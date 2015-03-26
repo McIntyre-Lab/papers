@@ -1,0 +1,31 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/arbeitman_dsx-fru/scripts/PBS_LOGS/dups/
+#PBS -l walltime=96:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=6Gb
+#PBS -t 1-90
+
+
+module load python/2.7.3
+
+PROJ=/scratch/lfs/mcintyre/arbeitman_dsx-fru
+PROG=/scratch/lfs/mcintyre/python.git/identify_duplicates.py
+
+OUTDIR=$PROJ/dup_logs
+if [ ! -e $OUTDIR ]; then mkdir -p $OUTDIR; fi
+
+DESIGN_FILE=$PROJ/file_list.txt
+
+INPUT=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+OUTPUT=$PROJ/duplicate_list.csv
+
+NAME=`basename $INPUT .txt`
+LOG=$OUTDIR/${NAME}.log
+
+cd $ORIG
+python $PROG --input $INPUT --out $OUTPUT --log $LOG -a

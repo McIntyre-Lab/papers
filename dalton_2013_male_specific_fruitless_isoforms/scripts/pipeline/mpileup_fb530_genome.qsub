@@ -1,0 +1,71 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -r n
+#PBS -l walltime=03:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=4gb
+#PBS -o /scratch/hpc/jfear/arbeitman_fru_network/scripts/PBS_LOGS/mpileup/
+#PBS -j oe
+#PBS -t 20,23,26-28,33-34,36-37,40,51-52
+#62
+
+module load samtools/0.1.18
+
+#### Set Directories
+PROJ=/project/mcintyre
+SCRATCH=/scratch/hpc/jfear/arbeitman_fru_network
+
+#### Because I am using an PBS Array I am pulling LINE:MV:REP from an external CSV with all possible combinations
+DESIGN_FILE=$SCRATCH/fru_sample_list_v2.csv
+DESIGN=$(cat $DESIGN_FILE | head -n $PBS_ARRAYID | tail -n 1)
+
+IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+DATE=${ARRAY[0]}
+LANE=${ARRAY[1]}
+FILE=${ARRAY[2]}
+SAMPLE=${ARRAY[3]}
+
+####
+REF=/project/mcintyre/references/dmel_fb530/dmel-all-chromosome-r5.30.fasta.fai
+SAM=$SCRATCH/fb530_genome_alignments/${DATE}_${LANE}_${SAMPLE}.sam
+
+sed -i '/^@HD/d' $SAM
+
+#### Create OUTPUT directory if needed.
+OUTPUT=$SCRATCH/fb530_genome_mpileups
+
+if [ ! -e $OUTPUT ]
+then 
+    mkdir -p $OUTPUT
+fi
+
+#### Create LOG directory and start log
+LOGS=$OUTPUT/logs 
+if [ ! -e $LOGS ]
+then
+    mkdir $LOGS
+fi
+
+#### Convert SAM to BAM
+BAM=$TMPDIR/${DATE}_${LANE}_${SAMPLE}_sorted
+MYLOG=$LOGS/${DATE}_${LANE}_${SAMPLE}_sam2bam.log
+
+echo `date`": Starting SAM to BAM conversion" >> $MYLOG
+samtools view -ut $REF -o - $SAM 2>>$MYLOG | samtools sort -m 1000000000 - $BAM 2>>$MYLOG
+samtools index $BAM.bam >>$MYLOG
+echo `date`": Finished SAM to BAM conversion" >> $MYLOG
+
+#### Make mpielup
+PILEUP=$OUTPUT/${DATE}_${LANE}_${SAMPLE}_fb530_genome.mpileup
+MYLOG=$LOGS/${DATE}_${LANE}_${SAMPLE}_mpileup.log
+
+printf "`date` $DATE $LANE $SAMPLE PBS_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > $MYLOG
+
+echo `date`": Starting" >> $MYLOG
+echo `date`": Generating pileup" >> $MYLOG
+
+samtools mpileup -d 1000000000 -f $REF $BAM.bam  > $PILEUP 2>> $MYLOG
+
+echo `date`": Finished" >> $MYLOG

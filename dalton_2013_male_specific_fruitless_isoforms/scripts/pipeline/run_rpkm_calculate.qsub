@@ -1,0 +1,40 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -q bio
+#PBS -r n
+#PBS -l walltime=10:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=8gb
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/arbeitman_dsx-fru/scripts/PBS_LOGS/fb530_genome_coverage/
+#PBS -t 59
+#62
+
+PROJ=/scratch/lfs/mcintyre/arbeitman_dsx-fru
+SCRIPTS=$PROJ/scripts
+
+## PBS Array pull from an external CSV with all possible combinations
+DESIGN_FILE=$PROJ/fru_sample_list_v4.csv
+DESIGN=$(cat $DESIGN_FILE | head -n $PBS_ARRAYID | tail -n 1)
+
+IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+DATE=${ARRAY[0]}
+LANE=${ARRAY[1]}
+BC=${ARRAY[2]}
+SAMPLE=${ARRAY[3]}
+
+NAME=${DATE}_${LANE}_${SAMPLE}
+
+RPKM=$PROJ/fb530_genome_coverage_counts
+if [ ! -e $RPKM ]; then mkdir -p $RPKM; fi
+
+LOGS=$RPKM/logs
+if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+
+SAM=$PROJ/fb530_genome_alignments/$NAME.sam
+PILEUP=$PROJ/fb530_genome_pileups/${NAME}_fb530_genome.consensus.pileup
+BED=/scratch/lfs/mcintyre/references/dmel_fb530/dmel-all-r5.30_fusions.bed
+
+perl $SCRIPTS/rpkm_calculate_mlm6.pl -b $BED -p $PILEUP -s $SAM -i ${DATE}_${LANE}_${BC} > $RPKM/coverage_on_fusions_${NAME}.csv 2> $LOGS/${NAME}.log

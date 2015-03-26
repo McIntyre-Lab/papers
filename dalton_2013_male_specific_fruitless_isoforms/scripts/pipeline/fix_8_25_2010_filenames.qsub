@@ -1,0 +1,31 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu 
+#PBS -m n
+#PBS -q bio
+#PBS -r n
+#PBS -l walltime=01:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=1gb
+#PBS -j oe
+#PBS -o /scratch/hpc/jfear/arbeitman_fru_network/scripts/PBS_LOGS/
+
+# The orignal data was named inconviently for 08-25-2010. This script renames
+# the files to include the barcode
+
+PROJ=/project/mcintyre/arbeitman_fru_network/original_data/Data_2010-08-25
+
+cd $PROJ
+
+for LANE in Lane*;
+do
+    cd $LANE
+    for FILE in *.txt
+    do
+        NAME=`echo $FILE | sed 's/\(s_[0-9]\)_[0-9]\{3\}_sequence.txt/\1/g'`
+        BAR=`head -n1 $FILE | sed 's/.*\#\([A-Z]\{6\}\)\/1/\1/g'`
+
+        mv $FILE ${NAME}_${BAR}_sequence.txt
+
+    done
+    cd $PROJ
+done

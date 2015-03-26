@@ -1,0 +1,37 @@
+#!/bin/bash
+#PBS -M fnew@ufl.edu
+#PBS -m n
+#PBS -N fastqDumpDSX
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/arbeitman_dsx-fru/scripts/PBS_LOGS/fastqdumpcoords
+#PBS -l walltime=12:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=10Gb
+
+module load python/2.7.3
+
+## Set Directories
+    PROJ=/scratch/lfs/mcintyre/arbeitman_dsx-fru
+    ORIG=$PROJ/original_data
+    OUTDIR=$PROJ/qc/fastqdumpcoords
+    OUTLOG=$PROJ/qc/fastqdumpcoords_logs
+
+    if [ ! -e $OUTDIR ]; then mkdir -p $OUTDIR; fi
+    if [ ! -e $OUTLOG ]; then mkdir -p $OUTLOG; fi
+
+    DESIGN_FILE=$PROJ/file_list.txt
+
+for PBS_ARRAYID in {1..90}
+do 
+    INPUT=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+    NAME=`basename $INPUT .txt`
+    
+
+    LOG=$OUTLOG/$NAME.log
+    python /scratch/lfs/mcintyre/python.git/fastqDumpCoords.py -i $INPUT -o $OUTDIR/${NAME}.csv -g $LOG
+
+done
+
+

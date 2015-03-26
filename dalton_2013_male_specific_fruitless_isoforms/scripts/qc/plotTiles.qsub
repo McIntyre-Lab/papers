@@ -1,0 +1,33 @@
+#!/bin/bash
+#PBS -M fnew@ufl.edu
+#PBS -m n
+#PBS -N plotTilesfru
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/arbeitman_dsx-fru/scripts/PBS_LOGS/plottiles
+#PBS -l walltime=12:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=13GB
+
+module load python/2.7.3
+
+
+    PROJ=/scratch/lfs/mcintyre/arbeitman_dsx-fru
+    ORIG=$PROJ/qc/fastqdumpcoords
+    OUTDIR=$PROJ/dup_locations
+
+    if [ ! -e $OUTDIR ]; then mkdir -p $OUTDIR; fi
+
+    DESIGN_FILE=$PROJ/file_list.txt
+
+for PBS_ARRAYID in {1..90}
+do
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+    NAME=`basename $DESIGN .txt`
+    
+    INPUT=$PROJ/qc/fastqdumpcoords/$NAME.csv
+    
+    python /scratch/lfs/mcintyre/python.git/plotTiles.py -i $INPUT -o $OUTDIR
+
+done

@@ -1,0 +1,56 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -q bio
+#PBS -r n
+#PBS -l walltime=01:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=1gb
+#PBS -j oe
+#PBS -o /scratch/hpc/jfear/arbeitman_fru_network/scripts/PBS_LOGS/barcode_trim/
+#PBS -t 20,23,26-28,33-34,36,37,40,51-52%50
+
+PROJ=/project/mcintyre/arbeitman_fru_network
+SCRATCH=/scratch/hpc/jfear/arbeitman_fru_network
+
+## PBS Array pull from an external CSV with all possible combinations
+DESIGN_FILE=$SCRATCH/fru_sample_list_v2.csv
+DESIGN=$(cat $DESIGN_FILE | head -n $PBS_ARRAYID | tail -n 1)
+
+IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+DATE=${ARRAY[0]}
+LANE=${ARRAY[1]}
+FILE=${ARRAY[2]}
+SAMPLE=${ARRAY[3]}
+
+######################################
+
+SCRIPTS=$SCRATCH/scripts
+
+ORIG=$PROJ/original_data/Data_$DATE/Lane$LANE/$FILE
+TRIM=$SCRATCH/bc_trim
+
+if [ ! -e $TRIM ]
+then
+    mkdir -p $TRIM
+fi
+
+LOGS=$TRIM/logs
+if [ ! -e $LOGS ]
+then
+    mkdir -p $LOGS
+fi
+
+MYLOG=$LOGS/${DATE}_${LANE}_${SAMPLE}.log
+
+echo "$HOSTNAME" >$MYLOG
+echo "Trimming Date_$DATE/Lane$LANE/$FILE" >>$MYLOG
+
+perl $SCRIPTS/fix_fastq_file.pl -5 6 \
+                                -s 25 \
+                                -p <$ORIG \
+                                >$TRIM/${DATE}_${LANE}_${SAMPLE}.fq \
+                                2>>$MYLOG
+
+echo "Finished Trimming!: New File at ${DATE}_${LANE}_${SAMPLE}.fq" >>$MYLOG

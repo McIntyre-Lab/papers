@@ -1,0 +1,50 @@
+#
+/bin/bash
+#PBS -M fnew@ufl.edu
+#PBS -m n
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/arbeitman_dsx-fru/scripts/PBS_LOGS/run_count_total_uniq_v2.pbs.out
+#PBS -l walltime=24:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=10Gb
+
+module load python/2.7.3
+
+## Set Directories
+    PROJ=/scratch/lfs/mcintyre/arbeitman_dsx-fru
+    ORIG=$PROJ/original_data
+    OUTDIR=$PROJ/qc/qc_duplicatesv2
+    OUTFILES=$OUTDIR/files
+
+    if [ ! -e $OUTFILES ]; then mkdir -p $OUTFILES; fi
+
+    OUT=duplicate_count_summary_`date +"%Y%m%d"`.csv
+
+    DESIGN_FILE=$PROJ/file_list.txt
+
+for PBS_ARRAYID in {1..90}
+do
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+   
+    INPUT=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+    NAME=`basename $INPUT .txt`
+
+
+
+    python /scratch/lfs/mcintyre/python.git/count_total_uniq_fq_v2.py -i $INPUT -o $TMPDIR/${NAME}.csv -t $OUTFILES/${NAME}_table.txt
+
+done
+
+cd $TMPDIR
+FLAG=0
+for FILE in *.csv;
+do 
+    if [ $FLAG -eq 0 ];
+    then
+        cat $FILE > $OUTDIR/$OUT
+        FLAG=1;
+    fi
+    tail -n 1 $FILE >> $OUTDIR/$OUT
+done

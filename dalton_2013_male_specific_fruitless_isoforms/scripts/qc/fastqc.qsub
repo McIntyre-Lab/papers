@@ -1,0 +1,22 @@
+#!/bin/bash
+# PBS -M jfear@ufl.edu
+# PBS -m ae
+# PBS -l nodes=1:ppn=1
+# PBS -l walltime=04:00:00
+# PBS -l pmem=1gb
+# PBS -r n
+
+module load fastqc/0.10.0
+
+ORIG="/scratch/hpc/mccrory/fru_network/original_data/DATE";
+mkdir $TMPDIR/orig
+mkdir $TMPDIR/DATE
+
+rsync -a $ORIG $TMPDIR/orig/; 
+
+for I in {1..8}
+do 
+    fastqc --noextract -o $TMPDIR/DATE $TMPDIR/orig/DATE/Lane${I}/*.txt;
+done;
+
+mv $TMPDIR/DATE /scratch/hpc/jfear/Fru_network/QC/

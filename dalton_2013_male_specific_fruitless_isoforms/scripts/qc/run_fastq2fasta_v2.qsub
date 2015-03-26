@@ -1,0 +1,27 @@
+#!/bin/bash
+#PBS -M fnew@ufl.edu
+#PBS -m n
+#PBS -N dsx_frufqfa
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/arbeitman_dsx-fru/scripts/PBS_LOGS/fastq2fastq/
+#PBS -l walltime=8:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=6gb
+
+module load python 
+
+PROJ=/scratch/lfs/mcintyre/arbeitman_dsx-fru
+ORIG=$PROJ/original_data
+OUTDIR=$PROJ/fasta_reads
+if [ ! -e $OUTDIR ]; then mkdir -p $OUTDIR; fi
+
+DESIGN_FILE=$PROJ/file_list.txt
+for PBS_ARRAYID in {1..90}
+do
+    INPUT=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+    NAME=`basename $INPUT .txt`
+
+    python /scratch/lfs/mcintyre/python.git/fastq2fasta.py -i $INPUT -o $OUTDIR/$NAME.fa
+done

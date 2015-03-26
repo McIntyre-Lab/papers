@@ -1,0 +1,37 @@
+#!/bin/bash
+#PBS -M fnew@ufl.edu
+#PBS -m n
+#PBS -N arbIDhom
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/arbeitman_dsx-fru/scripts/PBS_LOGS/homopolymer/
+#PBS -l walltime=12:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=10Gb
+#PBS -t 1-90
+
+module load python/2.7.3
+
+## Set Directories
+    PROJ=/scratch/lfs/mcintyre/arbeitman_dsx-fru
+    ORIG=$PROJ/original_data
+    OUTLOG=$PROJ/qc/homopolymer_logs
+    OUTPNG=$PROJ/qc/homopolymer_pngs
+    OUTPUT=$PROJ/qc/homopolymer_files
+    PROG=/scratch/lfs/mcintyre/python.git/identify_homopolymers.py
+
+    if [ ! -e $OUTLOG ]; then mkdir -p $OUTLOG; fi
+    if [ ! -e $OUTPNG ]; then mkdir -p $OUTPNG; fi
+    if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+# Pull info from design file
+    DESIGN_FILE=$PROJ/file_list.txt
+    
+    INPUT=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+    NAME=`basename $INPUT .txt`
+
+# run dup script on each lane
+	LOG=$OUTLOG/${NAME}.log
+	PNG=$OUTPNG/${NAME}.png
+	python $PROG --input $INPUT --fastq -a --out $OUTPUT/$NAME.csv --log $LOG --plot $PNG

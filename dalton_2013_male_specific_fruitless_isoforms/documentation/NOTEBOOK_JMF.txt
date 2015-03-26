@@ -1,0 +1,2704 @@
+#===============================================================================
+#
+#   DESCRIPTION: Justin's Laboratory Notebook
+# 
+#        AUTHOR: Justin Fear (JMF), jfear@ufl.edu
+#   INSTITUTION: University of Florida
+#       CREATED: 11/18/2011 09:51:56 AM EST
+#===============================================================================
+
+This is the Justin's lab notebook which will be used to create the README once
+different analysis steps are finalized. 
+#-------------------------------------------------------------------------------
+#  PRIOR TO NOVEMBER 18, 2011
+#-------------------------------------------------------------------------------
+
+Flybase 5.30
+Fusion_id = 60,290
+genes = 14,497
+Sequencing runs = 3
+    08/25/2010:
+        7 lanes
+        9 mutants (3 reps each)
+    04/26/2011: # maybe 05/03/2011
+        7 lanes
+        8 mutants (3 or 4 reps each)
+    07/05/2011: # Lanes 5,6,7,8 have samples no included in comparisons
+        7 lanes
+        7 mutants (3 reps)
+
+# IMPORT COVERAGE COUNTS
+Coverage counts were provided by Marty. The raw data provided for 08/25/2011 had
+an issue where the instead of having the barcode as part of the file name, they
+used a number (00[1-4]). I initially wrote a script to convert the coverage
+count files to the naming format used by rest of the files.
+
+Another issue is that according to the spreadsheet that Justin Dalton provided
+there should be a sample 04/26/2011. However there are not any files from this
+date. But there is a file called 05/03/2011, which is extremely close to this
+date. For now I am assuming that these are the same, I will double check with
+Justin Dalton that this is the case.
+
+[X] Check with Justin Dalton that 04/26/2011 = 05/03/2011
+    # I checked this with him and he said it was correct
+
+There are some going to be some from all_coverage_counts_with_key that will not
+match anything in fru.design_file. This is because Justin Dalton left samples
+out of the comparison for 07/05/2011 lanes 5,6,7,8.  Also 05/03/2011 (aka
+04/26/2011) lane 8 was a bad sample.
+
+The corresponding SAMPLE ID below was used to create a variable called trt and
+logRPKM = log(RPKM+100).
+
+----------------------------------------
+SAMPLE ID          | FILE NAME
+----------------------------------------
+48APF_CS           | 2010-08-25_1_ATCACG
+48APF_CS           | 2010-08-25_2_CGATGT
+48APF_CS           | 2010-08-25_3_TTAGGC
+48APF_FruP14_440   | 2010-08-25_1_TGACCA
+48APF_FruP14_440   | 2010-08-25_2_ACAGTG
+48APF_FruP14_440   | 2010-08-25_3_GCCAAT
+48APF_FruW12_ChaM5 | 2010-08-25_1_CAGATC
+48APF_FruW12_ChaM5 | 2010-08-25_2_ACTTGA
+48APF_FruW12_ChaM5 | 2010-08-25_3_GATCAG
+AB_CS              | 2010-08-25_5_ATCACG
+AB_CS              | 2010-08-25_6_CGATGT
+AB_CS              | 2010-08-25_7_TTAGGC
+AB_FruP14_440      | 2010-08-25_5_TGACCA
+AB_FruP14_440      | 2010-08-25_6_ACAGTG
+AB_FruP14_440      | 2010-08-25_7_GCCAAT
+AB_FruW12_ChaM5    | 2010-08-25_5_CAGATC
+AB_FruW12_ChaM5    | 2010-08-25_6_ACTTGA
+AB_FruW12_ChaM5    | 2010-08-25_7_GATCAG
+WPP_CS             | 2010-08-25_8_ATCACG
+WPP_CS             | 2010-08-25_1_CGATGT
+WPP_CS             | 2010-08-25_2_TTAGGC
+WPP_FruP14_440     | 2010-08-25_8_TGACCA
+WPP_FruP14_440     | 2010-08-25_3_ACAGTG
+WPP_FruP14_440     | 2010-08-25_6_GCCAAT
+WPP_FruW12_ChaM5   | 2010-08-25_8_CAGATC
+WPP_FruW12_ChaM5   | 2010-08-25_7_ACTTGA
+WPP_FruW12_ChaM5   | 2010-08-25_5_GATCAG
+AH_BerF            | 2011-05-03_5_TGACCA
+AH_BerF            | 2011-05-03_3_ACAGTG
+AH_BerF            | 2011-05-03_2_GCCAAT
+AH_BerM            | 2011-05-03_1_ATCACG
+AH_BerM            | 2011-05-03_6_CGATGT
+AH_BerM            | 2011-05-03_5_TTAGGC
+AH_CS              | 2011-05-03_1_ACTTGA
+AH_CS              | 2011-05-03_2_ACTTGA
+AH_CS              | 2011-05-03_3_ACTTGA
+AH_CS              | 2011-05-03_5_ACTTGA
+AH_dsxD            | 2011-05-03_1_CAGATC
+AH_dsxD            | 2011-05-03_6_ACTTGA
+AH_dsxD            | 2011-05-03_5_GATCAG
+AH_dsxNullF        | 2011-05-03_6_TAGCTT
+AH_dsxNullF        | 2011-05-03_2_ATCACG
+AH_dsxNullF        | 2011-05-03_5_CGATGT
+AH_dsxNullM        | 2011-05-03_6_TTAGGC
+AH_dsxNullM        | 2011-05-03_3_TGACCA
+AH_dsxNullM        | 2011-05-03_6_ACAGTG
+AH_FruP14_440      | 2011-05-03_1_GATCAG
+AH_FruP14_440      | 2011-05-03_2_GATCAG
+AH_FruP14_440      | 2011-05-03_3_GATCAG
+AH_FruP14_440      | 2011-05-03_8_GATCAG
+AH_FruW12_ChaM5    | 2011-05-03_1_TAGCTT
+AH_FruW12_ChaM5    | 2011-05-03_2_TAGCTT
+AH_FruW12_ChaM5    | 2011-05-03_3_TAGCTT
+AH_FruW12_ChaM5    | 2011-05-03_7_TAGCTT
+AH_Female_FruM(A)  | 2011-07-05_1_TGACCA
+AH_Female_FruM(A)  | 2011-07-05_2_ACAGTG
+AH_Female_FruM(A)  | 2011-07-05_3_GCCAAT
+AH_Male_FruM(A)    | 2011-07-05_1_ATCACG
+AH_Male_FruM(A)    | 2011-07-05_2_CGATGT
+AH_Male_FruM(A)    | 2011-07-05_3_TTAGGC
+AH_Female_FruM(B)  | 2011-07-05_2_TGACCA
+AH_Female_FruM(B)  | 2011-07-05_3_ACAGTG
+AH_Female_FruM(B)  | 2011-07-05_1_GCCAAT
+AH_Male_FruM(B)    | 2011-07-05_2_ATCACG
+AH_Male_FruM(B)    | 2011-07-05_3_CGATGT
+AH_Male_FruM(B)    | 2011-07-05_1_TTAGGC
+AH_Female_FruM(C)  | 2011-07-05_5_TAGCTT
+AH_Female_FruM(C)  | 2011-07-05_6_ATCACG
+AH_Female_FruM(C)  | 2011-07-05_5_CGATGT
+AH_Male_FruM(C)    | 2011-07-05_1_CAGATC
+AH_Male_FruM(C)    | 2011-07-05_2_ACTTGA
+AH_Male_FruM(C)    | 2011-07-05_3_GATCAG
+AH_CSFemale        | 2011-07-05_7_CAGATC
+AH_CSFemale        | 2011-07-05_7_ACTTGA
+AH_CSFemale        | 2011-07-05_8_GATCAG
+----------------------------------------
+
+# MAKE FLAGS AND CREATE A FORANALYSIS DATASET
+In order to run the data though our ANOVA we need to remove data that have
+either no variance within/accross conditions, or that have zero mean within a
+condition. So I created a series of flags to mark these and then create a
+dataset "foranalysis.sas7bdat"
+
+Because not all of the data was included in the comparisons, there are some data
+missing the trt variable. 
+
+** First a flag for no treatment variable (flag_no_trt) was created. 
+
+PROGRAM: analysis_flag_no_trt.sas
+
+DATASET: flag_no_trt.sas7bdat
+
+COMMAND: 
+    data fru.flag_no_trt;
+        set fru.all_coverage_counts_with_key;
+        if trt = "" then flag_no_trt = 1;
+        else flag_no_trt = 0; 
+        keep fusion_id trt flag_no_trt;
+        run;
+
+FREQS:
+                                            Cumulative    Cumulative
+    flag_no_trt    Frequency     Percent     Frequency      Percent
+    ----------------------------------------------------------------
+            0     4461460       85.06       4461460        85.06
+            1      783770       14.94       5245230       100.00 
+
+** Next a flag for no variance was created (flag_no_var) to mark any fusion that
+   has no variation between conditions.
+
+PROGRAM: analysis_flag_no_var.sas
+
+DATASET: flag_no_var.sas7bdat
+
+COMMAND:
+    /* 
+        Calculate variance for each treatment then flag those with 0 variance,
+        then sum these across treatments and flag fusion as having no_var ie sum
+        of treatment flags >0 
+    */
+    proc means data=flag_fusion_trt_no_var noprint;
+        by fusion_id;
+        output out=sum_flags_no_var sum(flag_no_var)=sum_flag_no_var;
+        run;
+
+    data fru.flag_no_var;
+        set sum_flags_no_var;
+        if sum_flag_no_var > 0 then flag_no_var=1;
+        else flag_no_var=0;
+        keep fusion_id flag_no_var;
+        run;
+
+FREQS:
+                                              Cumulative    Cumulative
+      flag_no_var    Frequency     Percent     Frequency      Percent
+      ----------------------------------------------------------------
+                0       36592       60.69         36592        60.69
+                1       23698       39.31         60290       100.00
+
+** Finally means were calculate within condition. If there was a zero mean for
+   one condition it was also flagged (flag_zero_mean)
+
+PROGRAM: analysis_flag_zero_mean_v2.sas
+
+DATASET: flag_zero_mean.sas7bdat
+
+COMMAND:
+   /* 
+   Means were calculated for each trt*fusion_id and they were flagged if there
+   was a zero mean. Then these flags were summed over conditions and if they
+   were >0 then the fusion was flagged as having zero_mean 
+   */
+    proc means data=fru.trt_means noprint;
+        by fusion_id;
+        output out=sum_flag_zero_mean sum(flag_zero_trt_mean)=sum_flag_zero_trt_mean;
+        run;
+
+    data fru.flag_zero_mean;
+        set sum_flag_zero_mean;
+        if sum_flag_zero_trt_mean > 0 then flag_zero_mean = 1;
+        else flag_zero_mean =0;
+        keep fusion_id flag_zero_mean;
+        run;
+
+FREQS:
+                                            Cumulative    Cumulative
+ flag_zero_mean    Frequency     Percent     Frequency      Percent
+ -------------------------------------------------------------------
+              0       36592       60.69         36592        60.69
+              1       23698       39.31         60290       100.00
+
+** Using these flags, fusions were removed that were flagged with flag_no_trt=1,
+   flag_no_var=1, flag_zero_mean=1
+
+PROGRAM: analysis_make_foranalysis.sas
+
+DATASET: foranalysis.sas7bdat
+
+COMMAND:
+    data foranalysis;
+        merge fru.all_coverage_counts_with_key (in=in1) fru.flag_no_var fru.flag_zero_mean;
+        by fusion_id;
+        if in1;
+        run;
+
+    data fru.foranalysis;
+        set foranalysis;
+        if trt ne "";
+        if flag_no_var =0;
+        if flag_zero_mean = 0;
+        run;
+
+# Analysis of Variance with contrasts
+Contrasts were suggested in the spreadsheet provided by Justin Dalton.
+
+PROGRAM: analysis_anova_v2.sas
+
+DATASET: model_fru.sas7bdat (p-value and other model output)
+         contrast.sas7bdat (Contrast output)
+         lsmeans.sas7bdat (least-squares means output)
+         resid.sas7bdat (residuals)
+
+COMMAND:
+    proc glm data=test;
+        by fusion_id;
+        class trt;
+        model logrpkm = trt;
+        lsmeans trt /pdiff;
+        /* Contrasts---------------------------------------1---2---3---4---5---6---7---8---9---10---11---12---13---14---15---16---17---18---19---20---21---22---23---24---*/
+        contrast 'WPP_CS vs WPP_FruP14_440' trt            0   0   0   0   0   0   0   0   0    0    0    0    0    0    0    0    0    0    0    0    0    1   -1    0   ;
+        contrast 'WPP_CS vs WPP_FruW12_ChaM5' trt          0   0   0   0   0   0   0   0   0    0    0    0    0    0    0    0    0    0    0    0    0    1    0   -1   ;
+        contrast '48APF_CS vs 48APF_FruP14_440' trt        1  -1   0   0   0   0   0   0   0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast '48APF_CS vs 48APF_FruW12_ChaM5' trt      1   0  -1   0   0   0   0   0   0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_CS vs AH_FruP14_440' trt              0   0   0   0   0   0   0   0   1    0    0    0    0   -1    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_CS vs AH_FruW12_ChaM5' trt            0   0   0   0   0   0   0   0   1    0    0    0    0    0   -1    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_BerM vs AH_FruP14_440' trt            0   0   0   0   0   0   0   1   0    0    0    0    0   -1    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_BerM vs AH_FruW12_ChaM5' trt          0   0   0   0   0   0   0   1   0    0    0    0    0    0   -1    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AB_CS vs AB_FruP14_440' trt              0   0   0   1  -1   0   0   0   0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AB_CS vs AB_FruW12_ChaM5' trt            0   0   0   1   0  -1   0   0   0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_CS vs AH_BerM' trt                    0   0   0   0   0   0   0   1  -1    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_BerM vs AH_BerF' trt                  0   0   0   0   0   0   1  -1   0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_CS vs AH_BerF' trt                    0   0   0   0   0   0   1   0  -1    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_BerM vs AH_dsxNullM' trt              0   0   0   0   0   0   0   1   0    0    0    0    0    0    0    0    0    0    0    0   -1    0    0    0   ;
+        contrast 'AH_CS vs AH_dsxNullM' trt                0   0   0   0   0   0   0   0   1    0    0    0    0    0    0    0    0    0    0    0   -1    0    0    0   ;
+        contrast 'AH_BerF vs AH_dsxNullM' trt              0   0   0   0   0   0   1   0   0    0    0    0    0    0    0    0    0    0    0    0   -1    0    0    0   ;
+        contrast 'AH_BerF vs AH_dsxNullF' trt              0   0   0   0   0   0   1   0   0    0    0    0    0    0    0    0    0    0    0   -1    0    0    0    0   ;
+        contrast 'AH_CS vs AH_dsxNullF' trt                0   0   0   0   0   0   0   0   1    0    0    0    0    0    0    0    0    0    0   -1    0    0    0    0   ;
+        contrast 'AH_BerM vs AH_dsxNullF' trt              0   0   0   0   0   0   0   1   0    0    0    0    0    0    0    0    0    0    0   -1    0    0    0    0   ;
+        contrast 'AH_BerF vs AH_dsxD' trt                  0   0   0   0   0   0   1   0   0    0    0    0    0    0    0    0    0    0   -1    0    0    0    0    0   ;
+        contrast 'AH_BerM vs AH_dsxD' trt                  0   0   0   0   0   0   0   1   0    0    0    0    0    0    0    0    0    0   -1    0    0    0    0    0   ;
+        contrast 'AH_CS vs AH_dsxD' trt                    0   0   0   0   0   0   0   0   1    0    0    0    0    0    0    0    0    0   -1    0    0    0    0    0   ;
+        contrast 'AH_CSFemale vs AH_CS' trt                0   0   0   0   0   0   0   0   1   -1    0    0    0    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_CSFemale vs AH_BerM' trt              0   0   0   0   0   0   0   1   0   -1    0    0    0    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_CSFemale vs AH_BerF' trt              0   0   0   0   0   0   1   0   0   -1    0    0    0    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_CSFemale vs AH_dsxNullM' trt          0   0   0   0   0   0   0   0   0    1    0    0    0    0    0    0    0    0    0    0   -1    0    0    0   ;
+        contrast 'AH_CSFemale vs AH_dsxNullF' trt          0   0   0   0   0   0   0   0   0    1    0    0    0    0    0    0    0    0    0   -1    0    0    0    0   ;
+        contrast 'AH_CSFemale vs AH_dsxD' trt              0   0   0   0   0   0   0   0   0    1    0    0    0    0    0    0    0    0   -1    0    0    0    0    0   ;
+        contrast 'AH_CS vs AH_Male_FruM(A)' trt            0   0   0   0   0   0   0   0   1    0    0    0    0    0    0   -1    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_CS vs AH_Male_FruM(B)' trt            0   0   0   0   0   0   0   0   1    0    0    0    0    0    0    0   -1    0    0    0    0    0    0    0   ;
+        contrast 'AH_CS vs AH_Male_FruM(C)' trt            0   0   0   0   0   0   0   0   1    0    0    0    0    0    0    0    0   -1    0    0    0    0    0    0   ;
+        contrast 'AH_BerM vs AH_Male_FruM(A)' trt          0   0   0   0   0   0   0   1   0    0    0    0    0    0    0   -1    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_BerM vs AH_Male_FruM(B)' trt          0   0   0   0   0   0   0   1   0    0    0    0    0    0    0    0   -1    0    0    0    0    0    0    0   ;
+        contrast 'AH_BerM vs AH_Male_FruM(C)' trt          0   0   0   0   0   0   0   1   0    0    0    0    0    0    0    0    0   -1    0    0    0    0    0    0   ;
+        contrast 'AH_CSFemale vs AH_Female_FruM(A)' trt    0   0   0   0   0   0   0   0   0    1   -1    0    0    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_CSFemale vs AH_Female_FruM(B)' trt    0   0   0   0   0   0   0   0   0    1    0   -1    0    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_CSFemale vs AH_Female_FruM(C)' trt    0   0   0   0   0   0   0   0   0    1    0    0   -1    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_BerF vs AH_Female_FruM(A)' trt        0   0   0   0   0   0   1   0   0    0   -1    0    0    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_BerF vs AH_Female_FruM(B)' trt        0   0   0   0   0   0   1   0   0    0    0   -1    0    0    0    0    0    0    0    0    0    0    0    0   ;
+        contrast 'AH_BerF vs AH_Female_FruM(C)' trt        0   0   0   0   0   0   1   0   0    0    0    0   -1    0    0    0    0    0    0    0    0    0    0    0   ;
+        output out=resid r=resid p=pred;
+        ods output modelanova = model_fru
+        contrasts=cons
+        lsmeans=lsm;
+        run;
+
+#-------------------------------------------------------------------------------
+#  NOVEMBER 18, 2011
+#-------------------------------------------------------------------------------
+
+# Testing for normality
+After running the glm, the residuals were output so that we could test their
+normality. Normality was tested and any residuals that failed were flagged with
+(flag_fail_normality).
+
+PROGRAM: analysis_flag_fail_normality.sas
+
+DATASET: flag_fail_normality.sas7bdat
+
+COMMAND:
+    proc univariate data=fru.resid normal plots;
+        by fusion_id;
+        var resid;
+        ods output TestsForNormality=normtest;
+        run;
+
+    data fru.flag_fail_normality;
+        set normtest;
+        if pValue eq . then flag_fail_normality=.;
+        else if pValue <= .05 then flag_fail_normality=1;
+        else flag_fail_normality=0;
+        keep fusion_id flag_fail_normality;
+        run;
+
+FREQS:
+                                                  Cumulative    Cumulative
+  flag_fail_normality    Frequency     Percent     Frequency      Percent
+    ---------------------------------------------------------------------
+                   0       10539       28.80         10539        28.80
+                   1       26053       71.20         36592       100.00
+
+# Testing that the means are the same for GLM
+To double check my GLM model I wanted to look at the means from the model and
+the means that I calculated myself. Within the GLM procedure. 
+
+PROGRAM: analysis_anova_v2.sas
+
+DATASET:
+    WORK.means.sas7bdat (mean output from GLM)
+    WORK.mean_check2 (mean output from means procedure for 1 fusion_id)
+
+These means were the same so I am comfortable that the model is working correctly.
+
+#-------------------------------------------------------------------------------
+#  NOVEMBER 19, 2011
+#-------------------------------------------------------------------------------
+
+# FDR analysis of Contrasts
+delete-- After running the anova and checking that the means were correct, the next step
+delete-- is to calculate FDR for the contrasts. 
+delete-- 
+delete-- PROGRAM: analysis_fdr.sas
+delete-- 
+delete-- INPUT: contrast.sas7bdat
+delete-- OUTPUT: fdr_contrast.sas7bdat
+
+# FDR analysis of Model
+After running the anova and checking that the means were correct, the next step
+is to calculate FDR for the model. 
+
+PROGRAM: analysis_fdr.sas
+
+INPUT: fru.model_fru.sas7bdat
+OUTPUT: fdr_model.sas7bdat
+
+
+RESULTS:
+    fdr_level_                             Cumulative    Cumulative
+    probf         Frequency     Percent     Frequency      Percent
+    ---------------------------------------------------------------
+    0_tan             3967       10.84          3967        10.84
+    1_yellow          2209        6.04          6176        16.88
+    2_orange          2150        5.88          8326        22.75
+    3_red            28266       77.25         36592       100.00
+
+#-------------------------------------------------------------------------------
+#  NOVEMBER 20, 2011
+#-------------------------------------------------------------------------------
+So looking at the code for the xsub project, I decided that it is no necessary
+to run fdr for contrasts, since you are not doing multiple testing. So I removed
+these fdr. 
+
+# Flag and Transpose Contrasts
+The contrasts need to transposed so in the final results file there is once
+fusion_id per row.  Because contrast names are so long, I went back and edited
+them so that instead of " vs " they have "x" and also removed all of the "_" (analysis_anova_v4.sas).
+
+## Re-run ANOVA with new Contrast names
+See PRIOR TO NOVEMBER 18, 2011 for ANOVA details, only changed contrast labels,
+and dropped some un-needed columns from fru.model_fru.
+
+PROGRAM: analysis_anova_v4.sas
+
+DATASET: model_fru.sas7bdat (p-value and other model output)
+         contrast.sas7bdat (Contrast output)
+         lsmeans.sas7bdat (least-squares means output)
+         resid.sas7bdat (residuals)
+
+## Flag and Transpose
+In addition a flag (flag_contrast_sig) needs to be created and transposed so
+that significant contrasts can easily be identified.  These steps are done in
+the following program:
+
+PROGRAM: analysis_flip_contrast.sas
+
+INPUT: fru.contrast.sas7bdat
+OUTPUT: fru.contrast_trans (transpose of the p-value by contrast)
+        fru.flag_contrast_sig (transposed version of a significance flag for each contrast)
+        fru.flag_contrast_sig_sum (flag if any contrasts were significant across the fusion)
+
+RESULTS:
+                                             Cumulative    Cumulative
+flag_contrast_sig    Frequency     Percent     Frequency      Percent
+---------------------------------------------------------------------
+               0     1273169       86.98       1273169        86.98
+               1      190511       13.02       1463680       100.00
+
+
+In addition another flag (flag_contrast_sig_sum) was made to flag if there were
+any significant contrasts across the fusion.
+
+RESULTS:
+                                                      Cumulative    Cumulative
+    flag_contrast_sig_sum    Frequency     Percent     Frequency      Percent
+        ---------------------------------------------------------------------
+                       0        4659       12.73          4659        12.73
+                       1       31933       87.27         36592       100.00
+
+# Create Fusion_id to Gene symbol
+In order to make the big results file gene symbol and annotations need to be
+merged onto fusion_id.  To start with gene symbol was brought in from Flybase
+5.30.
+
+PROGRAM: analysis_fusion2gene.sas
+
+INPUT: fru.all_coverage_counts_with_key
+       dmel530.fusion2gene2fbtr
+
+OUTPUT: fru.fru2gene
+
+[X] ASK MARTY about the 1 fusion_ID that is not in any of our datasets F58684_SI, but is in the fusion2gene2fbtr. 
+    This was an issue with the reference Marty had made, for some reason it had
+    skipped the first line of the file which was F58684_SI
+
+# Transpose Means for Big results
+Needed to transpose the means output from the model for the big results table.
+Transposed both the mean and sd for each trt and then merged them into one
+table.
+
+PROGRAM: analysis_means_transpose.sas
+
+INPUT: fru.means.sas7bdat
+
+OUTPUT: fru.means_trans.sas7bdat
+
+# Make Results file
+I will make two results file, fru.results will have all of the results,
+fru.big_results will also have annotation information.
+
+PROGRAM: analysis_make_big_results.sas
+
+## Make Results
+INPUT_1: fru.fru2gene.sas7bdat
+       fru.fdr_model.sas7bdat
+       fru.means_trans.sas7bdat
+       fru.contrast_trans.sas7bdat
+       fru.flag_contrast_sig.sas7bdat
+       fru.flag_fail_normality.sas7bdat
+       fru.flag_no_var.sas7bdat
+       fru.flag_zero_mean.sas7bdat
+
+OUTPUT_1: fru.results.sas7bdat
+
+## Make Big Results
+INPUT_2: fru.results.sas7bdat
+OUTPUT_2: fru.big_results.sas7bdat
+COLUMN_HEADERS:
+    fusion_id -> Fusion ID
+    symbol -> Gene Symbol
+    multigene -> Flag if fusion is in multiple genes
+# ANOVA RESULTS
+    Source  
+    DF  
+    SS  
+    MS  
+    FValue  
+    ProbF  
+# FDR RESULTS
+    fdr_probf -> FDR corrected p-value
+    fdr_level_probf -> color level 
+    fdr_probf_red -> <=0.05
+    fdr_probf_orange -> <= 0.1
+    fdr_probf_yellow -> <= 0.2
+# Mean and SD Log(RPKM+100) for each sample ID
+    _48APF_CS_mean  
+    _48APF_CS_sd  
+    _48APF_FruP14_440_mean  
+    _48APF_FruP14_440_sd  
+    _48APF_FruW12_ChaM5_mean  
+    _48APF_FruW12_ChaM5_sd  
+    AB_CS_mean  
+    AB_CS_sd  
+    AB_FruP14_440_mean  
+    AB_FruP14_440_sd  
+    AB_FruW12_ChaM5_mean  
+    AB_FruW12_ChaM5_sd  
+    AH_BerF_mean  
+    AH_BerF_sd  
+    AH_BerM_mean  
+    AH_BerM_sd  
+    AH_CS_mean  
+    AH_CS_sd  
+    AH_CSFemale_mean  
+    AH_CSFemale_sd  
+    AH_Female_FruM_A__mean  
+    AH_Female_FruM_A__sd  
+    AH_Female_FruM_B__mean  
+    AH_Female_FruM_B__sd  
+    AH_Female_FruM_C__mean  
+    AH_Female_FruM_C__sd  
+    AH_FruP14_440_mean  
+    AH_FruP14_440_sd  
+    AH_FruW12_ChaM5_mean  
+    AH_FruW12_ChaM5_sd  
+    AH_Male_FruM_A__mean  
+    AH_Male_FruM_A__sd  
+    AH_Male_FruM_B__mean  
+    AH_Male_FruM_B__sd  
+    AH_Male_FruM_C__mean  
+    AH_Male_FruM_C__sd  
+    AH_dsxD_mean  
+    AH_dsxD_sd  
+    AH_dsxNullF_mean  
+    AH_dsxNullF_sd  
+    AH_dsxNullM_mean  
+    AH_dsxNullM_sd  
+    WPP_CS_mean  
+    WPP_CS_sd  
+    WPP_FruP14_440_mean  
+    WPP_FruP14_440_sd  
+    WPP_FruW12_ChaM5_mean  
+    WPP_FruW12_ChaM5_sd  
+# Contrast p-values
+    _48APFCSx48APFFruP14440_probf  
+    _48APFCSx48APFFruW12ChaM5_probf  
+    ABCSxABFruP14440_probf  
+    ABCSxABFruW12ChaM5_probf  
+    AHBerFxAHFemaleFruM_A__probf  
+    AHBerFxAHFemaleFruM_B__probf  
+    AHBerFxAHFemaleFruM_C__probf  
+    AHBerFxAHdsxD_probf  
+    AHBerFxAHdsxNullF_probf  
+    AHBerFxAHdsxNullM_probf  
+    AHBerMxAHBerF_probf  
+    AHBerMxAHFruP14440_probf  
+    AHBerMxAHFruW12ChaM5_probf  
+    AHBerMxAHMaleFruM_A__probf  
+    AHBerMxAHMaleFruM_B__probf  
+    AHBerMxAHMaleFruM_C__probf  
+    AHBerMxAHdsxD_probf  
+    AHBerMxAHdsxNullF_probf  
+    AHBerMxAHdsxNullM_probf  
+    AHCSFemalexAHBerF_probf  
+    AHCSFemalexAHBerM_probf  
+    AHCSFemalexAHCS_probf  
+    AHCSFemalexAHFemaleFruM_A__probf  
+    AHCSFemalexAHFemaleFruM_B__probf  
+    AHCSFemalexAHFemaleFruM_C__probf  
+    AHCSFemalexAHdsxD_probf  
+    AHCSFemalexAHdsxNullF_probf  
+    AHCSFemalexAHdsxNullM_probf  
+    AHCSxAHBerF_probf  
+    AHCSxAHBerM_probf  
+    AHCSxAHFruP14440_probf  
+    AHCSxAHFruW12ChaM5_probf  
+    AHCSxAHMaleFruM_A__probf  
+    AHCSxAHMaleFruM_B__probf  
+    AHCSxAHMaleFruM_C__probf  
+    AHCSxAHdsxD_probf  
+    AHCSxAHdsxNullF_probf  
+    AHCSxAHdsxNullM_probf  
+    WPPCSxWPPFruP14440_probf  
+    WPPCSxWPPFruW12ChaM5_probf  
+# Flag showing if the Individual Contras was Significant
+    _48APFCSx48APFFruP14440_consig  
+    _48APFCSx48APFFruW12ChaM5_consig  
+    ABCSxABFruP14440_consig  
+    ABCSxABFruW12ChaM5_consig  
+    AHBerFxAHFemaleFruM_A__consig  
+    AHBerFxAHFemaleFruM_B__consig  
+    AHBerFxAHFemaleFruM_C__consig  
+    AHBerFxAHdsxD_consig  
+    AHBerFxAHdsxNullF_consig  
+    AHBerFxAHdsxNullM_consig  
+    AHBerMxAHBerF_consig  
+    AHBerMxAHFruP14440_consig  
+    AHBerMxAHFruW12ChaM5_consig  
+    AHBerMxAHMaleFruM_A__consig  
+    AHBerMxAHMaleFruM_B__consig  
+    AHBerMxAHMaleFruM_C__consig  
+    AHBerMxAHdsxD_consig  
+    AHBerMxAHdsxNullF_consig  
+    AHBerMxAHdsxNullM_consig  
+    AHCSFemalexAHBerF_consig  
+    AHCSFemalexAHBerM_consig  
+    AHCSFemalexAHCS_consig  
+    AHCSFemalexAHFemaleFruM_A__consi  
+    AHCSFemalexAHFemaleFruM_B__consi  
+    AHCSFemalexAHFemaleFruM_C__consi  
+    AHCSFemalexAHdsxD_consig  
+    AHCSFemalexAHdsxNullF_consig  
+    AHCSFemalexAHdsxNullM_consig  
+    AHCSxAHBerF_consig  
+    AHCSxAHBerM_consig  
+    AHCSxAHFruP14440_consig  
+    AHCSxAHFruW12ChaM5_consig  
+    AHCSxAHMaleFruM_A__consig  
+    AHCSxAHMaleFruM_B__consig  
+    AHCSxAHMaleFruM_C__consig  
+    AHCSxAHdsxD_consig  
+    AHCSxAHdsxNullF_consig  
+    AHCSxAHdsxNullM_consig  
+    WPPCSxWPPFruP14440_consig  
+    WPPCSxWPPFruW12ChaM5_consig  
+# Other flags
+    flag_contrast_sig_sum -> Flag =1 if any of the contrasts were significant
+    flag_fail_normality -> flag if the residual failed normality
+    flag_no_var -> Flag if there was no variance between conditions (removed prior to ANOVA)
+    flag_zero_mean -> Flag is one condition had a mean of 0 (removed prior to ANOVA)
+    FBgn -> Flybase Gene ID
+# GO Annotations
+    biopro_GO_ID_count  
+    GO_number_biopro_cat  
+    GO_biological_process_cat  
+    molfunc_GO_ID_count  
+    GO_number_molfunc_cat  
+    GO_molecular_function_cat  
+    celcomp_GO_ID_count  
+    GO_number_celcomp_cat  
+    GO_cellular_component_cat  
+
+#-------------------------------------------------------------------------------
+#  NOVEMBER 21, 2011
+#-------------------------------------------------------------------------------
+
+# Calculate FDR for Contrasts and Flag
+
+Lauren said that I should do FDR on the contrasts. So I created a new file to
+run FDR on the contrasts and create significance flags. One issue I was having
+with this process is when transposing and using the contrast labels and column
+names. Because of the 32 character limit in sas for variable names, I could not
+label the columns properly. So I instead created a new variable "contrast" which
+is simply a number 1:40. Then I used this contrast number as the variable name,
+but then used the contrast label as the variable label since you are allowed 256
+characters for labels. While not ideal this allows me to have labels that have
+meaning. For the key look in the PROGRAM file.
+
+PROGRAM: analysis_fdr_contrasts.sas
+
+INPUT: fru.contrast.sas7bdat
+OUTPUT: fur.flag_fdr_p_all_contrast
+
+By creating this new file I no longer need analysis_flip_contrast.sas 
+
+#-------------------------------------------------------------------------------
+#  NOVEMBER 29, 2011
+#-------------------------------------------------------------------------------
+
+# Run Spike Analysis
+I re-ran the import function, sas was not bringing the sample_id correctly. So I
+had to use a full import statement. The output dataset includes the calculation
+for logrpkm.
+
+    logrpkm = log(RPKM+100)
+
+PROGRAM: spikes_import_coverage_counts.sas
+
+INPUT: /mclab/Fru_network/pipeline_output/coverage_spikes/all_coverage_spikes.csv
+OUTPUT: all_coverage_spikes.sas7bdat
+
+# Make design file with concentrations
+Next a design file concentrations was created using:
+
+PROGRAM: spikes_make_design_file.sas
+
+I was provided with ng per 100ng of RNA. For the ERCC spikes we actually use a
+concentration adjusted for length. For now I am just going to use ng amount,
+initially this should be good enough
+
+# Make a stack data set and export it for running graphics in R
+I first sorted and merged the two data sets. Then Alison had calculated means in her Pedro dataset, so I decided to go ahead and do this and take a look at the mean logrpkm. I also checked for zero means, but there were none so I did not keep this step. This looks promising, the means are concentration dependent.
+
+PROGRAM: spikes_make_stack.sas
+
+INPUT: all_coverage_spikes.sas
+       spike_design_file.sas
+
+OUTPUT: spike_stack_avg.sas
+
+For making the standard curve graph I exported this data set for use in R.
+
+PROGRAM: spikes_export_stack_avg.sas
+
+INPUT: spike_stack_avg.sas
+OUTPUT: /mclab/Fru_network/output_data/spike_stack_avg.csv
+
+#-------------------------------------------------------------------------------
+#  NOVEMBER 30, 2011
+#-------------------------------------------------------------------------------
+
+# Create standard curves in R
+I took the R code from Alison for the Pedro project and adjusted to work the
+spikes. I then plotted concentration by rpkm for each sample ID. 
+
+PROGRAM: /mclab/Fru_network/r_programs/spike_con_plots.R
+
+INPUT: /mclab/Fru_network/output_data/spike_stack_avg.csv
+OUTPUT: /mclab/Fru_network/r_reports/conc_plots_1.png
+                                     conc_plots_10.png
+                                     conc_plots_2.png
+                                     conc_plots_3.png
+                                     conc_plots_4.png
+                                     conc_plots_5.png
+                                     conc_plots_6.png
+                                     conc_plots_7.png
+                                     conc_plots_8.png
+                                     conc_plots_9.png
+                                     conc_v_rpkm.png
+These plots look reasonable as standard curves, some of the libraries I think we
+need to take a closer look at. Talked with Lauren and overall the plots looked
+pretty good.
+
+#-------------------------------------------------------------------------------
+#  DECEMBER 1, 2011
+#-------------------------------------------------------------------------------
+
+# Export and Email Update
+I need to export and email an updated version of the big_results and the plots
+from R to the FRU group. Lauren asked me to change the contrast FDR from .05 to
+.20 so I will do that before combining the big dataset.
+
+# Changed FDR flag to .20
+I changed analysis_fdr_contrasts.sas to flag p-value and fdr p-values at .20
+
+PROGRAM: analysis_fdr_contrasts_v2.sas
+INPUT: fru.contrast.sas7bdat
+OUTPUT: fur.flag_fdr_p_all_contrast
+
+# Make Results file
+I will make two results file, fru.results will have all of the results,
+fru.big_results will also have annotation information.
+
+PROGRAM: analysis_make_big_results.sas
+
+## Make Results
+INPUT_1: fru.fru2gene.sas7bdat
+       fru.fdr_model.sas7bdat
+       fru.means_trans.sas7bdat
+       fru.contrast_trans.sas7bdat
+       fru.flag_contrast_sig.sas7bdat
+       fru.flag_fail_normality.sas7bdat
+       fru.flag_no_var.sas7bdat
+       fru.flag_zero_mean.sas7bdat
+
+OUTPUT_1: fru.results.sas7bdat
+
+## Make Big Results
+INPUT_2: fru.results.sas7bdat
+OUTPUT_2: fru.big_results.sas7bdat
+COLUMN_HEADERS:
+    fusion_id -> Fusion ID
+    symbol -> Gene Symbol
+    multigene -> Flag if fusion is in multiple genes
+## ANOVA RESULTS
+    DF
+    SS
+    MS
+    FValue
+    ProbF
+## FDR RESULTS
+    fdr_probf
+    fdr_level_probf
+    fdr_probf_red
+    fdr_probf_orange
+    fdr_probf_yellow
+## Mean and SD Log(RPKM+100) for each sample ID
+    _48APF_CS_mean
+    _48APF_CS_sd
+    _48APF_FruP14_440_mean
+    _48APF_FruP14_440_sd
+    _48APF_FruW12_ChaM5_mean
+    _48APF_FruW12_ChaM5_sd
+    AB_CS_mean
+    AB_CS_sd
+    AB_FruP14_440_mean
+    AB_FruP14_440_sd
+    AB_FruW12_ChaM5_mean
+    AB_FruW12_ChaM5_sd
+    AH_BerF_mean
+    AH_BerF_sd
+    AH_BerM_mean
+    AH_BerM_sd
+    AH_CS_mean
+    AH_CS_sd
+    AH_CSFemale_mean
+    AH_CSFemale_sd
+    AH_Female_FruM_A__mean
+    AH_Female_FruM_A__sd
+    AH_Female_FruM_B__mean
+    AH_Female_FruM_B__sd
+    AH_Female_FruM_C__mean
+    AH_Female_FruM_C__sd
+    AH_FruP14_440_mean
+    AH_FruP14_440_sd
+    AH_FruW12_ChaM5_mean
+    AH_FruW12_ChaM5_sd
+    AH_Male_FruM_A__mean
+    AH_Male_FruM_A__sd
+    AH_Male_FruM_B__mean
+    AH_Male_FruM_B__sd
+    AH_Male_FruM_C__mean
+    AH_Male_FruM_C__sd
+    AH_dsxD_mean
+    AH_dsxD_sd
+    AH_dsxNullF_mean
+    AH_dsxNullF_sd
+    AH_dsxNullM_mean
+    AH_dsxNullM_sd
+    WPP_CS_mean
+    WPP_CS_sd
+    WPP_FruP14_440_mean
+    WPP_FruP14_440_sd
+    WPP_FruW12_ChaM5_mean
+    WPP_FruW12_ChaM5_sd
+## Contrast p-values and Flags shoing p-value < .20
+    p_all_WPPCSxWPPFruP14440
+    flag_p_all_20_WPPCSxWPPFruP14440
+    p_all_WPPCSxWPPFruW12ChaM5
+    flag_p_all_20_WPPCSxWPPFruW12ChaM5
+    p_all_48APFCSx48APFFruP14440
+    flag_p_all_20_48APFCSx48APFFruP14440
+    p_all_48APFCSx48APFFruW12ChaM5
+    flag_p_all_20_48APFCSx48APFFruW12ChaM5
+    p_all_AHCSxAHFruP14440
+    flag_p_all_20_AHCSxAHFruP14440
+    p_all_AHCSxAHFruW12ChaM5
+    flag_p_all_20_AHCSxAHFruW12ChaM5
+    p_all_AHBerMxAHFruP14440
+    flag_p_all_20_AHBerMxAHFruP14440
+    p_all_AHBerMxAHFruW12ChaM5
+    flag_p_all_20_AHBerMxAHFruW12ChaM5
+    p_all_ABCSxABFruP14440
+    flag_p_all_20_ABCSxABFruP14440
+    p_all_ABCSxABFruW12ChaM5
+    flag_p_all_20_ABCSxABFruW12ChaM5
+    p_all_AHCSxAHBerM
+    flag_p_all_20_AHCSxAHBerM
+    p_all_AHBerMxAHBerF
+    flag_p_all_20_AHBerMxAHBerF
+    p_all_AHCSxAHBerF
+    flag_p_all_20_AHCSxAHBerF
+    p_all_AHBerMxAHdsxNullM
+    flag_p_all_20_AHBerMxAHdsxNullM
+    p_all_AHCSxAHdsxNullM
+    flag_p_all_20_AHCSxAHdsxNullM
+    p_all_AHBerFxAHdsxNullM
+    flag_p_all_20_AHBerFxAHdsxNullM
+    p_all_AHBerFxAHdsxNullF
+    flag_p_all_20_AHBerFxAHdsxNullF
+    p_all_AHCSxAHdsxNullF
+    flag_p_all_20_AHCSxAHdsxNullF
+    p_all_AHBerMxAHdsxNullF
+    flag_p_all_20_AHBerMxAHdsxNullF
+    p_all_AHBerFxAHdsxD
+    flag_p_all_20_AHBerFxAHdsxD
+    p_all_AHBerMxAHdsxD
+    flag_p_all_20_AHBerMxAHdsxD
+    p_all_AHCSxAHdsxD
+    flag_p_all_20_AHCSxAHdsxD
+    p_all_AHCSFemalexAHCS
+    flag_p_all_20_AHCSFemalexAHCS
+    p_all_AHCSFemalexAHBerM     label
+    flag_p_all_20_AHCSFemalexAHBerM
+    p_all_AHCSFemalexAHBerF
+    flag_p_all_20_AHCSFemalexAHBerF
+    p_all_AHCSFemalexAHdsxNullM
+    flag_p_all_20_AHCSFemalexAHdsxNullM
+    p_all_AHCSFemalexAHdsxNullF
+    flag_p_all_20_AHCSFemalexAHdsxNullF
+    p_all_AHCSFemalexAHdsxD
+    flag_p_all_20_AHCSFemalexAHdsxD
+    p_all_AHCSxAHMaleFruM(A)
+    flag_p_all_20_AHCSxAHMaleFruM(A)
+    p_all_AHCSxAHMaleFruM(B)
+    flag_p_all_20_AHCSxAHMaleFruM(B)
+    p_all_AHCSxAHMaleFruM(C)
+    flag_p_all_20_AHCSxAHMaleFruM(C)
+    p_all_AHBerMxAHMaleFruM(A)
+    flag_p_all_20_AHBerMxAHMaleFruM(A)
+    p_all_AHBerMxAHMaleFruM(B)
+    flag_p_all_20_AHBerMxAHMaleFruM(B)
+    p_all_AHBerMxAHMaleFruM(C)
+    flag_p_all_20_AHBerMxAHMaleFruM(C)
+    p_all_AHCSFemalexAHFemaleFruM(A)
+    flag_p_all_20_AHCSFemalexAHFemaleFruM(A)
+    p_all_AHCSFemalexAHFemaleFruM(B)
+    flag_p_all_20_AHCSFemalexAHFemaleFruM(B)
+    p_all_AHCSFemalexAHFemaleFruM(C)
+    flag_p_all_20_AHCSFemalexAHFemaleFruM(C)
+    p_all_AHBerFxAHFemaleFruM(A)
+    flag_p_all_20_AHBerFxAHFemaleFruM(A)
+    p_all_AHBerFxAHFemaleFruM(B)
+    flag_p_all_20_AHBerFxAHFemaleFruM(B)
+    p_all_AHBerFxAHFemaleFruM(C)
+    flag_p_all_20_AHBerFxAHFemaleFruM(C)
+## FDR adjusted P-values and flag showing p-value < .20
+    flag_fdr_20_WPPCSxWPPFruP14440
+    flag_fdr_p_contrast_1_20
+    flag_fdr_20_WPPCSxWPPFruW12ChaM5
+    flag_fdr_p_contrast_2_20
+    flag_fdr_20_48APFCSx48APFFruP14440
+    flag_fdr_p_contrast_3_20
+    flag_fdr_20_48APFCSx48APFFruW12ChaM5
+    flag_fdr_p_contrast_4_20
+    flag_fdr_20_AHCSxAHFruP14440
+    flag_fdr_p_contrast_5_20
+    flag_fdr_20_AHCSxAHFruW12ChaM5
+    flag_fdr_p_contrast_6_20
+    flag_fdr_20_AHBerMxAHFruP14440
+    flag_fdr_p_contrast_7_20
+    flag_fdr_20_AHBerMxAHFruW12ChaM5
+    flag_fdr_p_contrast_8_20
+    flag_fdr_20_ABCSxABFruP14440
+    flag_fdr_p_contrast_9_20
+    flag_fdr_20_ABCSxABFruW12ChaM5
+    flag_fdr_p_contrast_10_20
+    flag_fdr_20_AHCSxAHBerM
+    flag_fdr_p_contrast_11_20
+    flag_fdr_20_AHBerMxAHBerF
+    flag_fdr_p_contrast_12_20
+    flag_fdr_20_AHCSxAHBerF
+    flag_fdr_p_contrast_13_20
+    flag_fdr_20_AHBerMxAHdsxNullM
+    flag_fdr_p_contrast_14_20
+    flag_fdr_20_AHCSxAHdsxNullM
+    flag_fdr_p_contrast_15_20
+    flag_fdr_20_AHBerFxAHdsxNullM
+    flag_fdr_p_contrast_16_20
+    flag_fdr_20_AHBerFxAHdsxNullF
+    flag_fdr_p_contrast_17_20
+    flag_fdr_20_AHCSxAHdsxNullF
+    flag_fdr_p_contrast_18_20
+    flag_fdr_20_AHBerMxAHdsxNullF
+    flag_fdr_p_contrast_19_20
+    flag_fdr_20_AHBerFxAHdsxD
+    flag_fdr_p_contrast_20_20
+    flag_fdr_20_AHBerMxAHdsxD
+    flag_fdr_p_contrast_21_20
+    flag_fdr_20_AHCSxAHdsxD
+    flag_fdr_p_contrast_22_20
+    flag_fdr_20_AHCSFemalexAHCS
+    flag_fdr_p_contrast_23_20
+    flag_fdr_20_AHCSFemalexAHBerM
+    flag_fdr_p_contrast_24_20
+    flag_fdr_20_AHCSFemalexAHBerF
+    flag_fdr_p_contrast_25_20
+    flag_fdr_20_AHCSFemalexAHdsxNullM
+    flag_fdr_p_contrast_26_20
+    flag_fdr_20_AHCSFemalexAHdsxNullF
+    flag_fdr_p_contrast_27_20
+    flag_fdr_20_AHCSFemalexAHdsxD
+    flag_fdr_p_contrast_28_20
+    flag_fdr_20_AHCSxAHMaleFruM(A)
+    flag_fdr_p_contrast_29_20
+    flag_fdr_20_AHCSxAHMaleFruM(B)
+    flag_fdr_p_contrast_30_20
+    flag_fdr_20_AHCSxAHMaleFruM(C)
+    flag_fdr_p_contrast_31_20
+    flag_fdr_20_AHBerMxAHMaleFruM(A)
+    flag_fdr_p_contrast_32_20
+    flag_fdr_20_AHBerMxAHMaleFruM(B)
+    flag_fdr_p_contrast_33_20
+    flag_fdr_20_AHBerMxAHMaleFruM(C)
+    flag_fdr_p_contrast_34_20
+    flag_fdr_20_AHCSFemalexAHFemaleFruM(A)
+    flag_fdr_p_contrast_35_20
+    flag_fdr_20_AHCSFemalexAHFemaleFruM(B)
+    flag_fdr_p_contrast_36_20
+    flag_fdr_20_AHCSFemalexAHFemaleFruM(C)
+    flag_fdr_p_contrast_37_20
+    flag_fdr_20_AHBerFxAHFemaleFruM(A)
+    flag_fdr_p_contrast_38_20
+    flag_fdr_20_AHBerFxAHFemaleFruM(B)
+    flag_fdr_p_contrast_39_20
+    flag_fdr_20_AHBerFxAHFemaleFruM(C)
+    flag_fdr_p_contrast_40_20
+## Other flags
+    flag_fail_normality -> flag if the residual failed normality
+    flag_no_var -> Flag if there was no variance between conditions (removed prior to ANOVA)
+    flag_zero_mean -> Flag is one condition had a mean of 0 (removed prior to ANOVA)
+## Annotation information
+    FBgn -> Flybase Gene ID
+    biopro_GO_ID_count
+    GO_number_biopro_cat
+    GO_biological_process_cat
+    molfunc_GO_ID_count
+    GO_number_molfunc_cat
+    GO_molecular_function_cat
+    celcomp_GO_ID_count
+    GO_number_celcomp_cat
+    GO_cellular_component_cat
+
+# Export Big Results
+Finally I exported the big results file. I changed this export so that the
+labels for the contrasts were used as column headers instead of the actual
+variable name.
+
+PROGRAM: analysis_export_big_results_v2.sas
+INPUT: fru.big_results.sas7bdat
+OUTPUT: /home/jfear/mclab/Fru_network/reports/big_results_v2.csv
+COLUMN_HEADERS: See Big result headers above.
+
+#-------------------------------------------------------------------------------
+#  DECEMBER 2, 2011
+#-------------------------------------------------------------------------------
+I ran fastqc on all of the lanes from the Fru project on the HPC. QC results are
+on mclab (tar'ed) on the website in a viewable format.
+
+PROGRAM: /mclab/Fru_network/scripts/fastqc.qsub
+         /mclab/Fru_network/scripts/run_fastqc.sh
+FILES: /mclab/Fru_network/reports/QC/*
+WEBSITE: http://bioinformatics.ufl.edu/mclab_public_data/fru/QC/
+
+Breifly looked through some of the files and they seemed ok. I am planning on
+writing a script to parse the information into a more usable format instead of a
+webpage for each file.
+
+#-------------------------------------------------------------------------------
+#  DECEMBER 19, 2011
+#-------------------------------------------------------------------------------
+We are interested in tweaking the Mosaic Settings in order to minimize the time
+for alignment along with the accuracy. Marty ran Mosaik on the unaligned reads
+from the alignment pipeline 
+
+(see: /mclab/Fru_network/pipeline_output/data_for_checks/checking_mosaik_accuracy/README.txt)
+    * align using lab standard options
+    * trim/improve unaligned
+    * align the (unaligned) trimmed/improved reads using lab standard options
+    * aligning remaining unaligned reads to junctions
+    * aligning remaining unaligned reads using MOSAIK (25% error tolerance)
+    * parsing the MOSAIK ONLY alignment file, and reporting:
+
+I ran analysis using R to look at summary statistics and distirbutions.
+
+PROGRAM: /mclab/Fru_network/r_programs/checking_mosaik.R
+INPUT: /mclab/Fru_network/pipeline_output/data_for_checks/checking_mosaik_accuracy/alnq_alnlength_readlength.csv
+OUTPUT: NONE
+REPORT: /mclab/Fru_network/r_reports/mosaic_report/mosaic_report.pdf
+
+Summary information and distributions were created for
+{read_length,alignment_length,alignment_quality}. In addition a variable delta
+was created, which is (read_length - alignment_length) and summaries and
+distributions were created. 
+
+In addition specific parts of the distributions were analyzed. We were most
+interested in seeing what effect read_length was having, so that we could filter
+out reads bellow a certain size to speed up the process. Specifically:
+
+read_length <= 40
+alignment_length (where read_length <=40)
+delta >= 9
+alignment_quality <= 10
+
+#-------------------------------------------------------------------------------
+#  DECEMBER 20, 2011
+#-------------------------------------------------------------------------------
+Marty re-ran the above alignment pipeline but included the number of mismatches
+in the algining region.
+
+Data was analyzed using R.
+
+PROGRAM: /mclab/Fru_network/r_programs/checking_mosaik_v2.R
+INPUT: /mclab/Fru_network/pipeline_output/data_for_checks/checking_mosaik_accuracy/alnq_alnlength_readlength_mismatch.csv
+OUTPUT: /mclab/Fru_network/output_data/low_qual.csv
+        /mclab/Fru_network/output_data/low_read.csv
+REPORT: /mclab/Fru_network/r_reports/mosaic_report/mosaic_report_v2.pdf
+
+In addition to the original analysis I looked at percent mismatch (# mismatch /
+alignment_length). There was discussion of blasting reads with low quality
+scores and short read lengths to figure out what they are, so I parsed them out
+into {low_qual.csv,low_read.csv}.
+#-------------------------------------------------------------------------------
+
+From the above graphs and a meeting with Lauren we are interested in the 6
+points that have 0% mis-match and 0 quality scores and she wanted to zoom in on
+the per_mis_quals graph. 
+
+PROGRAM: /mclab/Fru_network/r_programs/checking_mosaik_v3.R
+INPUT:  /mclab/Fru_network/pipeline_output/data_for_checks/checking_mosaik_accuracy/alnq_alnlength_readlength_mismatch.csv
+OUTPUT: /mclab/Fru_network/output_data/low_qual.csv
+        /mclab/Fru_network/output_data/low_read.csv
+        /mclab/Fru_network/r_reports/mosaic_report/for_blast.txt
+REPORT: /mclab/Fru_network/r_reports/mosaic_report/mosaic_report_v3.pdf
+
+After looking at a few of thse reads, it is clear that they have homopolymers on the end.
+
+<example>
+SOLEXA1_0014:1:4:15580:3752#ATCACG/1                 0               37          44          0     7       0
+CTTGTTTTAATTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+cddcdaa]baddcdeeeeceee`eeeeeeedeeeb`bbUI___
+</example>
+
+I tried blasting these, but the settings are tricky because of the low
+complexity. I will try to work on this tomorrow.
+
+#-------------------------------------------------------------------------------
+#  DECEMBER 21, 2011
+#-------------------------------------------------------------------------------
+# FLAG HOMOPOLYMERS
+Lauren asked if there are any reads with high quality scores with these
+homopolymers. In order to address this I created the following script:
+
+PROGRAM: /mclab/Fru_network/scripts/flag_homopolymers.pl
+INPUT:  /mclab/Fru_network/pipeline_output/data_for_checks/checking_mosaik_accuracy/2010-08-25_1_ATCACG_unaligned_3.fq
+OUTPUT: /mclab/Fru_network/output_data/flag_homopolymers.csv
+
+This script simply flags (1) if there is a homopolymer on the end of a sequence.
+
+# SAS ANALISYS OF MOSAIK AND HOMOPOLYMERS
+Next I imported both data sets into SAS for looking to see if there are reads
+with high MOSAIK quality scores that have these repeats on the end.
+
+PROGRAM: /mclab/Fru_network/sas_programs/homopolymer_analysis.sas 
+INPUT: /mclab/Fru_network/output_data/flag_homopolymers.csv # 629925 obs
+       /mclab/Fru_network/pipeline_output/data_for_checks/checking_mosaik_accuracy/alnq_alnlength_readlength_mismatches.csv # 1050100 obs
+OUTPUT: /mclab/Fru_network/output_data/high_quality_with_homopolymers.csv
+
+In the merge statment there is an issue. When I merge the two datasets together
+and output reads that are in both data sets I get (313695 obs) instead of the
+expected (629925 obs). I expect this because all of the reads in the results
+file should be in the input file. I am thinking there may be a versioning issue
+between the results and the input file that Marty gave me.
+
+If I look at only reads with a Quality Score >= 30, and then look for reads with
+homopolymers:
+
+#-------------------------------------------------------------------------------
+#                    The FREQ Procedure
+#
+#                                                    Cumulative    Cumulative
+#       flag_homopolymer    Frequency     Percent     Frequency      Percent
+#       ---------------------------------------------------------------------
+#                      0      147593       99.85        147593        99.85
+#                      1         226        0.15        147819       100.00
+#-------------------------------------------------------------------------------
+
+
+When looking at the mean quality score for reads that have a qualtiy score > 30
+and have a homopolymer on the end, you get 45. This seems reasonable showing
+that there are some reads with high quality score (66) with these homopolymers.
+
+#-------------------------------------------------------------------------------
+#                       The MEANS Procedure
+#
+#                       Analysis Variable : alignment_quality
+#
+#          N            Mean         Std Dev         Minimum         Maximum
+#        -------------------------------------------------------------------
+#        226      45.8584071      13.3628788      30.0000000      66.0000000
+#        -------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+
+These data were exported to:
+OUTPUT: /mclab/Fru_network/output_data/high_quality_with_homopolymers.csv
+
+Interestingly there are some reads with really high quality scores (50+) that
+also have these homopolymers. They appear to be aligning to the geneome when you
+compare alignment_length vs read_length.
+
+Unfortunately the alignments being reported by mosiak and their length are the
+not same results reported by blast.
+
+#-------------------------------------------------------------------------------
+# Re-run FRU Analysis pipeline
+
+## Create all_coverage_counts.csv
+[X] Check that all coverage counts files have 60291 lines
+
+Run a simple script to concatenate all (88 coverage counts files; no including
+unkowns) together.
+
+PROGRAM: /mclab/Fru_network/scripts/combine_coverage_counts_v2.sh
+INPUT: /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_1_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_1_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_1_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_1_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_2_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_2_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_2_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_2_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_3_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_3_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_3_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_3_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_5_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_5_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_5_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_5_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_6_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_6_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_6_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_6_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_7_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_7_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_7_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_7_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_8_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_8_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_8_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_7_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_8_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_GCCAAT.csv
+OUTPUT: /mclab/Fru_network/pipeline_output/coverage_on_fusions/all_coverage_counts.csv
+
+[X] Check that all_coverage_counts.csv has (88*60291 = 5305608)
+
+## Import all_coverage_counts.csv into SAS
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_import_coverage_counts_v2.sas
+INPUT: /mclab/Fru_network/pipeline_output/coverage_on_fusions/all_coverage_counts.csv
+OUTPUT: /mclab/Fru_network/sasdata/all_coverage_counts.sas7bdat
+
+[X] Check that fru.all_coverage_counts has 5305608 obs
+
+Had to change to full import statment because sample_id was not importing
+properly.
+
+## Make Desigin File
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_make_design_file.sas
+INPUT: NONE
+OUTPUT: /mclab/Fru_network/sasdata/design_file.sas7bdat
+
+Made basic experimental design file based on the information given by Justin
+Dalton.
+
+## Make Stacked dataset with experimental design
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_make_stacked_with_key_v2.sas
+INPUT: /mclab/Fru_network/sasdata/all_coverage_counts.sas7bdat
+       /mclab/Fru_network/sasdata/design_file.sas7bdat
+OUTPUT: /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+[X] Check that had 5305608 obs;
+
+## Flag no Treatment Variable
+Because there are some samples in the dataset that do not have any treatment
+information provided by Justin Dalton. I flagged any samples that do not have
+treatment information to exclude from analysis.
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_flag_no_trt_v2.sas
+INPUT: /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+OUTPUT: /mclab/Fru_network/sasdata/flag_no_trt.sas7bdat
+
+
+0 = treatment information
+1 = no treatment information
+
+#-------------------------------------------------------------------------------
+#           The FREQ Procedure
+#
+#                                              Cumulative    Cumulative
+#      flag_no_trt    Frequency     Percent     Frequency      Percent
+#      ----------------------------------------------------------------
+#                0     4521825       85.23       4521825        85.23
+#                1      783783       14.77       5305608       100.00
+#-------------------------------------------------------------------------------
+[X] Same number of observations and number of samples 5305608
+
+## Flag No Variance
+Currently we understand that there is an issue with analysis with this kind of
+data if there is no variance between treatments. So I flagged fusion_ids that
+had no variance accross treatments to be excluded from analysis.
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_flag_no_var_v2.sas
+INPUT: /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+OUTPUT: /mclab/Fru_network/sasdata/flag_no_var.sas7bdat
+
+First I calulated the variance for fusion_id * treatment. If this variance was
+equal to 0 it was flagged. This flag was summed accross treatments for each
+fusions, and if the sum was greater the fusions_id was flagged as having no
+variance.
+
+0 = keep there is some variance 
+1 = no variance excluded from analysis
+
+#-------------------------------------------------------------------------------
+#           The FREQ Procedure
+#
+#                                              Cumulative    Cumulative
+#      flag_no_var    Frequency     Percent     Frequency      Percent
+#      ----------------------------------------------------------------
+#                0       42182       69.96         42182        69.96
+#                1       18109       30.04         60291       100.00
+#-------------------------------------------------------------------------------
+[X] This is on fusion level check if have 60291
+
+## Check for zero mean values
+Another big issue with these type of data is if there are all zeros in one
+treatment. This causes the anova model to blow, so these cases need to be
+flagged and analyzed separately.
+
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_flag_zero_mean_v3.sas
+INPUT: /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+OUTPUT: /mclab/Fru_network/sasdata/trt_means.sas7bdat
+        /mclab/Fru_network/sasdata/flag_zero_mean.sas7bdat # 60291 obs
+
+There is a question on what exactly to call as zero mean. Below are some Freq
+for different settings depending on what I call a Zero Mean. 
+
+Flag Zero mean if the mean was = 0.
+#-------------------------------------------------------------------------------
+#                           The FREQ Procedure
+#
+#                                               Cumulative    Cumulative
+#    flag_zero_mean    Frequency     Percent     Frequency      Percent
+#    -------------------------------------------------------------------
+#                 0       42182       69.96         42182        69.96
+#                 1       18109       30.04         60291       100.00
+#-------------------------------------------------------------------------------
+
+Flag Zero mean if the mean was < .01
+#-------------------------------------------------------------------------------
+#             The FREQ Procedure
+#
+#                                                   Cumulative    Cumulative
+#        flag_zero_mean    Frequency     Percent     Frequency      Percent
+#        -------------------------------------------------------------------
+#                     0       42147       69.91         42147        69.91
+#                     1       18144       30.09         60291       100.00
+#-------------------------------------------------------------------------------
+
+
+Flag Zero mean if the mean was < 1.
+#-------------------------------------------------------------------------------
+#                           The FREQ Procedure
+#
+#                                               Cumulative    Cumulative
+#    flag_zero_mean    Frequency     Percent     Frequency      Percent
+#    -------------------------------------------------------------------
+#                 0       33469       55.51         33469        55.51
+#                 1       26822       44.49         60291       100.00
+#-------------------------------------------------------------------------------
+
+I am going to stick with flagging zero mean as having a mean = 0.
+
+## Make the For Analysis Data Set
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_make_foranalysis_v2.sas
+
+WORK.FORANALYSIS MERGE CHECKS
+[X] all_coverage_counts_with_key 5305608 obs
+[X] flag_no_trt 5305608 obs
+[X] flag_no_var 60291 obs
+[X] flag_zero_mean 60291 obs
+[X] work.foranalysis 5305608 obs
+
+#-------------------------------------------------------------------------------
+# Continue work on Mosaik pipeline
+At this point in time it was decided that we still not understand what mosaic
+was doing, so we decided to stop the analysis pipeline and continue to work on
+the mosaik pipeline.
+
+#-------------------------------------------------------------------------------
+#  DECEMBER 22, 2011
+#-------------------------------------------------------------------------------
+# MOSIAK pipeline continued
+We continued looking into the Mosiak pipeline. We were concerned that the reason
+that the alignment counts were off was because of a versioning issue. So Marty
+re-ran all of the alignments over night so that we know we are on the same
+versioning system.
+
+I emailed the author of mosiak (wanping.lee@gmail.com) asking for futher
+information in mosaik and the quality score algorithm. His response:
+
+>Hi Justin,
+>
+>We are working on paper currently and target submitting in early 2012.
+>
+>For MOSAIK2, we apply neural network for mapping quality. The steps are briefly
+>described below.
+>1. Simulate reads by mason,  http://www.seqan.de/projects/mason.html 
+>2. Align reads and generate alignments by MOSAIK2
+>3. Check the correctness of each alignment
+>4. Obtain the following info of each alignment
+>  4a. best Smith-Waterman score
+>  4b. second best Smith-Waterman score
+>  4c. entropy
+>  4d. the length of the longest perfect match
+>  4e. # of alternative mappings
+>  4f. # of 15-mer obtained hashes
+>  4g. fragment length (for paired-end)
+>5. Feed Items 3 and 4 as inputs of fann library that is a neural-network library
+>6. Save the output file of Item 5; thus, MOSAIK can feed info of Item 4 of any
+>alignments and look up the mapping qualities by the file.
+>
+>Cheers,
+>Wan-Ping
+
+Not too promising, but at least we know that they are working on both
+documentation and a paper that will detail things a little more. On this front I
+looked through the literature and could not find any paper that had more
+information on this subject. The first paper that dicusses MOSIAK is (PMID:
+18204455), but they do not have details in the paper or the supplement.
+
+## Look at ambigous reads for homopolymers
+Lauren came up with the question about ambigous read and if they contained
+homopolymers (HP;ie {A,T,C,G}\8+)
+
+PROGRAM: /mclab/Fru_network/scripts/flag_homopolymers_v3.pl
+INPUT: /mclab/Fru_network/pipeline_output/aln_genome/2010-08-25_1_(122211_0930)/ATCACG/2010-08-25_1_ATCACG_ambig_3.fq
+OUTPUT: /mclab/Fru_network/output_data/flag_homopolymers_ambigous_reads.csv
+        /mclab/Fru_network/output_data/flag_homopolymers_ambigous_reads.xls
+
+### Ambigous reads
+Number of reads: 6912
+Number of 3' homopolymers: 3
+Number of homopolymers anywhere (including 3'): 164
+
+### Unaligned reads
+Number of reads: 1,050,101
+Number of 3' homopolymers: 1,191
+Number of homopolymers anywhere (including 3'): 20,747
+
+# Test LAST and BLAST
+I talked to Lauren on the phone and we decided to try to use BLAST or LAST
+instead of MOSIAK, since these both are well documentated and we know how they
+work. So Marty ran a test on both of these. BLAST never really finished, but
+LAST alignment results look good. 
+
+PROGRAM: /mclab/Fru_network/r_reports/last_report/last_report_v1.Rnw
+INPUT: /mclab/Fru_network/pipeline_output/data_for_checks/checking_last_accuracy/read_information_uniquely_aligned_alignments.csv
+REPORT: /mclab/Fru_network/r_reports/last_report/last_report_v1.pdf
+
+Total Reads into LAST: 1,050,100
+Uniquely Aligned: 437,861
+
+Align uniquely with fewer then 10% mismatch: 
+1) <10% (mismatches/alignment_length): 433,617
+2) <10% [ (mismatches + delta)/read_length) ]: 182,517
+where delta = read_length - alignment_length
+
+## BLAST LAST results and look for consistancy
+Next we wanted to look at what LAST aligned and see if that makes since. Marty
+pulled out the alinged read IDs that were the same from both LAST and Mosaik so
+that we could see if these reads were troublesome. This resulted in 81 reads
+that were the same. 
+
+I needed to take this list of 81, pull their sequence information and blast a
+few against flybase and see if the results make sense. 
+
+PROGRAM: /mclab/Fru_network/scripts/pull_sequence_hp_compare.sh
+INPUT:   /mclab/Fru_network/pipeline_output/data_for_checks/checking_last_accuracy/read_information_uniquely_aligned_alignments_homopolymers_on_3prime_end.csv
+         /mclab/Fru_network/pipeline_output/data_for_checks/checking_last_accuracy/reads_in_both_mosaik_hp_3prime_and_last_hp_3prime.txt
+OUTPUT:  /mclab/Fru_network/pipeline_output/data_for_checks/checking_last_accuracy/reads_in_both_mosaik_hp_3prime_and_last_hp_3prime_plus_sequence.csv
+
+I converted this output file to an xls and proceed to look at the length of the
+sequence that LAST aligned compared to the length reported, and then randomly
+blasted some of these reads against flybase (D. Mel, uncheck low complexity
+filter in advanced settings).
+
+FILE: /mclab/Fru_network/pipeline_output/data_for_checks/checking_last_accuracy/reads_in_both_mosaik_hp_3prime_and_last_hp_3prime_plus_sequence.xls
+
+I did not see any major issues. The lengths all looked good. Some of the BLAST
+results differed in length slightly, but in both cases these contained indels,
+so this is probably the issue, so I am not concerned.
+
+#-------------------------------------------------------------------------------
+#  DECEMBER 23, 2011
+#-------------------------------------------------------------------------------
+Over night Marty ran the alignment pipeline using LAST as the last step (haha),
+and ran coverage counts.
+FILES: /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_1_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_1_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_1_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_1_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_2_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_2_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_2_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_2_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_3_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_3_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_3_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_3_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_5_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_5_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_5_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_5_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_6_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_6_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_6_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_6_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_7_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_7_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_7_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_7_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_8_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_8_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_8_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_7_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_8_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_GCCAAT.csv
+
+Total alignment percentage across all samples 95.53%
+
+# FILE CHECKS Double Check file for common problems and report.
+
+[X] Check File Lengths Should be 60291
+60291 coverage_on_fusions_2010-08-25_1_TGACCA.csv
+60291 coverage_on_fusions_2010-08-25_2_ACTTGA.csv
+60291 coverage_on_fusions_2010-08-25_5_TGACCA.csv
+60291 coverage_on_fusions_2010-08-25_6_ACTTGA.csv
+60291 coverage_on_fusions_2010-08-25_7_ACTTGA.csv
+60291 coverage_on_fusions_2010-08-25_8_TGACCA.csv
+60291 coverage_on_fusions_2011-05-03_1_ACTTGA.csv
+60291 coverage_on_fusions_2011-05-03_2_ACTTGA.csv
+60291 coverage_on_fusions_2011-05-03_3_ACTTGA.csv
+60291 coverage_on_fusions_2011-05-03_3_TGACCA.csv
+60291 coverage_on_fusions_2011-05-03_5_ACTTGA.csv
+60291 coverage_on_fusions_2011-05-03_5_TGACCA.csv
+60291 coverage_on_fusions_2011-05-03_6_ACTTGA.csv
+60291 coverage_on_fusions_2011-07-05_1_TGACCA.csv
+60291 coverage_on_fusions_2011-07-05_2_ACTTGA.csv
+60291 coverage_on_fusions_2011-07-05_2_TGACCA.csv
+60291 coverage_on_fusions_2011-07-05_6_ACTTGA.csv
+60291 coverage_on_fusions_2011-07-05_6_TGACCA.csv
+60291 coverage_on_fusions_2011-07-05_7_ACTTGA.csv
+60291 coverage_on_fusions_2010-08-25_1_CAGATC.csv
+60291 coverage_on_fusions_2010-08-25_2_TTAGGC.csv
+60291 coverage_on_fusions_2010-08-25_3_TTAGGC.csv
+60291 coverage_on_fusions_2010-08-25_5_CAGATC.csv
+60291 coverage_on_fusions_2010-08-25_7_TTAGGC.csv
+60291 coverage_on_fusions_2010-08-25_8_CAGATC.csv
+60291 coverage_on_fusions_2011-05-03_1_CAGATC.csv
+60291 coverage_on_fusions_2011-05-03_5_TTAGGC.csv
+60291 coverage_on_fusions_2011-05-03_6_TTAGGC.csv
+60291 coverage_on_fusions_2011-07-05_1_CAGATC.csv
+60291 coverage_on_fusions_2011-07-05_1_TTAGGC.csv
+60291 coverage_on_fusions_2011-07-05_3_TTAGGC.csv
+60291 coverage_on_fusions_2011-07-05_5_CAGATC.csv
+60291 coverage_on_fusions_2011-07-05_5_TTAGGC.csv
+60291 coverage_on_fusions_2011-07-05_7_CAGATC.csv
+60291 coverage_on_fusions_2010-08-25_1_CGATGT.csv
+60291 coverage_on_fusions_2010-08-25_2_CGATGT.csv
+60291 coverage_on_fusions_2010-08-25_3_GCCAAT.csv
+60291 coverage_on_fusions_2010-08-25_6_CGATGT.csv
+60291 coverage_on_fusions_2010-08-25_6_GCCAAT.csv
+60291 coverage_on_fusions_2010-08-25_7_GCCAAT.csv
+60291 coverage_on_fusions_2011-05-03_1_TAGCTT.csv
+60291 coverage_on_fusions_2011-05-03_2_GCCAAT.csv
+60291 coverage_on_fusions_2011-05-03_2_TAGCTT.csv
+60291 coverage_on_fusions_2011-05-03_3_TAGCTT.csv
+60291 coverage_on_fusions_2011-05-03_5_CGATGT.csv
+60291 coverage_on_fusions_2011-05-03_6_CGATGT.csv
+60291 coverage_on_fusions_2011-05-03_6_TAGCTT.csv
+60291 coverage_on_fusions_2011-05-03_7_TAGCTT.csv
+60291 coverage_on_fusions_2011-07-05_1_GCCAAT.csv
+60291 coverage_on_fusions_2011-07-05_2_CGATGT.csv
+60291 coverage_on_fusions_2011-07-05_3_CGATGT.csv
+60291 coverage_on_fusions_2011-07-05_3_GCCAAT.csv
+60291 coverage_on_fusions_2011-07-05_5_CGATGT.csv
+60291 coverage_on_fusions_2011-07-05_5_TAGCTT.csv
+60291 coverage_on_fusions_2011-07-05_6_CGATGT.csv
+60291 coverage_on_fusions_2011-07-05_6_TAGCTT.csv
+60291 coverage_on_fusions_2011-07-05_8_CGATGT.csv
+60291 coverage_on_fusions_2011-07-05_8_GCCAAT.csv
+60291 coverage_on_fusions_2010-08-25_1_ATCACG.csv
+60291 coverage_on_fusions_2010-08-25_2_ACAGTG.csv
+60291 coverage_on_fusions_2010-08-25_3_ACAGTG.csv
+60291 coverage_on_fusions_2010-08-25_3_GATCAG.csv
+60291 coverage_on_fusions_2010-08-25_5_ATCACG.csv
+60291 coverage_on_fusions_2010-08-25_5_GATCAG.csv
+60291 coverage_on_fusions_2010-08-25_6_ACAGTG.csv
+60291 coverage_on_fusions_2010-08-25_7_GATCAG.csv
+60291 coverage_on_fusions_2010-08-25_8_ATCACG.csv
+60291 coverage_on_fusions_2011-05-03_1_ATCACG.csv
+60291 coverage_on_fusions_2011-05-03_1_GATCAG.csv
+60291 coverage_on_fusions_2011-05-03_2_ATCACG.csv
+60291 coverage_on_fusions_2011-05-03_2_GATCAG.csv
+60291 coverage_on_fusions_2011-05-03_3_ACAGTG.csv
+60291 coverage_on_fusions_2011-05-03_3_GATCAG.csv
+60291 coverage_on_fusions_2011-05-03_5_GATCAG.csv
+60291 coverage_on_fusions_2011-05-03_6_ACAGTG.csv
+60291 coverage_on_fusions_2011-05-03_8_GATCAG.csv # BAD SAMPLE FROM JD
+60291 coverage_on_fusions_2011-07-05_1_ATCACG.csv
+60291 coverage_on_fusions_2011-07-05_2_ACAGTG.csv
+60291 coverage_on_fusions_2011-07-05_2_ATCACG.csv
+60291 coverage_on_fusions_2011-07-05_3_ACAGTG.csv
+60291 coverage_on_fusions_2011-07-05_3_GATCAG.csv
+60291 coverage_on_fusions_2011-07-05_5_ATCACG.csv
+60291 coverage_on_fusions_2011-07-05_6_ATCACG.csv
+60291 coverage_on_fusions_2011-07-05_7_ACAGTG.csv
+60291 coverage_on_fusions_2011-07-05_7_GATCAG.csv
+60291 coverage_on_fusions_2011-07-05_8_ACAGTG.csv
+60291 coverage_on_fusions_2011-07-05_8_ATCACG.csv
+60291 coverage_on_fusions_2011-07-05_8_GATCAG.csv
+
+[X] Check that files have 0 values
+
+# SAS Analysis Pipeline
+## Concatenate Coverage Coutns
+CAT coverage count files (60 files)
+    Excluding files: 
+        Run 2010-08-25 because only interested in adult heads
+        unkowns
+        BAD Sample coverage_on_fusions_2011-05-03_8_GATCAG.csv
+
+PROGRAM: /mclab/Fru_network/scripts/combine_coverage_counts_v3.sh
+INPUT:   /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_ATCACG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_CAGATC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_GATCAG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_TAGCTT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_ATCACG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_GATCAG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_GCCAAT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_TAGCTT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_ACAGTG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_GATCAG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_TAGCTT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_TGACCA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_CGATGT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_GATCAG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_TGACCA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_TTAGGC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_ACAGTG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_CGATGT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_TAGCTT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_TTAGGC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_7_TAGCTT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_ATCACG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_CAGATC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_GCCAAT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_TGACCA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_TTAGGC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ACAGTG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ATCACG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_CGATGT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_TGACCA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_ACAGTG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_CGATGT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_GATCAG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_GCCAAT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_TTAGGC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_ATCACG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_CAGATC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_CGATGT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_TAGCTT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_TTAGGC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_ATCACG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_CGATGT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_TAGCTT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_TGACCA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_ACAGTG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_CAGATC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_GATCAG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_ACAGTG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_ATCACG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_CGATGT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_GATCAG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_GCCAAT.csv 
+OUTPUT:  /mclab/Fru_network/pipeline_output/coverage_on_fusions/all_coverage_counts.csv
+
+[X] Check that all_coverage_counts.csv has (60*60291 = 3617460)
+
+## Import Coverage Counts into SAS
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_import_coverage_counts_v2.sas
+INPUT:   /mclab/Fru_network/pipeline_output/coverage_on_fusions/all_coverage_counts.csvOUTPUT:  
+OUTPUT:  /mclab/Fru_network/sasdata/all_coverage_counts.sas7bdat
+
+[X] 3617460 obs same as input file
+[X] Columns look good no trunction
+
+## Make Design File
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_make_design_file_v2.sas
+OUTPUT:  /mclab/Fru_network/sasdata/design_file.sas7bdat
+
+Removed all other treatments, except for Adult heads since this is all of
+interest right now.
+
+## Make Stacked Dataset with Key and LOG(RPKM+100)
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_make_stacked_with_key_v2.sas
+INPUT:   /mclab/Fru_network/sasdata/all_coverage_counts.sas7bdat
+         /mclab/Fru_network/sasdata/design_file.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+
+[X] 3617460 obs same as coverage counts dataset
+
+## Flag No Treatment Information
+JD did not provide information for all samples, so there are some that need to
+be flagged and excluded from analysis. 
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_flag_no_trt_v2.sas
+INPUT:   /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/flag_no_trt.sas7bdat
+#-------------------------------------------------------------------------------
+#                         The FREQ Procedure
+#
+#                                          Cumulative    Cumulative
+#  flag_no_trt    Frequency     Percent     Frequency      Percent
+#  ----------------------------------------------------------------
+#            0     2833677       78.33       2833677        78.33
+#            1      783783       21.67       3617460       100.00
+#-------------------------------------------------------------------------------
+[X] Check that this makes sense. 783783/60291 = 13 samples without tretment
+information. That seems reasonable.
+
+## Flag No Variance
+If there is no variance within a treatment we cannot include thes in our model.
+So these are flagged and excluded from analysis.
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_flag_no_var_v2.sas
+INPUT:   /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/flag_no_var.sas7bdat
+#-------------------------------------------------------------------------------
+#                         The FREQ Procedure
+#
+#                                          Cumulative    Cumulative
+#  flag_no_var    Frequency     Percent     Frequency      Percent
+#  ----------------------------------------------------------------
+#            0       47154       78.21         47154        78.21
+#            1       13137       21.79         60291       100.00
+#-------------------------------------------------------------------------------
+[X] Total is equal to 60291 since this across fusions
+
+## Flag Zero Mean
+Another issue is when there are all 0 values for a single treatment. This will
+also cause problems with our model. So I am flagging those fusions that have all
+zeros for one treatment, and they will be excluded from the model. This should
+be a subset of flag_no_var.
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_flag_zero_mean_v3.sas
+INPUT:   /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/flag_zero_mean.sas7bdat
+#-------------------------------------------------------------------------------
+#                             The FREQ Procedure
+#
+#                                               Cumulative    Cumulative
+#    flag_zero_mean    Frequency     Percent     Frequency      Percent
+#    -------------------------------------------------------------------
+#                 0       47154       78.21         47154        78.21
+#                 1       13137       21.79         60291       100.00
+#-------------------------------------------------------------------------------
+!! This is strange that both flag_no_var and flag_zero_mean are the same. It
+makes sense if the fusions that have no var are only those that had all zeros
+for a given treatment. May change one of the flag to be equal to <.something.
+
+## Make for analysis dataset
+Combine my flags, dataset and gene symbol information. Remove fusions if they
+have at least one flag = 1, or if the fusions is present in multiple genes
+(mutligene=1)
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_make_foranalysis_v2.sas
+INPUT:   /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+         /mclab/Fru_network/sasdata/flag_no_trt.sas7bdat
+         /mclab/Fru_network/sasdata/flag_no_var.sas7bdat
+         /mclab/Fru_network/sasdata/flag_zero_mean.sas7bdat
+         /mclab/useful_dmel_data/Flybase 5.30/dmel_annotation/fusion2gene2fbtr.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/foranalysis.sas7bdat
+
+[X] 3617460 observation merged, same as original dataset
+[X] 2119653 observation left after remove obs with flags
+
+#-------------------------------------------------------------------------------
+#  DECEMBER 27, 2011
+#-------------------------------------------------------------------------------
+Ran Fru analysis to output for FRU grant
+
+Over night Marty ran the alignment pipeline using LAST as the last step (haha),
+and ran coverage counts.
+FILES: /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_1_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_1_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_1_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_1_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_2_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_2_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_2_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_2_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_3_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_3_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_3_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_3_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_5_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_5_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_5_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_5_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_6_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_6_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_6_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_6_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_7_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_7_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_7_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_7_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_8_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_8_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2010-08-25_8_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_7_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_8_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_GCCAAT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_TTAGGC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_TAGCTT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_TGACCA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_ACTTGA.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_CAGATC.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_ACAGTG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_ATCACG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_CGATGT.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_GATCAG.csv
+       /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_GCCAAT.csv
+
+Total alignment percentage across all samples 95.53%
+
+# FILE CHECKS Double Check file for common problems and report.
+
+[X] Check File Lengths Should be 60291
+60291 coverage_on_fusions_2010-08-25_1_TGACCA.csv
+60291 coverage_on_fusions_2010-08-25_2_ACTTGA.csv
+60291 coverage_on_fusions_2010-08-25_5_TGACCA.csv
+60291 coverage_on_fusions_2010-08-25_6_ACTTGA.csv
+60291 coverage_on_fusions_2010-08-25_7_ACTTGA.csv
+60291 coverage_on_fusions_2010-08-25_8_TGACCA.csv
+60291 coverage_on_fusions_2011-05-03_1_ACTTGA.csv
+60291 coverage_on_fusions_2011-05-03_2_ACTTGA.csv
+60291 coverage_on_fusions_2011-05-03_3_ACTTGA.csv
+60291 coverage_on_fusions_2011-05-03_3_TGACCA.csv
+60291 coverage_on_fusions_2011-05-03_5_ACTTGA.csv
+60291 coverage_on_fusions_2011-05-03_5_TGACCA.csv
+60291 coverage_on_fusions_2011-05-03_6_ACTTGA.csv
+60291 coverage_on_fusions_2011-07-05_1_TGACCA.csv
+60291 coverage_on_fusions_2011-07-05_2_ACTTGA.csv
+60291 coverage_on_fusions_2011-07-05_2_TGACCA.csv
+60291 coverage_on_fusions_2011-07-05_6_ACTTGA.csv
+60291 coverage_on_fusions_2011-07-05_6_TGACCA.csv
+60291 coverage_on_fusions_2011-07-05_7_ACTTGA.csv
+60291 coverage_on_fusions_2010-08-25_1_CAGATC.csv
+60291 coverage_on_fusions_2010-08-25_2_TTAGGC.csv
+60291 coverage_on_fusions_2010-08-25_3_TTAGGC.csv
+60291 coverage_on_fusions_2010-08-25_5_CAGATC.csv
+60291 coverage_on_fusions_2010-08-25_7_TTAGGC.csv
+60291 coverage_on_fusions_2010-08-25_8_CAGATC.csv
+60291 coverage_on_fusions_2011-05-03_1_CAGATC.csv
+60291 coverage_on_fusions_2011-05-03_5_TTAGGC.csv
+60291 coverage_on_fusions_2011-05-03_6_TTAGGC.csv
+60291 coverage_on_fusions_2011-07-05_1_CAGATC.csv
+60291 coverage_on_fusions_2011-07-05_1_TTAGGC.csv
+60291 coverage_on_fusions_2011-07-05_3_TTAGGC.csv
+60291 coverage_on_fusions_2011-07-05_5_CAGATC.csv
+60291 coverage_on_fusions_2011-07-05_5_TTAGGC.csv
+60291 coverage_on_fusions_2011-07-05_7_CAGATC.csv
+60291 coverage_on_fusions_2010-08-25_1_CGATGT.csv
+60291 coverage_on_fusions_2010-08-25_2_CGATGT.csv
+60291 coverage_on_fusions_2010-08-25_3_GCCAAT.csv
+60291 coverage_on_fusions_2010-08-25_6_CGATGT.csv
+60291 coverage_on_fusions_2010-08-25_6_GCCAAT.csv
+60291 coverage_on_fusions_2010-08-25_7_GCCAAT.csv
+60291 coverage_on_fusions_2011-05-03_1_TAGCTT.csv
+60291 coverage_on_fusions_2011-05-03_2_GCCAAT.csv
+60291 coverage_on_fusions_2011-05-03_2_TAGCTT.csv
+60291 coverage_on_fusions_2011-05-03_3_TAGCTT.csv
+60291 coverage_on_fusions_2011-05-03_5_CGATGT.csv
+60291 coverage_on_fusions_2011-05-03_6_CGATGT.csv
+60291 coverage_on_fusions_2011-05-03_6_TAGCTT.csv
+60291 coverage_on_fusions_2011-05-03_7_TAGCTT.csv
+60291 coverage_on_fusions_2011-07-05_1_GCCAAT.csv
+60291 coverage_on_fusions_2011-07-05_2_CGATGT.csv
+60291 coverage_on_fusions_2011-07-05_3_CGATGT.csv
+60291 coverage_on_fusions_2011-07-05_3_GCCAAT.csv
+60291 coverage_on_fusions_2011-07-05_5_CGATGT.csv
+60291 coverage_on_fusions_2011-07-05_5_TAGCTT.csv
+60291 coverage_on_fusions_2011-07-05_6_CGATGT.csv
+60291 coverage_on_fusions_2011-07-05_6_TAGCTT.csv
+60291 coverage_on_fusions_2011-07-05_8_CGATGT.csv
+60291 coverage_on_fusions_2011-07-05_8_GCCAAT.csv
+60291 coverage_on_fusions_2010-08-25_1_ATCACG.csv
+60291 coverage_on_fusions_2010-08-25_2_ACAGTG.csv
+60291 coverage_on_fusions_2010-08-25_3_ACAGTG.csv
+60291 coverage_on_fusions_2010-08-25_3_GATCAG.csv
+60291 coverage_on_fusions_2010-08-25_5_ATCACG.csv
+60291 coverage_on_fusions_2010-08-25_5_GATCAG.csv
+60291 coverage_on_fusions_2010-08-25_6_ACAGTG.csv
+60291 coverage_on_fusions_2010-08-25_7_GATCAG.csv
+60291 coverage_on_fusions_2010-08-25_8_ATCACG.csv
+60291 coverage_on_fusions_2011-05-03_1_ATCACG.csv
+60291 coverage_on_fusions_2011-05-03_1_GATCAG.csv
+60291 coverage_on_fusions_2011-05-03_2_ATCACG.csv
+60291 coverage_on_fusions_2011-05-03_2_GATCAG.csv
+60291 coverage_on_fusions_2011-05-03_3_ACAGTG.csv
+60291 coverage_on_fusions_2011-05-03_3_GATCAG.csv
+60291 coverage_on_fusions_2011-05-03_5_GATCAG.csv
+60291 coverage_on_fusions_2011-05-03_6_ACAGTG.csv
+60291 coverage_on_fusions_2011-05-03_8_GATCAG.csv # BAD SAMPLE FROM JD
+60291 coverage_on_fusions_2011-07-05_1_ATCACG.csv
+60291 coverage_on_fusions_2011-07-05_2_ACAGTG.csv
+60291 coverage_on_fusions_2011-07-05_2_ATCACG.csv
+60291 coverage_on_fusions_2011-07-05_3_ACAGTG.csv
+60291 coverage_on_fusions_2011-07-05_3_GATCAG.csv
+60291 coverage_on_fusions_2011-07-05_5_ATCACG.csv
+60291 coverage_on_fusions_2011-07-05_6_ATCACG.csv
+60291 coverage_on_fusions_2011-07-05_7_ACAGTG.csv
+60291 coverage_on_fusions_2011-07-05_7_GATCAG.csv
+60291 coverage_on_fusions_2011-07-05_8_ACAGTG.csv
+60291 coverage_on_fusions_2011-07-05_8_ATCACG.csv
+60291 coverage_on_fusions_2011-07-05_8_GATCAG.csv
+
+[X] Check that files have 0 values
+
+# SAS Analysis Pipeline
+## Concatenate Coverage Coutns
+CAT coverage count files (60 files)
+    Excluding files: 
+        Run 2010-08-25 because only interested in adult heads
+        unkowns
+        BAD Sample coverage_on_fusions_2011-05-03_8_GATCAG.csv
+
+PROGRAM: /mclab/Fru_network/scripts/combine_coverage_counts_v3.sh
+INPUT:   /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_ATCACG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_CAGATC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_GATCAG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_1_TAGCTT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_ATCACG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_GATCAG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_GCCAAT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_2_TAGCTT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_ACAGTG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_GATCAG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_TAGCTT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_3_TGACCA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_CGATGT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_GATCAG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_TGACCA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_5_TTAGGC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_ACAGTG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_CGATGT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_TAGCTT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_6_TTAGGC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-05-03_7_TAGCTT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_ATCACG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_CAGATC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_GCCAAT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_TGACCA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_1_TTAGGC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ACAGTG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_ATCACG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_CGATGT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_2_TGACCA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_ACAGTG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_CGATGT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_GATCAG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_GCCAAT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_3_TTAGGC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_ATCACG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_CAGATC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_CGATGT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_TAGCTT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_5_TTAGGC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_ATCACG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_CGATGT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_TAGCTT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_6_TGACCA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_ACAGTG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_ACTTGA.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_CAGATC.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_7_GATCAG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_ACAGTG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_ATCACG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_CGATGT.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_GATCAG.csv
+         /mclab/Fru_network/pipeline_output/coverage_on_fusions/coverage_on_fusions_2011-07-05_8_GCCAAT.csv 
+OUTPUT:  /mclab/Fru_network/pipeline_output/coverage_on_fusions/all_coverage_counts.csv
+
+[X] Check that all_coverage_counts.csv has (60*60291 = 3617460)
+
+## Import Coverage Counts into SAS
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_import_coverage_counts_v2.sas
+INPUT:   /mclab/Fru_network/pipeline_output/coverage_on_fusions/all_coverage_counts.csv  
+OUTPUT:  /mclab/Fru_network/sasdata/all_coverage_counts.sas7bdat
+
+[X] 3617460 obs same as input file
+[X] Columns look good no trunction
+
+## Make Design File
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_make_design_file_v2.sas
+OUTPUT:  /mclab/Fru_network/sasdata/design_file.sas7bdat
+
+Removed all other treatments, except for Adult heads since this is all of
+interest right now.
+
+## Make Stacked Dataset with Key and LOG(RPKM+100)
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_make_stacked_with_key_v2.sas
+INPUT:   /mclab/Fru_network/sasdata/all_coverage_counts.sas7bdat
+         /mclab/Fru_network/sasdata/design_file.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+
+[X] 3617460 obs same as coverage counts dataset
+
+## Flag No Treatment Information
+JD did not provide information for all samples, so there are some that need to
+be flagged and excluded from analysis. 
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_flag_no_trt_v2.sas
+INPUT:   /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/flag_no_trt.sas7bdat
+#-------------------------------------------------------------------------------
+#                         The FREQ Procedure
+#
+#                                          Cumulative    Cumulative
+#  flag_no_trt    Frequency     Percent     Frequency      Percent
+#  ----------------------------------------------------------------
+#            0     2833677       78.33       2833677        78.33
+#            1      783783       21.67       3617460       100.00
+#-------------------------------------------------------------------------------
+[X] Check that this makes sense. 783783/60291 = 13 samples without tretment
+information. That seems reasonable.
+
+## Flag No Variance
+If there is no variance within a treatment we cannot include thes in our model.
+So these are flagged and excluded from analysis.
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_flag_no_var_v2.sas
+INPUT:   /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/flag_no_var.sas7bdat
+#-------------------------------------------------------------------------------
+#                         The FREQ Procedure
+#
+#                                          Cumulative    Cumulative
+#  flag_no_var    Frequency     Percent     Frequency      Percent
+#  ----------------------------------------------------------------
+#            0       47154       78.21         47154        78.21
+#            1       13137       21.79         60291       100.00
+#-------------------------------------------------------------------------------
+[X] Total is equal to 60291 since this across fusions
+
+## Flag Zero Mean
+Another issue is when there are all 0 values for a single treatment. This will
+also cause problems with our model. So I am flagging those fusions that have all
+zeros for one treatment, and they will be excluded from the model. This should
+be a subset of flag_no_var.
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_flag_zero_mean_v3.sas
+INPUT:   /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/flag_zero_mean.sas7bdat
+#-------------------------------------------------------------------------------
+#                             The FREQ Procedure
+#
+#                                               Cumulative    Cumulative
+#    flag_zero_mean    Frequency     Percent     Frequency      Percent
+#    -------------------------------------------------------------------
+#                 0       47154       78.21         47154        78.21
+#                 1       13137       21.79         60291       100.00
+#-------------------------------------------------------------------------------
+!! This is strange that both flag_no_var and flag_zero_mean are the same. It
+makes sense if the fusions that have no var are only those that had all zeros
+for a given treatment. May change one of the flag to be equal to <.something.
+
+## Make for analysis dataset
+Combine my flags, dataset and gene symbol information. Remove fusions if they
+have at least one flag = 1, or if the fusions is present in multiple genes
+(mutligene=1)
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_make_foranalysis_v2.sas
+INPUT:   /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+         /mclab/Fru_network/sasdata/flag_no_trt.sas7bdat
+         /mclab/Fru_network/sasdata/flag_no_var.sas7bdat
+         /mclab/Fru_network/sasdata/flag_zero_mean.sas7bdat
+         /mclab/useful_dmel_data/Flybase 5.30/dmel_annotation/fusion2gene2fbtr.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/foranalysis.sas7bdat
+
+[X] 3617460 observation merged, same as original dataset
+[X] 2119653 observation left after remove obs with flags
+
+## ANOVA Analysis With contrasts
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_anova_v5.sas
+INPUT:   /mclab/Fru_network/sasdata/foranalysis.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/contrast.sas7bdat
+         /mclab/Fru_network/sasdata/lsmeans.sas7bdat
+         /mclab/Fru_network/sasdata/means.sas7bdat
+         /mclab/Fru_network/sasdata/model_fru.sas7bdat
+         /mclab/Fru_network/sasdata/resid.sas7bdat
+
+Treatment order for Contrast Statment:
+#-------------------------------------------------------------------------------
+#                              The FREQ Procedure
+# 
+#                                                  Cumulative    Cumulative
+#    trt                  Frequency     Percent     Frequency      Percent
+#    ----------------------------------------------------------------------
+#  1 AH_BerF                141462        6.38        141462         6.38
+#  2 AH_BerM                141462        6.38        282924        12.77
+#  3 AH_CS                  188616        8.51        471540        21.28
+#  4 AH_CSFemale            141462        6.38        613002        27.66
+#  5 AH_Female_FruM(A)      141462        6.38        754464        34.04
+#  6 AH_Female_FruM(B)      141462        6.38        895926        40.43
+#  7 AH_Female_FruM(C)      141462        6.38       1037388        46.81
+#  8 AH_FruP14_440          141462        6.38       1178850        53.19
+#  9 AH_FruW12_ChaM5        188616        8.51       1367466        61.70
+# 10 AH_Male_FruM(A)        141462        6.38       1508928        68.09
+# 11 AH_Male_FruM(B)        141462        6.38       1650390        74.47
+# 12 AH_Male_FruM(C)        141462        6.38       1791852        80.85
+# 13 AH_dsxD                141462        6.38       1933314        87.23
+# 14 AH_dsxNullF            141462        6.38       2074776        93.62
+# 15 AH_dsxNullM            141462        6.38       2216238       100.00
+#-------------------------------------------------------------------------------
+
+Contrast Statmenet with Contrast Numbers
+#-------------------------------------------------------------------------------
+#    /* Contrasts---------------------------------1---2---3---4---5---6---7---8---9---10---11---12---13---14---15---*/  Contrast Number
+#    contrast 'AHCSxAHFruP14440' trt              0   0   1   0   0   0   0  -1   0    0    0    0    0    0    0   ;            1
+#    contrast 'AHCSxAHFruW12ChaM5' trt            0   0   1   0   0   0   0   0  -1    0    0    0    0    0    0   ;            2
+#    contrast 'AHBerMxAHFruP14440' trt            0   1   0   0   0   0   0  -1   0    0    0    0    0    0    0   ;            3
+#    contrast 'AHBerMxAHFruW12ChaM5' trt          0   1   0   0   0   0   0   0  -1    0    0    0    0    0    0   ;            4
+#    contrast 'AHCSxAHBerM' trt                   0   1  -1   0   0   0   0   0   0    0    0    0    0    0    0   ;            5
+#    contrast 'AHBerMxAHBerF' trt                 1  -1   0   0   0   0   0   0   0    0    0    0    0    0    0   ;            6
+#    contrast 'AHCSxAHBerF' trt                   1   0  -1   0   0   0   0   0   0    0    0    0    0    0    0   ;            7
+#    contrast 'AHBerMxAHdsxNullM' trt             0   1   0   0   0   0   0   0   0    0    0    0    0    0   -1   ;            8
+#    contrast 'AHCSxAHdsxNullM' trt               0   0   1   0   0   0   0   0   0    0    0    0    0    0   -1   ;            9
+#    contrast 'AHBerFxAHdsxNullM' trt             1   0   0   0   0   0   0   0   0    0    0    0    0    0   -1   ;           10
+#    contrast 'AHBerFxAHdsxNullF' trt             1   0   0   0   0   0   0   0   0    0    0    0    0   -1    0   ;           11
+#    contrast 'AHCSxAHdsxNullF' trt               0   0   1   0   0   0   0   0   0    0    0    0    0   -1    0   ;           12
+#    contrast 'AHBerMxAHdsxNullF' trt             0   1   0   0   0   0   0   0   0    0    0    0    0   -1    0   ;           13
+#    contrast 'AHBerFxAHdsxD' trt                 1   0   0   0   0   0   0   0   0    0    0    0   -1    0    0   ;           14
+#    contrast 'AHBerMxAHdsxD' trt                 0   1   0   0   0   0   0   0   0    0    0    0   -1    0    0   ;           15
+#    contrast 'AHCSxAHdsxD' trt                   0   0   1   0   0   0   0   0   0    0    0    0   -1    0    0   ;           16
+#    contrast 'AHCSFemalexAHCS' trt               0   0   1  -1   0   0   0   0   0    0    0    0    0    0    0   ;           17
+#    contrast 'AHCSFemalexAHBerM' trt             0   1   0  -1   0   0   0   0   0    0    0    0    0    0    0   ;           18
+#    contrast 'AHCSFemalexAHBerF' trt             1   0   0  -1   0   0   0   0   0    0    0    0    0    0    0   ;           19
+#    contrast 'AHCSFemalexAHdsxNullM' trt         0   0   0   1   0   0   0   0   0    0    0    0    0    0   -1   ;           20
+#    contrast 'AHCSFemalexAHdsxNullF' trt         0   0   0   1   0   0   0   0   0    0    0    0    0   -1    0   ;           21
+#    contrast 'AHCSFemalexAHdsxD' trt             0   0   0   1   0   0   0   0   0    0    0    0   -1    0    0   ;           22
+#    contrast 'AHCSxAHMaleFruM(A)' trt            0   0   1   0   0   0   0   0   0   -1    0    0    0    0    0   ;           23
+#    contrast 'AHCSxAHMaleFruM(B)' trt            0   0   1   0   0   0   0   0   0    0   -1    0    0    0    0   ;           24
+#    contrast 'AHCSxAHMaleFruM(C)' trt            0   0   1   0   0   0   0   0   0    0    0   -1    0    0    0   ;           25
+#    contrast 'AHBerMxAHMaleFruM(A)' trt          0   1   0   0   0   0   0   0   0   -1    0    0    0    0    0   ;           26
+#    contrast 'AHBerMxAHMaleFruM(B)' trt          0   1   0   0   0   0   0   0   0    0   -1    0    0    0    0   ;           27
+#    contrast 'AHBerMxAHMaleFruM(C)' trt          0   1   0   0   0   0   0   0   0    0    0   -1    0    0    0   ;           28
+#    contrast 'AHCSFemalexAHFemaleFruM(A)' trt    0   0   0   1  -1   0   0   0   0    0    0    0    0    0    0   ;           29
+#    contrast 'AHCSFemalexAHFemaleFruM(B)' trt    0   0   0   1   0  -1   0   0   0    0    0    0    0    0    0   ;           30
+#    contrast 'AHCSFemalexAHFemaleFruM(C)' trt    0   0   0   1   0   0  -1   0   0    0    0    0    0    0    0   ;           31
+#    contrast 'AHBerFxAHFemaleFruM(A)' trt        1   0   0   0  -1   0   0   0   0    0    0    0    0    0    0   ;           32
+#    contrast 'AHBerFxAHFemaleFruM(B)' trt        1   0   0   0   0  -1   0   0   0    0    0    0    0    0    0   ;           33
+#    contrast 'AHBerFxAHFemaleFruM(C)' trt        1   0   0   0   0   0  -1   0   0    0    0    0    0    0    0   ;           34
+#-------------------------------------------------------------------------------
+
+## Flag Fusions that Fail Normality
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_flag_fail_normality.sas
+INPUT:   /mclab/Fru_network/sasdata/resid.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/flag_fail_normality.sas7bdat
+
+#-------------------------------------------------------------------------------
+#                             The FREQ Procedure
+#
+#         flag_fail_                             Cumulative    Cumulative
+#          normality    Frequency     Percent     Frequency      Percent
+#   ---------------------------------------------------------------------
+#                  0       39320       87.19         39320        87.19
+#                  1        5779       12.81         45099       100.00
+#-------------------------------------------------------------------------------
+
+Only 12.81% failing normality this is good.
+
+## Calculate FDR for Contrasts
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_fdr_contrasts_v3.sas
+INPUT:   /mclab/Fru_network/sasdata/contrast.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/flag_fdr_p_all_contrast.sas7bdat
+
+This script calculates the FDR for each of the contrasts and flags fusions with
+a p-value <= .05 or an fdr of <=.20
+
+## Calculate Means for all fusions 
+This script calculates the means for each treatment by fusion_id. Means were
+calculated for all fusions, even those that were not analyzed because of no
+variance.
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_means.sas
+INPUT:   /mclab/Fru_network/sasdata/all_coverage_counts_with_key.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/all_means.sas7bdat
+
+## Make Large Results File
+Now I simply merged our results files together with the various flags and
+finally with the gene symbol and GO information.
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_make_big_results_v3.sas
+INPUT:   /mclab/useful_dmel_data/Flybase%205.30/dmel_annotation/fusion2gene2fbtr.sas7bdat
+         /mclab/useful_dmel_data/Flybase%205.30/dmel_annotation/genes2go_nodups.sas7bdat
+         /mclab/Fru_network/sasdata/all_means.sas7bdat
+         /mclab/Fru_network/sasdata/flag_fail_normality.sas7bdat
+         /mclab/Fru_network/sasdata/flag_fdr_p_all_contrast.sas7bdat
+         /mclab/Fru_network/sasdata/flag_no_var.sas7bdat
+         /mclab/Fru_network/sasdata/flag_zero_mean.sas7bdat
+         /mclab/Fru_network/sasdata/model_fru.sas7bdat
+OUTPUT:  /mclab/Fru_network/sasdata/results.sas7bdat
+         /mclab/Fru_network/sasdata/big_results.sas7bdat
+
+## Export Results File
+
+PROGRAM: /mclab/Fru_network/sas_programs/analysis_export_big_results_v3.sas
+INPUT:   /mclab/Fru_network/sasdata/big_results.sas7bdat
+OUTPUT:  /mclab/Fru_network/reports/big_results_v3.csv
+         /mclab/Fru_network/reports/small_results_v3.csv
+
+COLUMN HEADERS:
+    fusion_id <- fusion ID number S# = single exon fusion, F# = multiple exon fusion, _SI = strand independent.
+    exon_id_cat <- individual exon IDs concatenated together.
+    symbol <- gene symbol
+# ANOVA Output
+    DF
+    SS
+    MS
+    FValue
+    ProbF
+# Mean and SD Log(RPKM+100) for each treatment by fusion_id
+    AH_BerF_mean_logrpkm
+    AH_BerF_SD_logrpkm
+    AH_BerM_mean_logrpkm
+    AH_BerM_SD_logrpkm
+    AH_CS_mean_logrpkm
+    AH_CS_SD_logrpkm
+    AH_CSFemale_mean_logrpkm
+    AH_CSFemale_SD_logrpkm
+    AH_Female_FruM_A__mean_logrpkm
+    AH_Female_FruM_A__SD_logrpkm
+    AH_Female_FruM_B__mean_logrpkm
+    AH_Female_FruM_B__SD_logrpkm
+    AH_Female_FruM_C__mean_logrpkm
+    AH_Female_FruM_C__SD_logrpkm
+    AH_FruP14_440_mean_logrpkm
+    AH_FruP14_440_SD_logrpkm
+    AH_FruW12_ChaM5_mean_logrpkm
+    AH_FruW12_ChaM5_SD_logrpkm
+    AH_Male_FruM_A__mean_logrpkm
+    AH_Male_FruM_A__SD_logrpkm
+    AH_Male_FruM_B__mean_logrpkm
+    AH_Male_FruM_B__SD_logrpkm
+    AH_Male_FruM_C__mean_logrpkm
+    AH_Male_FruM_C__SD_logrpkm
+    AH_dsxD_mean_logrpkm
+    AH_dsxD_SD_logrpkm
+    AH_dsxNullF_mean_logrpkm
+    AH_dsxNullF_SD_logrpkm
+    AH_dsxNullM_mean_logrpkm
+    AH_dsxNullM_SD_logrpkm
+# Mean and SD RPKM for each treatment by fusion_id
+    AH_BerF_mean_rpkm
+    AH_BerF_SD_rpkm
+    AH_BerM_mean_rpkm
+    AH_BerM_SD_rpkm
+    AH_CS_mean_rpkm
+    AH_CS_SD_rpkm
+    AH_CSFemale_mean_rpkm
+    AH_CSFemale_SD_rpkm
+    AH_Female_FruM_A__mean_rpkm
+    AH_Female_FruM_A__SD_rpkm
+    AH_Female_FruM_B__mean_rpkm
+    AH_Female_FruM_B__SD_rpkm
+    AH_Female_FruM_C__mean_rpkm
+    AH_Female_FruM_C__SD_rpkm
+    AH_FruP14_440_mean_rpkm
+    AH_FruP14_440_SD_rpkm
+    AH_FruW12_ChaM5_mean_rpkm
+    AH_FruW12_ChaM5_SD_rpkm
+    AH_Male_FruM_A__mean_rpkm
+    AH_Male_FruM_A__SD_rpkm
+    AH_Male_FruM_B__mean_rpkm
+    AH_Male_FruM_B__SD_rpkm
+    AH_Male_FruM_C__mean_rpkm
+    AH_Male_FruM_C__SD_rpkm
+    AH_dsxD_mean_rpkm
+    AH_dsxD_SD_rpkm
+    AH_dsxNullF_mean_rpkm
+    AH_dsxNullF_SD_rpkm
+    AH_dsxNullM_mean_rpkm
+    AH_dsxNullM_SD_rpkm
+# Contrast p-value and Flags {<=.05} 
+    p_all_AHCSxAHFruP14440
+    flag_p_all_05_AHCSxAHFruP14440
+    p_all_AHCSxAHFruW12ChaM5
+    flag_p_all_05_AHCSxAHFruW12ChaM5
+    p_all_AHBerMxAHFruP14440
+    flag_p_all_05_AHBerMxAHFruP14440
+    p_all_AHBerMxAHFruW12ChaM5
+    flag_p_all_05_AHBerMxAHFruW12ChaM5
+    p_all_AHCSxAHBerM
+    flag_p_all_05_AHCSxAHBerM
+    p_all_AHBerMxAHBerF
+    flag_p_all_05_AHBerMxAHBerF
+    p_all_AHCSxAHBerF
+    flag_p_all_05_AHCSxAHBerF
+    p_all_AHBerMxAHdsxNullM
+    flag_p_all_05_AHBerMxAHdsxNullM
+    p_all_AHCSxAHdsxNullM
+    flag_p_all_05_AHCSxAHdsxNullM
+    p_all_AHBerFxAHdsxNullM
+    flag_p_all_05_AHBerFxAHdsxNullM
+    p_all_AHBerFxAHdsxNullF
+    flag_p_all_05_AHBerFxAHdsxNullF
+    p_all_AHCSxAHdsxNullF
+    flag_p_all_05_AHCSxAHdsxNullF
+    p_all_AHBerMxAHdsxNullF
+    flag_p_all_05_AHBerMxAHdsxNullF
+    p_all_AHBerFxAHdsxD
+    flag_p_all_05_AHBerFxAHdsxD
+    p_all_AHBerMxAHdsxD
+    flag_p_all_05_AHBerMxAHdsxD
+    p_all_AHCSxAHdsxD
+    flag_p_all_05_AHCSxAHdsxD
+    p_all_AHCSFemalexAHCS
+    flag_p_all_05_AHCSFemalexAHCS
+    p_all_AHCSFemalexAHBerM     
+    flag_p_all_05_AHCSFemalexAHBerM
+    p_all_AHCSFemalexAHBerF
+    flag_p_all_05_AHCSFemalexAHBerF
+    p_all_AHCSFemalexAHdsxNullM
+    flag_p_all_05_AHCSFemalexAHdsxNullM
+    p_all_AHCSFemalexAHdsxNullF
+    flag_p_all_05_AHCSFemalexAHdsxNullF
+    p_all_AHCSFemalexAHdsxD
+    flag_p_all_05_AHCSFemalexAHdsxD
+    p_all_AHCSxAHMaleFruM(A)
+    flag_p_all_05_AHCSxAHMaleFruM(A)
+    p_all_AHCSxAHMaleFruM(B)
+    flag_p_all_05_AHCSxAHMaleFruM(B)
+    p_all_AHCSxAHMaleFruM(C)
+    flag_p_all_05_AHCSxAHMaleFruM(C)
+    p_all_AHBerMxAHMaleFruM(A)
+    flag_p_all_05_AHBerMxAHMaleFruM(A)
+    p_all_AHBerMxAHMaleFruM(B)
+    flag_p_all_05_AHBerMxAHMaleFruM(B)
+    p_all_AHBerMxAHMaleFruM(C)
+    flag_p_all_05_AHBerMxAHMaleFruM(C)
+    p_all_AHCSFemalexAHFemaleFruM(A)
+    flag_p_all_05_AHCSFemalexAHFemaleFruM(A)
+    p_all_AHCSFemalexAHFemaleFruM(B)
+    flag_p_all_05_AHCSFemalexAHFemaleFruM(B)
+    p_all_AHCSFemalexAHFemaleFruM(C)
+    flag_p_all_05_AHCSFemalexAHFemaleFruM(C)
+    p_all_AHBerFxAHFemaleFruM(A)
+    flag_p_all_05_AHBerFxAHFemaleFruM(A)
+    p_all_AHBerFxAHFemaleFruM(B)
+    flag_p_all_05_AHBerFxAHFemaleFruM(B)
+    p_all_AHBerFxAHFemaleFruM(C)
+    flag_p_all_05_AHBerFxAHFemaleFruM(C)
+# FDR corrected contrast p-value and Flags {<=.20} 
+    fdr_p_contrast_AHCSxAHFruP14440
+    flag_fdr_20_AHCSxAHFruP14440
+    fdr_p_contrast_AHCSxAHFruW12ChaM5
+    flag_fdr_20_AHCSxAHFruW12ChaM5
+    fdr_p_contrast_AHBerMxAHFruP14440
+    flag_fdr_20_AHBerMxAHFruP14440
+    fdr_p_contrast_AHBerMxAHFruW12ChaM5
+    flag_fdr_20_AHBerMxAHFruW12ChaM5
+    fdr_p_contrast_AHCSxAHBerM
+    flag_fdr_20_AHCSxAHBerM
+    fdr_p_contrast_AHBerMxAHBerF
+    flag_fdr_20_AHBerMxAHBerF
+    fdr_p_contrast_AHCSxAHBerF
+    flag_fdr_20_AHCSxAHBerF
+    fdr_p_contrast_AHBerMxAHdsxNullM
+    flag_fdr_20_AHBerMxAHdsxNullM
+    fdr_p_contrast_AHCSxAHdsxNullM
+    flag_fdr_20_AHCSxAHdsxNullM
+    fdr_p_contrast_AHBerFxAHdsxNullM
+    flag_fdr_20_AHBerFxAHdsxNullM
+    fdr_p_contrast_AHBerFxAHdsxNullF
+    flag_fdr_20_AHBerFxAHdsxNullF
+    fdr_p_contrast_AHCSxAHdsxNullF
+    flag_fdr_20_AHCSxAHdsxNullF
+    fdr_p_contrast_AHBerMxAHdsxNullF
+    flag_fdr_20_AHBerMxAHdsxNullF
+    fdr_p_contrast_AHBerFxAHdsxD
+    flag_fdr_20_AHBerFxAHdsxD
+    fdr_p_contrast_AHBerMxAHdsxD
+    flag_fdr_20_AHBerMxAHdsxD
+    fdr_p_contrast_AHCSxAHdsxD
+    flag_fdr_20_AHCSxAHdsxD
+    fdr_p_contrast_AHCSFemalexAHCS
+    flag_fdr_20_AHCSFemalexAHCS
+    fdr_p_contrast_AHCSFemalexAHBerM
+    flag_fdr_20_AHCSFemalexAHBerM
+    fdr_p_contrast_AHCSFemalexAHBerF
+    flag_fdr_20_AHCSFemalexAHBerF
+    fdr_p_contrast_AHCSFemalexAHdsxNullM
+    flag_fdr_20_AHCSFemalexAHdsxNullM
+    fdr_p_contrast_AHCSFemalexAHdsxNullF
+    flag_fdr_20_AHCSFemalexAHdsxNullF
+    fdr_p_contrast_AHCSFemalexAHdsxD
+    flag_fdr_20_AHCSFemalexAHdsxD
+    fdr_p_contrast_AHCSxAHMaleFruM(A)
+    flag_fdr_20_AHCSxAHMaleFruM(A)
+    fdr_p_contrast_AHCSxAHMaleFruM(B)
+    flag_fdr_20_AHCSxAHMaleFruM(B)
+    fdr_p_contrast_AHCSxAHMaleFruM(C)
+    flag_fdr_20_AHCSxAHMaleFruM(C)
+    fdr_p_contrast_AHBerMxAHMaleFruM(A)
+    flag_fdr_20_AHBerMxAHMaleFruM(A)
+    fdr_p_contrast_AHBerMxAHMaleFruM(B)
+    flag_fdr_20_AHBerMxAHMaleFruM(B)
+    fdr_p_contrast_AHBerMxAHMaleFruM(C)
+    flag_fdr_20_AHBerMxAHMaleFruM(C)
+    fdr_p_contrast_AHCSFemalexAHFemaleFruM(A)
+    flag_fdr_20_AHCSFemalexAHFemaleFruM(A)
+    fdr_p_contrast_AHCSFemalexAHFemaleFruM(B)
+    flag_fdr_20_AHCSFemalexAHFemaleFruM(B)
+    fdr_p_contrast_AHCSFemalexAHFemaleFruM(C)
+    flag_fdr_20_AHCSFemalexAHFemaleFruM(C)
+    fdr_p_contrast_AHBerFxAHFemaleFruM(A)
+    flag_fdr_20_AHBerFxAHFemaleFruM(A)
+    fdr_p_contrast_AHBerFxAHFemaleFruM(B)
+    flag_fdr_20_AHBerFxAHFemaleFruM(B)
+    fdr_p_contrast_AHBerFxAHFemaleFruM(C)
+    flag_fdr_20_AHBerFxAHFemaleFruM(C)
+# Other Flags
+    flag_fail_normality <- Flag if residual failed normality
+    flag_no_var <- flag if there was no variance, excluded from analysis
+    flag_zero_mean <- flag if there were all zeros for one treatment, excluded from analysis
+    multigene <- flag if a fusion is created from exons of multiple genes
+# Annotation Information
+    FBgn <- Flybase gene ID
+    genename_cat <- concatenation of gene names for multigene fusions
+    exon_fbtr_cat <- concatenation of flybase transcript id
+    biopro_GO_ID_count <- biological 
+    GO_number_biopro_cat
+    GO_biological_process_cat
+    molfunc_GO_ID_count
+    GO_number_molfunc_cat
+    GO_molecular_function_cat
+    celcomp_GO_ID_count
+    GO_number_celcomp_cat
+    GO_cellular_component_cat;
+
+#-------------------------------------------------------------------------------
+#  January 19, 2012
+#-------------------------------------------------------------------------------
+# Graph differences in mean rpkm for contrasts
+
+Problem: We are wanting to be able to collapse FRU_network analysis to the gene level. There are basically three different approaches that we can take for this.
+
+1) We can take the exon level analysis and subset only the common exons and then rerun the FDR’s on the common exons.  In the case where we have 2 common exons we have a little function for deciding if the gene is significant.  Basically if either is significant and common exons have means in the same direction we say the gene is significant.
+
+2) We can subset the original data for just common exons and then do an analysis on the mean of all common exons-  so you get one analysis on the gene level
+
+3) We can work out the isoform analysis and then from this extract the gene level data
+
+If we choose to do option one we need to classify genes based on how their exons preform. There are two forms of classifications that we need to apply; significance and consistancy.
+
+How do we assign significance
+    * If one exon is significant then the whole gene is significant
+    * If blah percent of exons are significant then the whole gene is significant
+    * If all exons are signficant the whole gene is significant
+How do we assign consistancy
+    * If all exons are in the same direction and magnitude the gene is consistant
+    * If all exons are in the same direction the gene is consitant
+
+To begin to think about these problems I started by doing some data visualizations. 
+
+## Fusion Classification
+Currently Fusions are classified in 3 ways:
+
+When (Exon_per_fusion = 1)
+        constitutive: fbtr_per_fusion = max_fbtr_per_gene 
+
+When (Exon_per_fusion > 1)
+        common: fbtr_per_fusion = max_fbtr_per_gene
+        Alternative: fbtr_per_fusion < max_fbtr_per_gene
+
+## SAS Analysis of RPKM for genes with 2 common exons
+
+PROGRAM: /mclab/Fru_network/sas_programs/compare_contrast_mean_direction_v2.sas
+LIBNAME: fru = /mclab/Fru_network/sasdata
+         dmel530 = /mclab/useful_dmel_data/flybase530/sasdata
+INPUT: dmel530.fb530_si_fusions_unique_flagged
+       fru.all_means
+OUTPUT: /mclab/Fru_network/reports/mean_difs/contrast_{1-34}.html
+        /mclab/Fru_network/reports/mean_difs/pngs/contrast_*.png
+
+Data set filtered by :
+1) no multi gene fusions
+2) only common fusions. 
+3) only genes with 2 common fusions
+
+For each of the 34 contrasts I calculated difference in rpkm (A-B) for
+each fusion (labeled as exon_num={1,2}). Then for each gene plotted the
+diff_rpkm for fusion_1 and fusion_2. I generated graphs is SAS and
+exported each contrast to an html file
+
+/mclab/Fru_network/reports/mean_difs/*.html
+
+From looking at these output it is clear that we appear to have all of
+the classes that we started thinking about. There are examples of
+fusions going in the opposite direction, and fusions that are in the
+same direction, but vastly different (ie 80 vs 10 rpkm). The script is
+easily modifiable to use logrpkm, but I felt was easier to see the
+differences.
+

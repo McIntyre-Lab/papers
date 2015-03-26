@@ -1,0 +1,62 @@
+#!/bin/bash
+#PBS -M fnew@ufl.edu
+#PBS -m n
+#PBS -q bio
+#PBS -N FRUIlumina
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/arbeitman_dsx-fru/scripts/PBS_LOGS/blat/
+#PBS -l walltime=24:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=8gb
+#PBS -t 1-90
+#90
+
+module load blat
+
+## Set Directories
+    PROJ=/scratch/lfs/mcintyre/arbeitman_dsx-fru
+    ORIG=$PROJ/fasta_reads
+
+    OUTDIR=$PROJ/qc_adapters
+    if [ ! -e $OUTDIR ]; then mkdir -p $OUTDIR; fi
+
+    OUTFILES=$OUTDIR/files
+    if [ ! -e $OUTFILES ]; then mkdir -p $OUTFILES; fi
+
+    LOGS=$OUTDIR/logs 
+    if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+
+
+## Job array
+    DESIGN_FILE=$PROJ/file_list.txt
+    INPUT=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+    NAME=`basename $INPUT .txt`
+
+
+## Initialize Log
+    MYLOG=$LOGS/${NAME}_adapter.log
+    printf "`date` $NAME ARRAY_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > $MYLOG
+
+## Set Reference
+    REF=/scratch/lfs/jfear/tmp/illumina_adapter_list.fasta
+
+echo "file,total_num_reads,num_reads_w_adapter,per_adapter" > $OUTFILES/$NAME.csv
+## Start BLAT
+    for FILE in $ORIG/$NAME*.fa
+    do
+        if [ -s $FILE ]
+        then
+            NAME2=`basename $FILE .fa`
+            printf "`date` Starting BLAT $FILE\n" >> $MYLOG
+            blat $REF $FILE  $TMPDIR/$NAME2.psl 2>>$MYLOG
+            printf "`date` Finished BLAT $FILE\n" >> $MYLOG
+
+            TOTAL=`grep ">" $FILE | wc -l`
+            COUNT=`cut -f 10 $TMPDIR/$NAME2.psl | sort | uniq | wc -l`
+            PER=`echo "scale=4; $COUNT / $TOTAL * 100" | bc`
+            echo "$NAME2,$TOTAL,$COUNT,$PER" >> $OUTFILES/$NAME.csv
+        fi
+    done
+
+printf "`date` Script complete" >> $MYLOG

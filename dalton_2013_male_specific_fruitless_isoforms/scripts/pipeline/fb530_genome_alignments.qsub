@@ -1,0 +1,192 @@
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -q bio
+#PBS -r n
+#PBS -l walltime=10:00:00
+#PBS -l nodes=1:ppn=2
+#PBS -l pmem=4gb
+#PBS -j oe
+#PBS -o /scratch/hpc/jfear/arbeitman_fru_network/scripts/PBS_LOGS/fb530_genome_alignments/
+#PBS -t 20,23,26-28,33-34,36-37,40,51-52
+#62
+
+module load bowtie/0.12.8
+module load last/193
+module load tophat/1.4.1
+module load samtools/0.1.16
+
+PROJ=/project/mcintyre/arbeitman_fru_network
+SCRATCH=/scratch/hpc/jfear/arbeitman_fru_network
+SCRIPTS=$SCRATCH/scripts
+TRIM=$SCRATCH/bc_trim
+REF=/project/mcintyre/references/dmel_fb530/dmel-all-chromosome-r5.30
+LASTREF=/project/mcintyre/references/dmel_fb530/dmel-all-chromosome-r5.30-LAST
+
+## PBS Array pull from an external CSV with all possible combinations
+DESIGN_FILE=$SCRATCH/fru_sample_list_v2.csv
+DESIGN=$(cat $DESIGN_FILE | head -n $PBS_ARRAYID | tail -n 1)
+
+IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+DATE=${ARRAY[0]}
+LANE=${ARRAY[1]}
+FILE=${ARRAY[2]}
+SAMPLE=${ARRAY[3]}
+
+######################################
+
+ALN=$SCRATCH/fb530_genome_alignments
+if [ ! -e $ALN ]
+then
+    mkdir -p $ALN
+fi
+
+
+JOBLOGS=$ALN/job_logs
+if [ ! -e $JOBLOGS ]
+then
+    mkdir -p $JOBLOGS
+fi
+
+ALNLOGS=$ALN/aln_logs
+if [ ! -e $ALNLOGS ]
+then
+    mkdir -p $ALNLOGS
+fi
+
+NAME=${DATE}_${LANE}_${SAMPLE}
+READS=$TRIM/$NAME.fq
+
+#FIRST BOWTIE
+echo `date`": FIRST ALIGNMENT: aligning $READS $REF using standard bowtie settings">$JOBLOGS/$NAME.log
+bowtie --solexa1.3-quals \
+       --tryhard \
+       --chunkmbs 1024 \
+       --best \
+       --strata \
+       --sam \
+       -m 1 \
+       -p 2 \
+       --un $TMPDIR/${NAME}_unaligned_b1.fq \
+       --max $TMPDIR/${NAME}_ambig_b1.fq \
+       $REF \
+       $READS \
+       2>$ALNLOGS/${NAME}_b1.log \
+       | perl -ne 'if(/^@/){next} @s=split; if($s[1] != 4) {print}' \
+       >$TMPDIR/${NAME}_b1.sam 
+       2>>$JOBLOGS/$NAME.log
+
+echo `date`": removing homopolymers, b-tails" >> $JOBLOGS/$NAME.log
+perl $SCRIPTS/fix_fastq_file.pl \
+            -m \
+            -b \
+            -s 25 \
+            <$TMPDIR/${NAME}_unaligned_b1.fq >$TMPDIR/${NAME}_unaligned_fixed.fq \
+            2>$JOBLOGS/${NAME}_timm2.csv
+
+# Second Bowtie
+READS=$TMPDIR/${NAME}_unaligned_fixed.fq
+
+echo `date`": SECOND ALIGNMENT: aligning the improved reads again" >> $JOBLOGS/$NAME.log
+bowtie --solexa1.3-quals \
+       --tryhard \
+       --chunkmbs 1024 \
+       --best \
+       --strata \
+       --sam \
+       -m 1 \
+       -p 2 \
+       --un $TMPDIR/${NAME}_unaligned_b2.fq \
+       --max $TMPDIR/${NAME}_ambig_b2.fq \
+       $REF \
+       $READS \
+       2>$ALNLOGS/${NAME}_b2.log \
+       | perl -ne 'if(/^@/){next} @s=split; if($s[1] != 4) {print}' \
+       >$TMPDIR/${NAME}_b2.sam 
+       2>>$JOBLOGS/$NAME.log
+
+if [ ! -e $SCRATCH/references/$NAME ]
+then
+    mkdir -p $SCRATCH/references/$NAME
+
+   echo `date`": finding junctions using Tophat">$JOBLOGS/${NAME}_tophat.log
+   tophat \
+             --solexa1.3-quals \
+             --mate-inner-dist 170 \
+             --mate-std-dev 50 \
+             -i 50 \
+             -I 400000 \
+             -p 2 \
+             -z0 \
+             -o $SCRATCH/references/$NAME \
+             $REF \
+             $TRIM/$NAME.fq \
+             2>>$JOBLOGS/${NAME}_tophat.log
+
+echo `date`": Converting junctions.bed to FASTA">>$JOBLOGS/${NAME}_tophat.log
+READ_LENGTH=100
+perl $SCRIPTS/bed2fasta.pl \
+                    -r $REF.fasta \
+                    -f $READ_LENGTH \
+                    <$SCRATCH/references/$NAME/junctions.bed \
+                    >$SCRATCH/references/$NAME/junctions.fa \
+                    2>>$JOBLOGS/${NAME}_tophat.log
+
+   echo `date`": Building junctions index">>$JOBLOGS/${NAME}_tophat.log
+   bowtie-build $SCRATCH/references/$NAME/junctions.fa $SCRATCH/references/$NAME/junctions >>$JOBLOGS/${NAME}_tophat.log 2>>$JOBLOGS/${NAME}_tophat.log
+fi
+
+## Third Bowtie
+READS=$TMPDIR/${NAME}_unaligned_b2.fq
+
+echo `date`": THIRD AGNMENT: aligning the remaining unaligned reads to the junctions">>$JOBLOGS/$NAME.log
+bowtie --solexa1.3-quals \
+       --tryhard \
+       --chunkmbs 1024 \
+       --best \
+       --strata \
+       --sam \
+       -m 1 \
+       -p 2 \
+       --un $TMPDIR/${NAME}_unaligned_b3.fq \
+       --max $TMPDIR/${NAME}_ambig_b3.fq \
+       $SCRATCH/references/$NAME/junctions \
+       $READS \
+       2>$ALNLOGS/${NAME}_b3.log \
+       | perl -ne 'if(/^@/){next} @s=split; if($s[1] != 4) {print}' \
+       >$TMPDIR/${NAME}_b3.sam 
+       2>>$JOBLOGS/$NAME.log
+
+
+echo `date`": converting junction alignments to reference coordinate alignments">>$JOBLOGS/$NAME.log
+perl $SCRIPTS/sam-split-junctions.pl \
+                -b $SCRATCH/references/$NAME/junctions.bed \
+                <$TMPDIR/${NAME}_b3.sam \
+                >$TMPDIR/${NAME}_b3_converted.sam
+
+mv $TMPDIR/${NAME}_b3.sam $TMPDIR/${NAME}_b3.old
+
+echo `date`": FOURTH ALIGNMENT: using the LAST aligner on the remaining unaligned reads (from aln to junctions)">>$JOBLOGS/${NAME}_tophat.log
+lastal \
+    -l 20 \
+    -Q 3 \
+    $LASTREF \
+    $TMPDIR/${NAME}_unaligned_b3.fq \
+    2>$ALNLOGS/${NAME}_last.log \
+    >$TMPDIR/$NAME.maf
+echo "LAST Step 1 Complete `date`" >>$JOBLOGS/$NAME.log
+
+#### Convert MAF to SAM
+echo "Converting from MAF to SAM" >>$JOBLOGS/$NAME.log
+/apps/last/src/last-193/scripts/maf-convert.py sam $TMPDIR/$NAME.maf > $TMPDIR/${NAME}_last.sam 2>>$JOBLOGS/$NAME.log
+echo "Finished converting to SAM" >>$JOBLOGS/$NAME.log
+
+echo `date`": selecting reads that only aligned once from the LAST alignment">>$JOBLOGS/$NAME.log
+perl $SCRIPTS/select_unique_alignments_from_sam.pl $TMPDIR/${NAME}_last.sam >$TMPDIR/${NAME}_last_uniq.sam
+mv $TMPDIR/${NAME}_last.sam $TMPDIR/${NAME}_last.old
+echo "Number of reads uniquely aligned by LAST: `wc -l $TMPDIR/${NAME}_last_uniq.sam | cut -d " " -f1`" >>$JOBLOGS/$NAME.log
+
+echo `date`": combining all bowtie alignment files">>$JOBLOGS/$NAME.log
+cd $TMPDIR
+cat *.sam >$ALN/${NAME}.sam
+echo `date`": Finished combining all bowtie alignment files">>$JOBLOGS/$NAME.log
