@@ -2,7 +2,7 @@ This Repository contains all scripts and documentation for recent published pape
 
 ## 2015
 * [Fear et al. 2015](https://github.com/McIntyre-Lab/papers/tree/master/fear_sem_sd_2015):
-Current under review.
+Currently under review.
 
 * [Lehmann et al. 2015](https://github.com/McIntyre-Lab/papers/tree/master/lehmann_2015): Submitted
 
