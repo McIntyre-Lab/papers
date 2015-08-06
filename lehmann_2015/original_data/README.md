@@ -3,6 +3,8 @@
 Raw RNA-seq data from the F1-hybrids have been deposited at NCBI as BioProject
 PRJNA281652.
 
+http://www.ncbi.nlm.nih.gov/bioproject/PRJNA281652/
+
 We also rely heavily on:
 
 PRJNA36679: Illumina WGS for Raleigh by DGRP
