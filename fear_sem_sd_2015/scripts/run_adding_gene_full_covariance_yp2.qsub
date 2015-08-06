@@ -1,0 +1,75 @@
+#!/bin/sh
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -r n
+#PBS -N fullcov
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_sem_sd_paper/scripts/PBS_LOGS/fullcov
+#PBS -e /scratch/lfs/mcintyre/cegs_sem_sd_paper/scripts/PBS_LOGS/fullcov
+#PBS -l walltime=11:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=2gb
+#PBS -t 1-99
+
+# Load required modules
+module load python/2.7.3
+module load sas/9.3
+
+# Set up major variables
+PROJ=/scratch/lfs/mcintyre/cegs_sem_sd_paper
+WORK=$PROJ/fullcov
+PYGEN=$PROJ/scripts/adding_genes_full_covariance_yp2.py
+MNAME=dsrp_sbs_combine_sym
+ORIG=$PROJ/sasdata/${MNAME}.sas7bdat
+DESIGN_FILE=$PROJ/design_file/dsrp_gene2isoform_no_sex_det.csv
+
+# Make a copy of the orignal data
+cd $TMPDIR
+cp $ORIG $TMPDIR/
+
+# One gene is too fast, so I am going to run 25 genes in each job
+ITER=75
+let "END=$ITER * $PBS_ARRAYID"
+let "START=$END - ($ITER - 1)"
+for I in `seq $START $END`
+do
+    # Import design information
+    DESIGN=$(sed -n "${I}p" $DESIGN_FILE)
+
+    # If there is no design info break the loop
+    if [[ ! $DESIGN ]]; then break; fi
+
+    IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+    GENE=${ARRAY[0]}
+    ISO=${ARRAY[1]}
+
+    # Generate SAS models for GENE
+    if [[ ! -e $WORK/sas_programs/$GENE ]]; then mkdir -p $WORK/sas_programs/$GENE; fi;
+    if [[ ! -e $WORK/model_logs ]]; then mkdir -p $WORK/model_logs; fi;
+    if [[ ! -e $WORK/gen_logs ]]; then mkdir -p $WORK/gen_logs; fi;
+    if [[ ! -e $WORK/comb_logs ]]; then mkdir -p $WORK/comb_logs; fi;
+    if [[ ! -e $WORK/sasdata ]]; then mkdir -p $WORK/sasdata; fi;
+
+    echo "[`date`] Generating SEM models for $GENE"
+    python $PYGEN -o $WORK/sas_programs/$GENE/$GENE.sas -l $TMPDIR -m $MNAME -g $GENE -n $ISO --log $WORK/gen_logs/${GENE}_model_gen.log
+    echo "[`date`] Finished generating SEM models for $GENE"
+
+    # Run SAS Models
+    echo "[`date`] Running SEM models for $GENE"
+    for MODEL in $WORK/sas_programs/$GENE/$GENE*.sas
+    do
+        NAME=`basename $MODEL .sas`
+        sas -work $TMPDIR -MEMSIZE 2g -nonews -sysin $MODEL -log $WORK/model_logs/${NAME}.log -print /dev/null
+    done
+    echo "[`date`] Finished running SEM models for $GENE"
+
+    echo "[`date`] Combining SEM models for $GENE"
+    sas -work $TMPDIR -MEMSIZE 2g -nonews -sysin $PROJ/sas_programs/dsrp_combine_genome_wide_sem_models.sas -log $WORK/comb_logs/${GENE}_combine.log -print /dev/null -sysparm "lib1=$TMPDIR,lib2=$WORK/sasdata,gene=$GENE"
+    echo "[`date`] Finished combining SEM models for $GENE"
+
+    # Delete current gene models to prepare for next iteration
+    rm gene_*.sas7bdat
+done
+
+echo "[`date`] Script complete"

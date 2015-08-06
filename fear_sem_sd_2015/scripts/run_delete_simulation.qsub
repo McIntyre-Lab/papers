@@ -1,0 +1,41 @@
+#!/bin/sh
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -r n
+#PBS -N clean
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_sem_sd_paper/scripts/PBS_LOGS/cegs_ag/
+#PBS -e /scratch/lfs/mcintyre/cegs_sem_sd_paper/scripts/PBS_LOGS/cegs_ag/
+#PBS -l walltime=12:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=900mb
+#PBS -t 1-10
+
+# Set Options to handle errors
+set -o nounset
+set -e
+
+echo "[`date`] Starting Script"
+
+NUMGENES=80
+
+#DATA=cegs
+DATA=dspr
+
+SIM=adding_genes
+#SIM=adding_links
+#SIM=removing_genes
+
+# Set up directories (exporting to env for use with GNU parallel)
+PROJ=/scratch/lfs/mcintyre/cegs_sem_sd_paper
+if [[ $SIM == 'adding_genes' ]]
+then
+    WORK=$PROJ/${DATA}_${SIM}_simulation/${NUMGENES}_gene_sim/$PBS_ARRAYID
+else
+    WORK=$PROJ/${DATA}_${SIM}_simulation/$PBS_ARRAYID
+fi
+
+rm -r $WORK
+
+echo "Deleted $WORK"
+echo "[`date`] Script complete"

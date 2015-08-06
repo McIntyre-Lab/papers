@@ -1,0 +1,18 @@
+# General things to ignore
+*/old/
+*Thumbs.db
+*.DS_Store
+
+# Specific folders to ignore
+analysis_output/
+exported_data/
+from_matt/
+manuscript/
+reports/
+sas_data/
+
+# Misc Files
+Adding_genes_analysis_plan_jmf1.docx
+cegsV_yp2.txt
+DSRP_analysis_plan_lmm3.docx
+DSX_analysis_plan_jmf1.docx

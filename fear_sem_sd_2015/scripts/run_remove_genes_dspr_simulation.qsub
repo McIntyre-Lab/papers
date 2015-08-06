@@ -1,0 +1,52 @@
+#!/bin/sh
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -r n
+#PBS -N remove
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_sem_sd_paper/scripts/PBS_LOGS/cegs_rg
+#PBS -e /scratch/lfs/mcintyre/cegs_sem_sd_paper/scripts/PBS_LOGS/cegs_rg
+#PBS -l walltime=11:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=1gb
+
+# Set Options to handle errors
+set -o nounset
+set -e
+
+echo "[`date`] Starting Script"
+
+# Load required modules
+module load sas/9.3
+module load R/3.0.2
+
+# Set up directories
+PROJ=/scratch/lfs/mcintyre/cegs_sem_sd_paper
+
+for PBS_ARRAYID in `seq 1 100`
+do
+    WORK=$PROJ/dspr_removing_genes_simulation/$PBS_ARRAYID
+    if [[ ! -e $WORK ]]; then mkdir -p $WORK; fi;
+
+    # Run simulation
+    ## Simulation variables
+    RSCRIPT=$PROJ/scripts/run_dspr_core_simulation.R
+    MYDAT=$WORK/simulated_data.csv
+
+    ## Use R to generate simulated dataset and output the needed files for sas import
+    Rscript $RSCRIPT > $MYDAT
+
+    ## convert to sas dataset
+    SASFILE=/scratch/lfs/mcintyre/cegs_sem_sd_paper/sas_programs/dspr_sem_remove_gene_sim.sas
+
+    sas -work $TMPDIR \
+        -MEMSIZE 1g \
+        -nonews \
+        -rsasuser \
+        -log $WORK/fit.log \
+        -print $WORK/fit.lst \
+        -sysin $SASFILE \
+        -sysparm "lib=$WORK,mydat=$MYDAT"
+
+done
+echo "[`date`] Script complete"
