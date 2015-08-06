@@ -1,0 +1,98 @@
+#!/bin/sh
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -r n
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_sem_sd_paper/scripts/PBS_LOGS/cegs_ag_msl
+#PBS -e /scratch/lfs/mcintyre/cegs_sem_sd_paper/scripts/PBS_LOGS/cegs_ag_msl
+#PBS -l walltime=11:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=1gb
+#PBS -t 1-500
+
+# Load required modules
+module load python/2.7.6
+module load sas/9.3
+
+# Set up major variables
+PROJ=/scratch/lfs/mcintyre/cegs_sem_sd_paper
+PYSCRIPT=$PROJ/scripts/add_new_gene_to_network.py
+ORIG=$PROJ/sas_data/cegsv_by_gene_sbs.sas7bdat
+
+DESIGN_FILE=$PROJ/design_file/cegsV_gene_list.csv
+
+# Make a copy of the orignal data
+cd $TMPDIR
+cp $ORIG $TMPDIR/
+
+# Iterate over Yps
+WORK=$PROJ/cegs_adding_genes_yp2_w_msl2
+PATHFILE=$PROJ/path_file/cegs_sex_determination_yp2_w_msl2.path
+
+# One gene is too fast, so I am going to run 25 genes in each job
+ITER=18
+let "END=$ITER * $PBS_ARRAYID"
+let "START=$END - ($ITER - 1)"
+for I in `seq $START $END`
+do
+    # Import gene name from the design fil
+    GENE=$(sed -n "${I}p" $DESIGN_FILE)
+
+    # If there is no design info break the loop
+    if [[ ! $GENE ]]; then break; fi
+
+    # Only add genes that are not in the current network. Search the path
+    # file for the current gene, if it is there then skip.
+    if grep -qe "$GENE" $PATHFILE; then continue; fi
+
+    # Build folder structure
+    echo "[`date`] Building Folder structure"
+    SASPROG=$WORK/sas_programs/$GENE
+    SASDAT=$WORK/sas_data 
+    GENLOG=$WORK/generation_logs        # Generation of SAS scripts
+    MODELLOG=$WORK/sem_logs/$GENE       # running SEMs
+    COMBLOG=$WORK/cat_logs              # Combining sas datasets together
+
+    for DIR in $SASPROG $SASDAT $MODELLOG $GENLOG $COMBLOG
+    do
+        if [[ ! -e $DIR ]]; then mkdir -p $DIR; fi;
+    done
+
+    # Generate SAS models for GENE
+    echo "[`date`] Generating SEM models for $GENE"
+    python $PYSCRIPT -p $PATHFILE \
+              -l $TMPDIR \
+              -m $ORIG \
+              -o $WORK/sas_programs/$GENE/$GENE.sas \
+              -n $GENE \
+              -g $GENE \
+              --log $GENLOG/model_generation_${GENE}.log
+
+    # Run SAS Models
+    echo "[`date`] Running SEM models for $GENE"
+    for MODEL in $WORK/sas_programs/$GENE/$GENE*.sas
+    do
+        NAME=`basename $MODEL .sas`
+        sas -work $TMPDIR \
+            -MEMSIZE 3g \
+            -rsasuser \
+            -nonews \
+            -sysin $MODEL \
+            -log $MODELLOG/${NAME}.log \
+            -print /dev/null
+    done
+
+    echo "[`date`] Combining SEM models for $GENE"
+    sas -work $TMPDIR \
+        -MEMSIZE 3g \
+        -nonews \
+        -rsasuser \
+        -sysin $PROJ/sas_programs/combine_genome_wide_sem_models.sas \
+        -log $COMBLOG/${GENE}.log \
+        -print /dev/null \
+        -sysparm "lib1=$TMPDIR,lib2=$WORK/sas_data,gene=$GENE"
+
+    # Delete current gene models to prepare for next iteration
+    rm gene_*.sas7bdat
+done
+echo "[`date`] Script complete"

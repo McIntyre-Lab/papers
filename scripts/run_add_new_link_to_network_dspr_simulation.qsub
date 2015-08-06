@@ -1,0 +1,105 @@
+#!/bin/sh
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -r n
+#PBS -N al
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_sem_sd_paper/scripts/PBS_LOGS/dspr_al/
+#PBS -e /scratch/lfs/mcintyre/cegs_sem_sd_paper/scripts/PBS_LOGS/dspr_al/
+#PBS -l walltime=11:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=1gb
+#PBS -t 1-100
+
+# Set Options to handle errors
+set -o nounset
+set -e
+
+# Load required modules
+module load sas/9.3
+module load R/3.0.2
+module load python/2.7.6
+
+echo "[`date`] Starting Script"
+cd $TMPDIR
+
+# Set up directories
+PROJ=/scratch/lfs/mcintyre/cegs_sem_sd_paper
+WORK=$PROJ/dspr_adding_links_simulation/$PBS_ARRAYID
+if [[ ! -e $WORK ]]; then mkdir -p $WORK; fi;
+
+# Run simulation
+## Simulation variables
+RSCRIPT=$PROJ/scripts/run_dspr_core_simulation.R
+MYDAT=$WORK/simulated_data.csv
+
+## Use R to generate simulated dataset and output the needed files for sas import
+Rscript $RSCRIPT > $MYDAT
+
+## convert to sas dataset
+SASFILE=/scratch/lfs/mcintyre/cegs_sem_sd_paper/sas_programs/import_simulation_small_csv.sas
+
+sas -work $TMPDIR \
+    -MEMSIZE 1g \
+    -nonews \
+    -rsasuser \
+    -log $WORK/import.log \
+    -print /dev/null \
+    -sysin $SASFILE \
+    -sysparm "lib=$WORK,mydat=$MYDAT"
+
+ORIG=$WORK/simulated_data.sas7bdat
+cp $ORIG $TMPDIR/
+
+# Run Adding Links
+## Set Variables
+PYSCRIPT=$PROJ/scripts/add_new_links_to_network.py
+PATHFILE=$PROJ/path_file/dspr_sex_determination_gene_yp2.path
+
+## Build folder structure
+echo "[`date`] Building Folder structure"
+SASPROG=$WORK/sas_programs
+SASDAT=$WORK/sas_data 
+GENLOG=$WORK/generation_logs          # Generation of SAS scripts
+MODELLOG=$WORK/sem_logs               # running SEMs
+COMBLOG=$WORK/cat_logs                # Combining sas datasets together
+
+for DIR in $SASPROG $SASDAT $MODELLOG $GENLOG $COMBLOG
+do
+    if [[ ! -e $DIR ]]; then mkdir -p $DIR; fi;
+done
+
+## Generate SAS models 
+echo "[`date`] Generating SEM models for Yp2"
+$PYSCRIPT -p $PATHFILE \
+          -l $TMPDIR \
+          -m $ORIG \
+          -o $WORK/sas_programs/Yp2.sas \
+          --log $GENLOG/model_generation_Yp2.log
+
+## Run SAS Models
+echo "[`date`] Running SEM models for Yp2"
+for MODEL in $WORK/sas_programs/Yp2*.sas
+do
+    NAME=`basename $MODEL .sas`
+    sas -work $TMPDIR \
+        -MEMSIZE 3g \
+        -nonews \
+        -rsasuser \
+        -sysin $MODEL \
+        -log $MODELLOG/${NAME}.log \
+        -print /dev/null
+done
+
+## Combine SAS Results
+echo "[`date`] Combining SEM models for Yp2"
+sas -work $TMPDIR \
+    -MEMSIZE 3g \
+    -nonews \
+    -rsasuser \
+    -sysin $PROJ/sas_programs/combine_genome_wide_sem_models.sas \
+    -log $COMBLOG/Yp2.log \
+    -print /dev/null \
+    -sysparm "lib1=$TMPDIR,lib2=$WORK/sas_data,gene=None"
+
+echo "[`date`] Script complete"

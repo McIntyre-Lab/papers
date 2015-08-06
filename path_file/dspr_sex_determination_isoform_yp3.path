@@ -1,0 +1,5 @@
+snf Spf45 vir fl_2_d_A|fl_2_d_B -> Sxl_A
+vir fl_2_d_A|fl_2_d_B -> tra
+Sxl -> tra
+tra tra2_A|tra2_B -> fru Yp3
+her ix -> Yp3
