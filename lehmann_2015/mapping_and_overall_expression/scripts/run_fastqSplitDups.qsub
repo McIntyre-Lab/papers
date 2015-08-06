@@ -1,0 +1,71 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -N CEGSSplit
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/cegs/scripts/PBS_LOGS/fastqSplitDups/
+#PBS -l walltime=02:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=20gb
+#PBS -t 1-67
+
+module load python/2.7.3
+PROJ=/scratch/lfs/mcintyre/cegs
+ORIG=$PROJ/original_data/transcriptome/combined
+OUTDIR=$PROJ/fastq_split
+if [ ! -e $OUTDIR ]; then mkdir -p $OUTDIR; fi
+
+LOGS=$PROJ/qc/duplicates/logs
+if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+
+TABLE=$PROJ/qc/duplicates/tables
+if [ ! -e $TABLE ]; then mkdir -p $TABLE; fi
+
+FILES=$PROJ/qc/duplicates/files
+if [ ! -e $FILES ]; then mkdir -p $FILES; fi
+
+#DESIGN_FILE=$PROJ/design_files/CEGS_70_lines_no_tech.txt
+DESIGN_FILE=$PROJ/design_files/CEGS_combined_w_platek_lines_no_tech.txt
+DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+
+IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+LINE=${ARRAY[0]}
+MV=${ARRAY[1]}
+REP=${ARRAY[2]}
+ONAME=${LINE}_${MV}${REP}
+
+cd $ORIG
+
+for FILE in $(find . -iname "$ONAME*" | cut -f1,2,3 -d'.' | sort -u)
+do
+    NAME=`basename $FILE .1.txt`
+    R1=$NAME.1.txt
+    R2=$NAME.2.txt
+
+    if [ -e $R1 -a -e $R2 ]
+    then
+        python /scratch/lfs/mcintyre/python.git/fastqSplitDups.py -r1 $R1 -r2 $R2 --outdir $OUTDIR -g $LOGS/$NAME.log -t $TABLE/$NAME.tsv -o $FILES/$NAME.csv 
+        OCOUNT=`grep "@HWI" $R1 $R2 | wc -l`
+    elif [ -e $R1 ]
+    then
+        python /scratch/lfs/mcintyre/python.git/fastqSplitDups.py -r1 $R1 --outdir $OUTDIR -g $LOGS/$NAME.log -t $TABLE/$NAME.tsv -o $FILES/$NAME.csv
+        OCOUNT=`grep "@HWI" $R1 | wc -l`
+    elif [ -e $R2 ]
+    then
+        python /scratch/lfs/mcintyre/python.git/fastqSplitDups.py -r1 $R2 --outdir $OUTDIR -g $LOGS/$NAME.log -t $TABLE/$NAME.tsv -o $FILES/$NAME.csv
+        OCOUNT=`grep "@HWI" $R2 | wc -l`
+    else
+        echo "ERROR - read $R1 or $R2 do not exist" 
+    fi
+
+    COUNT=`grep "@HWI" $OUTDIR/$NAME*{uniq,duplicate}.fq | wc -l`
+    if [ $OCOUNT == $COUNT ]
+    then
+        echo "Count OK" >> $LOGS/$NAME.log
+    else
+        echo "Count FAIL" >> $LOGS/$NAME.log
+    fi
+done

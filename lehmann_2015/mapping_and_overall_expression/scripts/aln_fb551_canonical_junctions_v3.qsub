@@ -1,0 +1,130 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/cegs/scripts/PBS_LOGS/aln_fb551_canonical_junctions/
+#PBS -l walltime=11:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=5gb
+#PBS -t 1-972%200
+
+module load bowtie/0.12.9
+module load last/193
+module load python/2.7.3
+
+## Store number of processors that will be used, i.e. the number of files we will split into to run LAST on
+    NUMPROCS=1
+
+## Set Directories
+    PROJ=/scratch/lfs/mcintyre/cegs
+    ORIG=$PROJ/fastq_split
+ 
+## Because I am using an PBS Array I am pulling LINE:MV:REP:TECH_REP from an external CSV with all possible combinations
+    DESIGN_FILE=$PROJ/design_files/CEGS_combined_w_platek_lines_design.txt
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+
+    IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+    LINE=${ARRAY[0]}
+    MV=${ARRAY[1]}
+    REP=${ARRAY[2]}
+    TECH_REP=${ARRAY[3]}
+
+    NAME=${LINE}_${MV}${REP}.${TECH_REP}
+
+## Set Different References
+    REF=/scratch/lfs/mcintyre/references/dmel_fb551/fb551_canonical_200bpJunctions_BT1
+    LASTREF=/scratch/lfs/mcintyre/references/dmel_fb551/fb551_canonical_200bpJunctions_LAST
+
+## Create Necessary Folders
+    OUTPUT=$PROJ/aln_fb551_canonical_junctions_nodup
+    if [ ! -d $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+    # Create LOG directory and start log
+        LOGS=$OUTPUT/job_logs 
+        if [ ! -d $LOGS ]; then mkdir -p $LOGS; fi
+
+        MYLOG=$LOGS/${NAME}.log
+        printf "`date` $LINE $MV $REP $TECH_REP PBS_ARRAYID:$PBS_ARRAYID HOSTNAME:$HOSTNAME\n" > $MYLOG
+
+        ALNLOGS=$OUTPUT/aln_logs 
+        if [ ! -d $ALNLOGS ]; then mkdir -p $ALNLOGS; fi
+
+        ALN_ERROR_LOG=$LOGS/size_errors.txt
+
+    # Select TMPDIR
+        # Create a temporary folder to do everything in. If you comment this section
+        # out, script will use node's local TMPDIR
+        SIZE=`df /local/scratch/ | grep -v "Filesystem" | awk '{print $4}'`
+        FLAG_SCRATCH=0
+        #SIZE=1
+
+        if [ $SIZE -lt 20000000 ]
+        then 
+            echo "TMPDIR full, moving to SCRATCH">>$MYLOG
+            TMPDIR=/scratch/hpc/$USER/tmpdir/aln_fb551_canonical_junctions_$PBS_ARRAYID
+            if [ ! -d $TMPDIR ]; then mkdir -p $TMPDIR; fi
+            FLAG_SCRATCH=1
+        fi
+        printf "\----tmpdir: $TMPDIR \n"> $MYLOG
+
+## Functions for the alignment pipeline
+source $PROJ/scripts/alignment_functions.sh
+
+## Start Alignment Pipeline
+    printf "<------------------- STARTING SE alignment process for $NAME [`date`] ------------------->\n" >> $MYLOG
+    READS=$TMPDIR/${NAME}_uniq.fq
+    cat $ORIG/${NAME}*_uniq.fq > $READS
+
+## IF empty stop early
+    if [ ! -s $READS ]
+    then
+        echo "WARNING: Input File is empty terminating early, [`date`]" >>$MYLOG
+        echo "Script complete, [`date`]" >>$MYLOG
+        exit
+    fi
+
+## Determine my quality FASTQ score type
+    qual=`python /scratch/lfs/mcintyre/python.git/identify_quality.py -i $READS`
+    if [ $qual == 'phred64' ]; 
+    then 
+        # set to old illumina quality scores phred64/solexa 1.3
+        btqual='--phred64-quals'
+        lastqual='3'
+    else
+        # change to sanger format which is what all new illumina data is
+        btqual='--phred33-quals'
+        lastqual='1'
+    fi
+
+## Run alignment pipeline
+    bowtie_se_uniq
+
+## File Check
+    cd $TMPDIR
+    echo "FILE SIZE CHECK">>$MYLOG
+    du -sh *.sam >>$MYLOG
+
+## Combine all Sam files 
+    echo "START Combine SAM files">>$MYLOG
+    cat *_aln_bt.sam >$OUTPUT/${NAME}_bowtie.sam 2>>$MYLOG
+    echo "FINISH Combining SAM files [`date`]" >>$MYLOG
+
+## Store un-aligned reads for later use
+    UNDIR=$PROJ/unaln_reads_fb551_canonical_junctions_nodup
+    if [ ! -e $UNDIR ] ; then mkdir -p $UNDIR; fi
+
+    echo "START Combine UNALN FASTQ files">>$MYLOG
+    cat *_unaln_bt.fq >$UNDIR/${NAME}_junc_unaln.fq 2>>$MYLOG
+    echo "FINISH Combining UNALN FASTQ files [`date`]" >>$MYLOG
+
+## Remove TMPDIR if on SCRATCH
+    DEL_TMP=1
+    if [[ $FLAG_SCRATCH -eq 1 && $DEL_TMP -eq 1 ]]
+    then
+        cd ~
+        rm -r $TMPDIR
+    fi
+
+echo "Script complete, [`date`]" >>$MYLOG

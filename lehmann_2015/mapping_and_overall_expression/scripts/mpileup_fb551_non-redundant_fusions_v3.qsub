@@ -1,0 +1,81 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -r n
+#PBS -q bio
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/cegs/scripts/PBS_LOGS/mpileup_fb551_non-redundant_fusions/
+#PBS -l walltime=08:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=10gb
+#PBS -t 1-67
+
+module load samtools/0.1.19
+
+#### Set Directories
+    PROJ=/scratch/lfs/mcintyre/cegs
+
+#### Because I am using an PBS Array I am pulling LINE:MV:REP from an external CSV with all possible combinations
+    #DESIGN_FILE=$PROJ/design_files/CEGS_combined_lines_no_tech.txt
+    DESIGN_FILE=$PROJ/design_files/CEGS_combined_w_platek_lines_no_tech.txt
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+
+    IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+    LINE=${ARRAY[0]}
+    MV=${ARRAY[1]}
+    REP=${ARRAY[2]}
+
+    # Create OUTPUT directory if needed.
+        OUTPUT=$PROJ/mpileup_fb551_non-redundant_fusions_nodup
+        if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+    # Create LOG directory and start log
+        LOGS=$OUTPUT/logs 
+        if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+        MYLOG=$LOGS/${LINE}_${MV}${REP}.log
+        printf "`date` $LINE $MV $REP PBS_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > $MYLOG
+
+    # Select TMPDIR
+        # Create a temporary folder to do everything in. If you comment this section
+        # out, script will use node's local TMPDIR
+        SIZE=`df /local/scratch/ | grep -v "Filesystem" | awk '{print $4}'`
+        FLAG_SCRATCH=0
+        #SIZE=1
+
+        if [ $SIZE -lt 20000000 ]
+        then 
+            echo "TMPDIR full, moving to SCRATCH" >> $MYLOG
+            TMPDIR=/scratch/lfs/$USER/tmp/mpileup_fb551_$PBS_ARRAYID
+            if [ ! -d $TMPDIR ]; then mkdir -p $TMPDIR; fi
+            FLAG_SCRATCH=1
+        fi
+
+#### References
+    REF=/scratch/lfs/mcintyre/references/dmel_fb551/dmel-non-redundant-r5.51_fusions.fa
+
+    if [ ! -e $REF.fai ]
+    then
+        samtools faidx $REF
+    fi
+
+#### Convert SAM to BAM
+    SAM=$TMPDIR/${LINE}_${MV}${REP}.sam
+    cat $PROJ/aln_fb551_non-redundant_fusions_nodup/${LINE}_${MV}${REP}*.sam > $SAM
+    BAM=$TMPDIR/${LINE}_${MV}${REP}
+
+    printf "<-------------------- Convert SAM to BAM -------------------->" >> $MYLOG
+    echo `date`": Starting SAM to BAM conversion" >> $MYLOG
+    samtools view -ut $REF.fai -o $BAM.bam $SAM 2>> $MYLOG 
+    samtools sort -m 1000000000 $BAM.bam $BAM.sorted 2>> $MYLOG
+    samtools index $BAM.sorted.bam >> $MYLOG
+    echo `date`": Finished SAM to BAM conversion" >> $MYLOG
+
+#### Make mpielup
+    PILEUP=$OUTPUT/${LINE}_${MV}${REP}.mpileup
+
+    printf "<-------------------- Convert BAM to MPILEUP -------------------->" >> $MYLOG
+    echo `date`": Generating pileup" >> $MYLOG
+    samtools mpileup -d 1000000000 -f $REF $BAM.sorted.bam  > $PILEUP 2>> $MYLOG
+
+echo `date`": Finished Script complete" >> $MYLOG

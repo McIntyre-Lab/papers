@@ -1,0 +1,81 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+##PBS -o /bio/mcintyre/cegs/scripts/PBS_LOGS/coverage_count_fb551_non-redundant_fusions/
+#PBS -o /scratch/hpc/jfear/cc_logs/
+#PBS -l walltime=2:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=15gb
+#PBS -t 1-342%50
+#342
+
+# I am making this script write to scratch instead of bio because there have been issues on bio.
+
+module load python
+USER=jfear
+
+PROJ=/bio/mcintyre/cegs
+SCRATCH=/scratch/hpc/jfear
+
+#### Because I am using an PBS Array I am pulling LINE:MV:REP:LANE from an
+#    external CSV with all possible combinations (5590 lines)
+    DESIGN_FILE=$PROJ/design_files/CEGS_57_lines_no_tech.txt
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+
+    IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+    LINE=${ARRAY[0]}
+    MV=${ARRAY[1]}
+    REP=${ARRAY[2]}
+
+#### Make Output Directory
+    # Create OUTPUT directory if needed.
+        #OUTPUT=$PROJ/coverage_count_fb551_non-redundant_fusions_on_segments
+        OUTPUT=$SCRATCH/coverage_count_fb551_non-redundant_fusions_on_segments
+        if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+    # Create LOG directory and start log
+        LOGS=$OUTPUT/logs 
+        if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+        MYLOG=$LOGS/${LINE}_${MV}${REP}.log
+        printf "`date` $LINE $MV $REP PBS_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > $MYLOG
+
+    # Select TMPDIR
+        # Create a temporary folder to do everything in. If you comment this section
+        # out, script will use node's local TMPDIR
+        SIZE=`df /local/scratch/ | grep -v "Filesystem" | awk '{print $4}'`
+        FLAG_SCRATCH=0
+        #SIZE=1
+
+        if [ $SIZE -lt 20000000 ]
+        then 
+            echo "TMPDIR full, moving to SCRATCH" >> $MYLOG
+            TMPDIR=/scratch/hpc/$USER/tmp/coverage_count_fb551_non-redundant_fusions_on_segments_$PBS_ARRAYID
+            if [ ! -d $TMPDIR ]; then mkdir -p $TMPDIR; fi
+            FLAG_SCRATCH=1
+        fi
+
+#### COVERAGE COUNTS
+    BED=/bio/mcintyre/references/dmel_fb551/fusion_segments.bed
+    #SAM=$PROJ/aln_fb551_non-redundant_fusions/${LINE}_${MV}${REP}.sam
+    #MPILEUP=$PROJ/mpileup_fb551_non-redundant_fusions/${LINE}_${MV}${REP}.mpileup
+
+    SAM=$TMPDIR/${LINE}_${MV}${REP}.sam
+    cp $PROJ/aln_fb551_non-redundant_fusions/${LINE}_${MV}${REP}.sam $SAM
+
+    MPILEUP=$TMPDIR/${LINE}_${MV}${REP}.mpileup
+    cp $PROJ/mpileup_fb551_non-redundant_fusions/${LINE}_${MV}${REP}.mpileup $MPILEUP
+
+    echo "Starting Coverage Counts for $LINE $MV $REP `date`" > $MYLOG
+    python $PROJ/scripts/rpkm_calculate.py \
+        -b $BED \
+        -m $MPILEUP \
+        -s $SAM \
+        -g $MYLOG \
+        -o $OUTPUT/${LINE}_${MV}${REP}.csv
+    echo "Finished Coverage Counts for $LINE $MV $REP `date`" >> $MYLOG
+
+echo "Script complete [`date`]" >> $MYLOG

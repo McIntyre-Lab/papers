@@ -1,0 +1,30 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /bio/mcintyre/cegs/scripts/PBS_LOGS/package_fb551_unaln_reads/
+#PBS -l walltime=20:00:00
+#PBS -l nodes=1:ppn=4
+#PBS -l pmem=1gb
+
+PROJ=/bio/mcintyre/cegs
+NAME=unaln_reads_fb551_canonical_junctions
+NUMPROCS=4
+
+# PACK Alignments
+cd $PROJ/$NAME
+for FILE in *.fq;
+do
+    gzip $FILE &
+
+    while [ $(jobs -p | wc -l) -ge $NUMPROCS ]
+    do
+        sleep 60
+    done
+
+done
+wait
+
+md5sum *.gz > md5sum

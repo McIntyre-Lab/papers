@@ -1,0 +1,54 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /bio/mcintyre/cegs/scripts/PBS_LOGS/package_fb551_transcriptome/
+#PBS -l walltime=21:00:00
+#PBS -l nodes=1:ppn=4
+#PBS -l pmem=1gb
+
+PROJ=/bio/mcintyre/cegs
+NAME=transcriptome
+NUMPROCS=4
+
+# PACK Alignments
+cd $PROJ/aln_fb551_$NAME
+for FILE in *.sam;
+do
+    gzip $FILE &
+
+    while [ $(jobs -p | wc -l) -ge $NUMPROCS ]
+    do
+        sleep 60
+    done
+
+done
+wait
+
+tar -czvf aln_logs.tar.gz ./aln_logs
+tar -czvf job_logs.tar.gz ./job_logs
+md5sum *.gz > md5sum
+md5sum *.csv >> md5sum
+
+rm -r aln_logs job_logs
+
+# PACK Coverage Counts
+cd $PROJ/coverage_count_fb551_${NAME}
+for FILE in *.csv;
+do
+    gzip $FILE &
+
+    while [ $(jobs -p | wc -l) -ge $NUMPROCS ]
+    do
+        sleep 30
+    done
+
+done
+wait
+
+tar -czvf logs.tar.gz ./logs
+md5sum *.gz > md5sum
+
+rm -r logs

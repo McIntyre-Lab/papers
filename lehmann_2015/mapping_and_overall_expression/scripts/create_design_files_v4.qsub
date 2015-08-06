@@ -1,0 +1,17 @@
+#!/bin/bash
+
+PROJ=/scratch/lfs/mcintyre/cegs
+ORIG=$PROJ/original_data/transcriptome/complete
+LIST=$PROJ/design_files/CEGS_70_lines_design.txt
+
+if [ -e $LIST ]; then rm $LIST; fi
+
+for FILE in $(find $ORIG/ -name "*.txt");
+do
+    NAME=`basename $FILE .txt`;
+    LINE=`echo $NAME | sed 's/\(.*\)_.*/\1/g'`
+    MV=`echo $NAME | sed 's/.*_\([MV]\)[0-9].*/\1/g'`
+    REP=`echo $NAME | sed 's/.*_[MV]\([0-9]\).*/\1/g'`
+    TECH=`echo $NAME | sed 's/.*_[MV][0-9][-\.]\(.*\)/\1/g'`
+    echo "$LINE,$MV,$REP,$TECH" >> $LIST
+done

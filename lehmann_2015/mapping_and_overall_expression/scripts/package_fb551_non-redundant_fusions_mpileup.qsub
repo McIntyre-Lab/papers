@@ -1,0 +1,34 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /bio/mcintyre/cegs/scripts/PBS_LOGS/package_fb551_non-redundant_fusions/
+#PBS -l walltime=11:00:00
+#PBS -l nodes=1:ppn=4
+#PBS -l pmem=1gb
+
+NUMPROCS=4
+
+PROJ=/bio/mcintyre/cegs
+NAME=non-redundant_fusions
+
+# PACK Alignments
+cd $PROJ/mpileup_fb551_$NAME
+for FILE in *.mpileup;
+do
+    gzip $FILE &
+
+    while [ $(jobs -p | wc -l) -ge $NUMPROCS ]
+    do
+        sleep 60
+    done
+
+done
+wait
+
+tar -czvf logs.tar.gz ./logs
+md5sum *.gz > md5sum
+
+rm -r logs

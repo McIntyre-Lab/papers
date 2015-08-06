@@ -1,0 +1,31 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /bio/mcintyre/cegs/scripts/PBS_LOGS/package_fb551_canonical_junctions/
+#PBS -l walltime=11:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=900mb
+
+PROJ=/bio/mcintyre/cegs
+NAME=canonical_junctions
+
+# PACK Alignments
+cd $PROJ/aln_fb551_$NAME
+gzip *.sam
+tar -czvf aln_logs.tar.gz ./aln_logs
+tar -czvf job_logs.tar.gz ./job_logs
+md5sum *.gz > md5sum
+md5sum *.csv >> md5sum
+
+rm -r aln_logs job_logs
+
+# PACK Coverage Counts
+cd $PROJ/coverage_count_fb551_$NAME
+gzip *.csv
+tar -czvf logs.tar.gz ./logs
+md5sum *.gz > md5sum
+
+rm -r logs

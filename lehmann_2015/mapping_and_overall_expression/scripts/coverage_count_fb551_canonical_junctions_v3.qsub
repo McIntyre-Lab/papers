@@ -1,0 +1,55 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/cegs/scripts/PBS_LOGS/coverage_count_fb551_canonical_junctions/
+#PBS -l walltime=2:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=4gb
+#PBS -t 1-67
+
+module load python
+
+PROJ=/scratch/lfs/mcintyre/cegs
+
+#### Because I am using an PBS Array I am pulling LINE:MV:REP:LANE from an
+#    external CSV with all possible combinations (5590 lines)
+    DESIGN_FILE=$PROJ/design_files/CEGS_combined_w_platek_lines_no_tech.txt
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+
+    IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+    LINE=${ARRAY[0]}
+    MV=${ARRAY[1]}
+    REP=${ARRAY[2]}
+
+#### Make Output Directory
+    # Create OUTPUT directory if needed.
+        OUTPUT=$PROJ/coverage_count_fb551_canonical_junctions_nodup
+        if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+    # Create LOG directory and start log
+        LOGS=$OUTPUT/logs 
+        if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+        MYLOG=$LOGS/${LINE}_${MV}${REP}.log
+        printf "`date` $LINE $MV $REP PBS_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > $MYLOG
+
+#### COVERAGE COUNTS
+    BED=/scratch/lfs/mcintyre/references/dmel_fb551/fb551_canonical_200bpJunctions_fasta2bed.bed
+    MPILEUP=$PROJ/mpileup_fb551_canonical_junctions_nodup/${LINE}_${MV}${REP}.mpileup
+
+    SAM=$TMPDIR/${LINE}_${MV}${REP}.sam
+    cat $PROJ/aln_fb551_canonical_junctions_nodup/${LINE}_${MV}${REP}*.sam > $SAM
+
+    echo "Starting Coverage Counts for $LINE $MV $REP `date`" > $MYLOG
+    python $PROJ/scripts/rpkm_calculate.py \
+        -b $BED \
+        -m $MPILEUP \
+        -s $SAM \
+        -g $MYLOG \
+        -o $OUTPUT/${LINE}_${MV}${REP}.csv
+    echo "Finished Coverage Counts for $LINE $MV $REP `date`" >> $MYLOG
+
+echo "Script complete [`date`]" >> $MYLOG

@@ -1,0 +1,61 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -r n
+#PBS -q bio
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/cegs/scripts/PBS_LOGS/bam_fb551_canonical_junctions/
+#PBS -l walltime=02:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=10gb
+#PBS -t 1-429
+#429
+
+module load samtools/0.1.19
+
+#### Set Directories
+    PROJ=/scratch/lfs/mcintyre/cegs
+
+#### Because I am using an PBS Array I am pulling LINE:MV:REP from an external CSV with all possible combinations
+    DESIGN_FILE=$PROJ/design_files/CEGS_70_lines_no_tech.txt
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+
+    IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+    LINE=${ARRAY[0]}
+    MV=${ARRAY[1]}
+    REP=${ARRAY[2]}
+
+    # Create OUTPUT directory if needed.
+        OUTPUT=$PROJ/bam_fb551_canonical_junctions_nodup
+        if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+    # Create LOG directory and start log
+        LOGS=$OUTPUT/logs 
+        if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+        MYLOG=$LOGS/${LINE}_${MV}_${REP}.log
+        printf "`date` $LINE $MV $REP PBS_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > $MYLOG
+
+#### References
+    REF=/scratch/lfs/mcintyre/references/dmel_fb551/fb551_canonical_200bpJunctions.fasta
+
+    if [ ! -e $REF.fai ]
+    then
+        samtools faidx $REF
+    fi
+
+### Concatenate Lanes
+for SAM in $PROJ/aln_fb551_canonical_junctions_nodup/${LINE}_${MV}${REP}*.sam
+do
+
+    NAME=`basename $SAM .sam`
+    #### Convert SAM to BAM
+        printf "<-------------------- Convert SAM to BAM -------------------->" >> $MYLOG
+        echo `date`": Starting SAM to BAM conversion" >> $MYLOG
+        samtools view -ut $REF.fai -o $TMPDIR/$NAME.bam $SAM 2>> $MYLOG 
+        samtools sort -m 1000000000 $TMPDIR/$NAME.bam $OUTPUT/$NAME.sorted 2>> $MYLOG
+        echo `date`": Finished SAM to BAM conversion" >> $MYLOG
+done
+
+
+echo `date`": Finished Script complete" >> $MYLOG
