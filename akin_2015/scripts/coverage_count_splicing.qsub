@@ -1,0 +1,76 @@
+#!/bin/bash
+#PBS -M jrbnewman@ufl.edu
+#PBS -m n
+#PBS -N hg19splicecov
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/sugrue/scripts/PBS_LOGS/cc_splicing
+#PBS -l walltime=16:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=12gb
+#PBS -t 1
+
+module load python/2.7.3
+
+    PROJ=/scratch/lfs/sugrue
+
+### Split the BED file by chromosome, hopefully makes jobs actually run
+
+#    CHROM=Y
+
+#### I am using an SGE Array (pulls out each name from the file and calls it 'design')
+    DESIGN_FILE=$PROJ/design_files/sugrue_file_list.csv
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+
+    IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+     C=${ARRAY[0]}
+     NUM=${ARRAY[1]}
+     SAMP=${ARRAY[2]}
+     LANE=${ARRAY[3]}
+     READ=${ARRAY[4]}
+     BIN=${ARRAY[5]}
+
+     FILE=${C}-${NUM}_${SAMP}_${LANE}_${READ}_${BIN}
+
+
+
+#### Make Output Directory
+        OUTPUT=$PROJ/coverage_counts_splicing
+        if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+    # Create LOG directory and start log
+        LOGS=$OUTPUT/logs
+        if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+        MYLOG=$LOGS/${FILE}.log
+        printf "`date` $FILE PBS_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > "${MYLOG}"
+
+
+### BED file was split by chromosome. Going to define chrom list to iterate though
+
+   CHROM=$PROJ/design_files/chrom_list2.txt
+
+
+#### COVERAGE COUNTS
+    SAM=$PROJ/aln_splicing_se/${FILE}.sam
+    MPILEUP=$PROJ/mpileup_splicing/${FILE}.mpileup
+
+for chrom in $(cat $CHROM)
+do
+    BED=$PROJ/references/splicing/hg19_splicing_catalogue_176bp_chr${chrom}.bed
+
+    echo "Starting Coverage Counts for $FILE `date`" > "${MYLOG}"
+    python /scratch/lfs/sugrue/scripts/rpkm_calculate2.py \
+        -b $BED \
+        -m $MPILEUP \
+        -s $SAM \
+        -n ${FILE} \
+        --cv \
+	-g "${MYLOG}" \
+        -o $OUTPUT/cvrg_cnts_${FILE}_chr${chrom}.csv
+    echo "Finished Coverage Counts for $FILE `date`" >> "${MYLOG}"
+
+echo "Script complete [`date`]" >> "${MYLOG}"
+
+done
