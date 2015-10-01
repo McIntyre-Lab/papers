@@ -1,0 +1,86 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -N updgenome
+#PBS -m n
+#PBS -r n
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/ase_pipeline/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/ase_pipeline/
+#PBS -l walltime=11:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=3gb
+#PBS -t 1-68
+
+set -o nounset
+set -e
+
+module load bowtie/1.1.1
+module load samtools/1.2
+module load last/247
+module load python/2.7.6
+
+# generates "updated" genome and fusions based on the dmel 5.51 genome then parses by chromsome
+# and outputs new "masked" reference genome
+
+# Set directories and variables
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+SCRIPTS=/scratch/lfs/mcintyre/python.git
+REF=/scratch/lfs/mcintyre/references/dmel_fb551/dmel-all-chromosome-r5.51.fasta
+BED=/scratch/lfs/mcintyre/references/dmel_fb551/fb551-non-redundant-fusions.bed
+VCF=$PROJ/ase_pipeline_output/ase_lvl2_filtered_vcf_files
+
+# Get design info 
+DESIGN_FILE=$PROJ/design_files/CEGS_list_68_lines.txt
+LINE=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+
+# Create directories 
+PREF=$PROJ/references/upd_genome/${LINE}
+if [ ! -d $PREF ]; then mkdir -p $PREF &>/dev/null; fi
+
+LOGS=$PROJ/references/upd_genome/logs
+if [ ! -d $LOGS ]; then mkdir -p $LOGS &>/dev/null; fi
+
+MYLOG=$LOGS/$LINE.log
+
+echo `date`": processing ${LINE}" > $MYLOG
+# Update FB5.57 genome with SNPs and Indels
+    echo `date`": generating updated genome for ${LINE}" >> $MYLOG
+    ${SCRIPTS}/vcfFastaUpdate.py \
+            --vcf $VCF/${LINE}_w11182${LINE}_UPD.vcf \
+            --fasta $REF \
+            --bed $BED \
+            --log $TMPDIR/mylog1 \
+            -o $PREF/${LINE}_w11182${LINE}_UPD_fusions.fa
+
+    cat $TMPDIR/mylog1 >> $MYLOG
+
+    ${SCRIPTS}/vcfFastaUpdate.py \
+            --vcf $VCF/w1118_w11182${LINE}_UPD.vcf \
+            --fasta $REF\
+            --bed $BED \
+            --log $TMPDIR/mylog2 \
+            -o $PREF/w1118_w11182${LINE}_UPD_fusions.fa
+
+    cat $TMPDIR/mylog2 >> $MYLOG
+
+# Build indexes from the references
+    echo `date`": building bowtie index for $LINE" >> $MYLOG
+    bowtie-build \
+        $PREF/${LINE}_w11182${LINE}_UPD_fusions.fa \
+        $PREF/${LINE}_w11182${LINE}_UPD_fusions_BT1 \
+        &>$PREF/${LINE}_w11182${LINE}_genomes_bowtie_build.log
+
+    bowtie-build \
+        $PREF/w1118_w11182${LINE}_UPD_fusions.fa \
+        $PREF/w1118_w11182${LINE}_UPD_fusions_BT1 \
+        &>$PREF/w1118_w11182${LINE}_genomes_bowtie_build.log
+
+    echo `date`": building samtools index for $PREF" >> $MYLOG
+    samtools faidx $PREF/${LINE}_w11182${LINE}_UPD_fusions.fa
+    samtools faidx $PREF/w1118_w11182${LINE}_UPD_fusions.fa
+
+    echo `date`": building LAST db for $PREF" >> $MYLOG
+    lastdb $PREF/${LINE}_w11182${LINE}_UPD_fusions_LAST $PREF/${LINE}_w11182${LINE}_UPD_fusions.fa
+    lastdb $PREF/w1118_w11182${LINE}_UPD_fusions_LAST $PREF/w1118_w11182${LINE}_UPD_fusions.fa
+
+echo `date`": Script Complete" >> $MYLOG

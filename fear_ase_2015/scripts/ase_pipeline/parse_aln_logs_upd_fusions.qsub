@@ -1,0 +1,45 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -N parseAlnLogsUpd
+#PBS -r n
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/ase_pipeline/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/ase_pipeline/
+#PBS -l walltime=01:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=900mb
+
+set -o nounset
+set -e
+
+module load python/2.7.6
+
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+LOGS=$PROJ/ase_pipeline_output/aln_upd_fusions/aln_logs
+SCRIPTS=/scratch/lfs/mcintyre/python.git
+
+OUTPUT=$PROJ/ase_pipeline_output
+if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+#### Change 6 to how many lines are in design
+for I in {1..5164}
+do
+    DESIGN_FILE=$PROJ/design_files/CEGS_68_lines_design.txt
+    DESIGN=$(sed -n "${I}p" $DESIGN_FILE)
+    IFS=',' read -ra ARRAY <<< "$DESIGN"
+    LINE=${ARRAY[0]}
+    MV=${ARRAY[1]}
+    REP=${ARRAY[2]}
+    TECH=${ARRAY[3]}
+    NAME=${LINE}_${MV}${REP}.${TECH}
+
+    echo "$NAME" 
+    python ${SCRIPTS}/logParser.py \
+        -bowtie $LOGS/${NAME}_bowtie.log \
+        -last $LOGS/${NAME}_LAST.log \
+        -treatment $LINE $MV $REP $TECH \
+        -o $OUTPUT/ase_upd_aln_summary.csv
+done
+
+echo "Script Complete [`date`]"

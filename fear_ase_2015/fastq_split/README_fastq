@@ -1,0 +1,7 @@
+Distinct fastq files for r101 can be found at:
+
+bio.rc.ufl.edu/mcpublic/papers/fear_ase_2015/fastq_split
+ 
+r101_M1.1.1_distinct.fq      
+r101_M1.1.2_distinct.fq
+r101_M1.1.1_r101_M1.1.2_unpaired_distinct.fq

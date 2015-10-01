@@ -1,0 +1,39 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -N parseAlnLogs
+#PBS -r n
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/ase_pipeline/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/ase_pipeline/
+#PBS -l walltime=01:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=900mb
+
+module load python/2.7.6
+
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+LOGS=$PROJ/ase_pipeline_output/aln_masked_genome/aln_logs
+SCRIPTS=/scratch/lfs/mcintyre/python.git
+
+OUTPUT=$PROJ/ase_pipeline_output
+if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+#### Change 6 to how many lines are in design
+for I in {1..417}
+do
+    DESIGN_FILE=$PROJ/design_files/CEGS_68_lines_no_tech.txt
+    DESIGN=$(sed -n "${I}p" $DESIGN_FILE)
+    IFS=',' read -ra ARRAY <<< "$DESIGN"
+    LINE=${ARRAY[0]}
+    MV=${ARRAY[1]}
+    REP=${ARRAY[2]}
+    NAME=${LINE}_${MV}${REP}
+
+    echo "$NAME" 
+    python ${SCRIPTS}/logParser.py \
+        -bowtie $LOGS/${NAME}_bowtie.log \
+        -last $LOGS/${NAME}_LAST.log \
+        -treatment $LINE $MV $REP \
+        -o $OUTPUT/masked_aln_summary.csv
+done

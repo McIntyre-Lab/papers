@@ -1,0 +1,62 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -N msk_genome
+#PBS -r n
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/ase_pipeline/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/ase_pipeline/
+#PBS -l walltime=05:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=2gb
+#PBS -t 1-68
+
+module load bowtie/1.1.1
+module load samtools/1.2
+module load last/247
+module load python/2.7.6
+
+# generates "masked" genome and fusions based on the dmel 5.51 genome then parses by chromsome
+# and outputs new "masked" reference genome
+
+# Set directories and variables
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+SCRIPTS=/scratch/lfs/mcintyre/python.git
+REF=/scratch/lfs/mcintyre/references/dmel_fb551
+PREF=$PROJ/references
+
+# Get design info 
+DESIGN_FILE=$PROJ/design_files/CEGS_list_68_lines.txt
+DESIGN=$(cat $DESIGN_FILE | head -n $PBS_ARRAYID | tail -n 1)
+IFS=',' read -ra ARRAY <<< "$DESIGN"
+LINE=${ARRAY[0]}
+
+# Create directories 
+if [ ! -d ${PREF}/masked_genome/${LINE} ]; then mkdir -p ${PREF}/masked_genome/${LINE} &>/dev/null; fi
+
+echo `date`": processing ${LINE}"
+# Mask the FB5.51 genome changing ref bases to "N" when there is a SNP
+    echo `date`": generating masked genome for ${LINE}"
+    ${SCRIPTS}/vcfFastaUpdate.py \
+            --vcf ${PROJ}/ase_pipeline_output/ase_lvl1_filtered_vcf_files/w11182${LINE}_MSKD.vcf \
+            --fasta ${REF}/dmel-all-chromosome-r5.51.fasta \
+            --mask \
+            --snps_only \
+            -o ${PREF}/masked_genome/${LINE}/w1118_2_${LINE}_masked_genome.fasta
+
+# Build indexes from the references
+    echo `date`": building bowtie index for ${LINE}"
+    bowtie-build \
+        ${PREF}/masked_genome/${LINE}/w1118_2_${LINE}_masked_genome.fasta \
+        ${PREF}/masked_genome/${LINE}/w1118_2_${LINE}_masked_genome_BT1 \
+        &>${PREF}/masked_genome/w1118_2_${LINE}_genomes_bowtie_build.log
+
+    echo `date`": building samtools index for ${PREF}"
+    samtools faidx ${PREF}/masked_genome/${LINE}/w1118_2_${LINE}_masked_genome.fasta
+
+    echo `date`": building LAST db for ${PREF}"
+    lastdb ${PREF}/masked_genome/${LINE}/w1118_2_${LINE}_masked_genome_LAST ${PREF}/masked_genome/${LINE}/w1118_2_${LINE}_masked_genome.fasta
+
+echo `date`": processing ${LINE} complete"
+
+echo "Script Complete"

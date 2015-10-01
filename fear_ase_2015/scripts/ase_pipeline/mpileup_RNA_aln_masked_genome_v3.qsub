@@ -1,0 +1,55 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -N mpileupmask
+#PBS -r n
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/ase_pipeline/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/ase_pipeline/
+#PBS -l walltime=48:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=20gb
+##PBS -t 1-417
+#PBS -t 2-417
+
+set -o nounset
+set -e
+
+module load samtools/1.2
+
+# Set Directories
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+
+# Pull design information 
+DESIGN_FILE=$PROJ/design_files/CEGS_68_lines_no_tech.txt
+DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+IFS=',' read -ra ARRAY <<< "$DESIGN"
+LINE=${ARRAY[0]}
+MV=${ARRAY[1]}
+REP=${ARRAY[2]}
+NAME=${LINE}_${MV}${REP}
+
+# Set files
+REF=$PROJ/references/masked_genome/$LINE/w1118_2_${LINE}_masked_genome.fasta
+BAM=$PROJ/ase_pipeline_output/aln_masked_genome/${NAME}.sorted.bam
+
+# Create output directories
+OUTPUT=${PROJ}/ase_pipeline_output/rna_counts
+if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+LOGS=$OUTPUT/logs 
+if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+
+MYLOG=$LOGS/${LINE}.log
+printf "`date` $NAME PBS_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > $MYLOG
+
+# Count per base RNA coverage
+echo `date`": Generating pileup" >> $MYLOG
+samtools mpileup -d 10000000000 -uf $REF -v -t INFO/DPR $BAM | $PROJ/scripts/ase_pipeline/count_snps_indels.py -o $OUTPUT/$NAME.csv 2>> $MYLOG
+    # -d sets the max depth to a large number
+    # -u outputs an uncompressed format
+    # -f the fasta reference
+    # -v output a vcf formated file
+    # -t INFO/DPR includes an additional column in the INFO with a separate
+    # count for A,C,T,G
+
+echo `date`": Script Complete" >> $MYLOG
