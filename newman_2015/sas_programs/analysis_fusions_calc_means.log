@@ -1,0 +1,363 @@
+1                                                          The SAS System                             21:16 Sunday, October 11, 2015
+
+NOTE: Unable to open SASUSER.REGSTRY. WORK.REGSTRY will be opened instead.
+NOTE: All registry changes will be lost at the end of the session.
+
+WARNING: Unable to copy SASUSER registry to WORK registry. Because of this, you will not see registry customizations during this 
+         session.
+NOTE: Unable to open SASUSER.PROFILE. WORK.PROFILE will be opened instead.
+NOTE: All profile changes will be lost at the end of the session.
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to UNIVERSITY OF FLORIDA - SFA T&R, Site 70095659.
+NOTE: This session is executing on the Linux 3.16.0-38-generic (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 3.16.0-38-generic #52~14.04.1-Ubuntu SMP Fri May 8 09:43:57 UTC 2015 x86_64 Unrecognized Linux Distribution 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.15 seconds
+      cpu time            0.03 seconds
+      
+1          /*** CALCULATING MEANS BY FUSION ***/
+2          
+3          /* import libraries */
+4          libname con '/home/jrbnewman/concannon/sas_data';
+NOTE: Libref CON was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/concannon/sas_data
+5          
+6          
+7          /*** TRANSPOSE DATA ***/
+2                                                          The SAS System                             21:16 Sunday, October 11, 2015
+
+8          
+9          /* Transpose depth by sample - want "zero" counts back in!! */
+10         
+11         data fusion_data_for_tpose;
+12            set con.apn0_q3_norm;
+13            keep Name fusion_id log_q3_q3_apn_filter;
+14         run;
+
+NOTE: There were 44080021 observations read from the data set CON.APN0_Q3_NORM.
+NOTE: The data set WORK.FUSION_DATA_FOR_TPOSE has 44080021 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           22:21.49
+      cpu time            28.12 seconds
+      
+
+15         
+16         proc sort data=fusion_data_for_tpose;
+17             by fusion_id Name;
+18         run;
+
+NOTE: There were 44080021 observations read from the data set WORK.FUSION_DATA_FOR_TPOSE.
+NOTE: The data set WORK.FUSION_DATA_FOR_TPOSE has 44080021 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           1:41.89
+      cpu time            46.04 seconds
+      
+
+19         
+20         proc transpose data=fusion_data_for_tpose out=fusion_apn_data_tpose;
+21            by fusion_id;
+22            var log_q3_q3_apn_filter;
+23            id Name;
+24         run;
+
+NOTE: There were 44080021 observations read from the data set WORK.FUSION_DATA_FOR_TPOSE.
+NOTE: The data set WORK.FUSION_APN_DATA_TPOSE has 326808 observations and 248 variables.
+NOTE: PROCEDURE TRANSPOSE used (Total process time):
+      real time           4:56.46
+      cpu time            4:56.28
+      
+
+25         
+26         data con.fusion_apn_data_tpose;
+27            set fusion_apn_data_tpose;
+28            array change _numeric_;
+29                     do over change;
+30                     if change=. then change=0;
+31                     end;
+32            drop _NAME_;
+33            run ;
+
+NOTE: There were 326808 observations read from the data set WORK.FUSION_APN_DATA_TPOSE.
+NOTE: The data set CON.FUSION_APN_DATA_TPOSE has 326808 observations and 247 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1:14.00
+      cpu time            4.72 seconds
+      
+
+3                                                          The SAS System                             21:16 Sunday, October 11, 2015
+
+34         
+35         
+36         
+37         /**** CALCULATE GROUP MEANS ****/
+38         
+39         /* UNTRANSPOSE AND CALC GROUP MEAN */
+40         
+41         proc transpose name=Name data=con.fusion_apn_data_tpose out=fusion_q3apn_untpose(rename=(col1=log_q3_q3_apn));
+42              by fusion_id;
+43              var _2009_PC_:;
+44         run;
+
+NOTE: There were 326808 observations read from the data set CON.FUSION_APN_DATA_TPOSE.
+NOTE: The data set WORK.FUSION_Q3APN_UNTPOSE has 80394768 observations and 3 variables.
+NOTE: PROCEDURE TRANSPOSE used (Total process time):
+      real time           1:17.64
+      cpu time            13.27 seconds
+      
+
+45         
+46         data fusion_q3apn_untpose_2;
+47            set fusion_q3apn_untpose;
+48            Name=tranwrd(Name, "_2009_PC_", "2009-PC-");
+49         run;
+
+NOTE: There were 80394768 observations read from the data set WORK.FUSION_Q3APN_UNTPOSE.
+NOTE: The data set WORK.FUSION_Q3APN_UNTPOSE_2 has 80394768 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           30.15 seconds
+      cpu time            21.51 seconds
+      
+
+50         
+51         
+52         /* make permenant -- need for ANOVAs! */
+53         
+54         data con.fusion_q3_norm_data_all;
+55            set fusion_q3apn_untpose_2;
+56         run;
+
+NOTE: There were 80394768 observations read from the data set WORK.FUSION_Q3APN_UNTPOSE_2.
+NOTE: The data set CON.FUSION_Q3_NORM_DATA_ALL has 80394768 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           7:05.56
+      cpu time            18.63 seconds
+      
+
+57         
+58         /* get groups */
+59         
+60         data cell_types;
+61           set con.design_file;
+62           keep Name cell_type;
+63         run;
+
+NOTE: There were 5024 observations read from the data set CON.DESIGN_FILE.
+NOTE: The data set WORK.CELL_TYPES has 5024 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+4                                                          The SAS System                             21:16 Sunday, October 11, 2015
+
+      real time           0.11 seconds
+      cpu time            0.00 seconds
+      
+
+64         
+65         proc sort data=fusion_q3apn_untpose_2;
+66            by Name;
+67         run;
+
+NOTE: There were 80394768 observations read from the data set WORK.FUSION_Q3APN_UNTPOSE_2.
+NOTE: The data set WORK.FUSION_Q3APN_UNTPOSE_2 has 80394768 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           2:56.16
+      cpu time            1:38.43
+      
+
+68         
+69         proc sort data=cell_types;
+70         by Name;
+71         run;
+
+NOTE: There were 5024 observations read from the data set WORK.CELL_TYPES.
+NOTE: The data set WORK.CELL_TYPES has 5024 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+72         
+73         data fusion_exp_w_cell oops1 oops2;
+74            merge cell_types (in=in1) fusion_q3apn_untpose_2 (in=in2);
+75            by Name;
+76            if in1 and in2 then output fusion_exp_w_cell;
+77            else if in1 then output oops1;
+78            else output oops2;
+79         run;
+
+WARNING: Multiple lengths were specified for the BY variable Name by input data sets. This might cause unexpected results.
+NOTE: MERGE statement has more than one data set with repeats of BY values.
+NOTE: There were 5024 observations read from the data set WORK.CELL_TYPES.
+NOTE: There were 80394768 observations read from the data set WORK.FUSION_Q3APN_UNTPOSE_2.
+NOTE: The data set WORK.FUSION_EXP_W_CELL has 80394768 observations and 4 variables.
+NOTE: The data set WORK.OOPS1 has 0 observations and 4 variables.
+NOTE: The data set WORK.OOPS2 has 0 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           25.65 seconds
+      cpu time            25.65 seconds
+      
+
+80         
+81         
+82         proc sort data=fusion_exp_w_cell;
+83           by cell_type fusion_id;
+84         run;
+
+NOTE: There were 80394768 observations read from the data set WORK.FUSION_EXP_W_CELL.
+NOTE: The data set WORK.FUSION_EXP_W_CELL has 80394768 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+5                                                          The SAS System                             21:16 Sunday, October 11, 2015
+
+      real time           4:02.63
+      cpu time            1:22.15
+      
+
+85         
+86         proc means data=fusion_exp_w_cell noprint;
+87            var log_q3_q3_apn;
+88            by cell_type fusion_id;
+89            output out=fusion_mean_counts_by_fusion mean=mean;
+90         run;
+
+NOTE: There were 80394768 observations read from the data set WORK.FUSION_EXP_W_CELL.
+NOTE: The data set WORK.FUSION_MEAN_COUNTS_BY_FUSION has 980424 observations and 5 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           12.43 seconds
+      cpu time            12.42 seconds
+      
+
+91         
+92         /* Split means on cell_type */
+93         
+94         data means_cd19 means_cd8 means_cd4 ;
+95            set fusion_mean_counts_by_fusion;
+96            if cell_type='CD19' then output means_cd19;
+97            if cell_type='CD4' then output means_cd4;
+98            if cell_type='CD8' then output means_cd8;
+99            drop _TYPE_ _FREQ_;
+100           run;
+
+NOTE: There were 980424 observations read from the data set WORK.FUSION_MEAN_COUNTS_BY_FUSION.
+NOTE: The data set WORK.MEANS_CD19 has 326808 observations and 3 variables.
+NOTE: The data set WORK.MEANS_CD8 has 326808 observations and 3 variables.
+NOTE: The data set WORK.MEANS_CD4 has 326808 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.19 seconds
+      cpu time            0.20 seconds
+      
+
+101        
+102        data means_cd19_2;
+103           set means_cd19;
+104           rename mean=mean_logq3q3apn_cd19;
+105           drop cell_type;
+106        run;
+
+NOTE: There were 326808 observations read from the data set WORK.MEANS_CD19.
+NOTE: The data set WORK.MEANS_CD19_2 has 326808 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.04 seconds
+      
+
+107        
+108        data means_cd4_2;
+109           set means_cd4;
+110           rename mean=mean_logq3q3apn_cd4;
+111           drop cell_type;
+112        run;
+6                                                          The SAS System                             21:16 Sunday, October 11, 2015
+
+
+NOTE: There were 326808 observations read from the data set WORK.MEANS_CD4.
+NOTE: The data set WORK.MEANS_CD4_2 has 326808 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.06 seconds
+      
+
+113        
+114        data means_cd8_2;
+115           set means_cd8;
+116           rename mean=mean_logq3q3apn_cd8;
+117           drop cell_type;
+118        run;
+
+NOTE: There were 326808 observations read from the data set WORK.MEANS_CD8.
+NOTE: The data set WORK.MEANS_CD8_2 has 326808 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.05 seconds
+      
+
+119        
+120        data means_merge;
+121           merge means_cd19_2 means_cd4_2 means_cd8_2;
+122           by fusion_id;
+123        run;
+
+NOTE: There were 326808 observations read from the data set WORK.MEANS_CD19_2.
+NOTE: There were 326808 observations read from the data set WORK.MEANS_CD4_2.
+NOTE: There were 326808 observations read from the data set WORK.MEANS_CD8_2.
+NOTE: The data set WORK.MEANS_MERGE has 326808 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.21 seconds
+      cpu time            0.21 seconds
+      
+
+124        
+125        
+126        /* make permenant */
+127        
+128        data con.fusion_means_by_celltype;
+129           set means_merge;
+130        run;
+
+NOTE: There were 326808 observations read from the data set WORK.MEANS_MERGE.
+NOTE: The data set CON.FUSION_MEANS_BY_CELLTYPE has 326808 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.92 seconds
+      cpu time            0.09 seconds
+      
+
+131        
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           46:47.02
+      cpu time            10:47.94
+7                                                          The SAS System                             21:16 Sunday, October 11, 2015
+
+      
