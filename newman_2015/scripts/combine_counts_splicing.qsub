@@ -1,0 +1,75 @@
+#!/bin/bash
+#PBS -N CombineCountsFusions
+#PBS -M jrbnewman@ufl.edu
+#PBS -m n
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/patcon/jnewman/scripts/PBS_LOGS/cc_splicing_summary
+#PBS -l walltime=11:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=4gb
+#PBS -t 22
+
+#22
+
+PROJ=/scratch/lfs/patcon/jnewman
+OUTDIR=$PROJ/splicing_by_chrom_cell
+ORIG=$PROJ/coverage_splicing_by_chr
+
+cd $ORIG
+
+FLAG=0
+OUT=$OUTDIR/all_counts_${PBS_ARRAYID}.csv
+for FILE in *_${PBS_ARRAYID}.csv;
+do
+    if [ $FLAG == 0 ];
+    then
+    grep -v ,0,0,0,0,0.0,0.0,0 $FILE > $OUT;
+    FLAG=1;
+    else
+    tail -n +2 $FILE | grep -v ,0,0,0,0,0.0,0.0,0  >> $OUT;
+    fi;
+done
+
+
+FLAG=0
+OUT=$OUTDIR/all_counts_23.csv
+for FILE in *_X.csv;
+do
+    if [ $FLAG == 0 ];
+    then
+    grep -v ,0,0,0,0,0.0,0.0,0 $FILE > $OUT;
+    FLAG=1;
+    else
+    tail -n +2 $FILE | grep -v ,0,0,0,0,0.0,0.0,0  >> $OUT;
+    fi;
+done
+
+FLAG=0
+OUT=$OUTDIR/all_counts_24.csv
+for FILE in *_Y.csv;
+do
+    if [ $FLAG == 0 ];
+    then
+    grep -v ,0,0,0,0,0.0,0.0,0 $FILE > $OUT;
+    FLAG=1;
+    else
+    tail -n +2 $FILE | grep -v ,0,0,0,0,0.0,0.0,0  >> $OUT;
+    fi;
+done
+
+
+FLAG=0
+OUT=$OUTDIR/all_counts_25.csv
+for FILE in *_mito.csv;
+do
+    if [ $FLAG == 0 ];
+    then
+    grep -v ,0,0,0,0,0.0,0.0,0 $FILE > $OUT;
+    FLAG=1;
+    else
+    tail -n +2 $FILE | grep -v ,0,0,0,0,0.0,0.0,0  >> $OUT;
+    fi;
+done
+

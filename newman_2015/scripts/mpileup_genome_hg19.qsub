@@ -1,0 +1,77 @@
+#!/bin/bash
+#PBS -M jrbnewman@ufl.edu
+#PBS -m n
+#PBS -r n
+#PBS -W group_list=concannon
+#PBS -j oe
+#PBS -o /scratch/lfs/patcon/jnewman/scripts/PBS_LOGS/mpileup_genome
+#PBS -l walltime=6:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=8gb
+#PBS -t 4500-5024
+
+#5024
+
+module load samtools/0.1.19
+
+#### Set Directories
+    PROJ=/scratch/lfs/patcon/jnewman
+    FNEW=/scratch/lfs/patcon/fnew
+
+#### Because I am using an PBS Array I am pulling LINE:MV:REP from an external CSV with all possible combinations
+
+    DESIGN_FILE=$PROJ/new_design_file.csv
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+    IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+    FLOWCELL=${ARRAY[0]}
+    LANE=${ARRAY[1]}
+    REP=${ARRAY[2]}
+    INDEX1=${ARRAY[3]}
+    INDEX2=${ARRAY[4]}
+    LIBRARY=${ARRAY[5]}
+    NAME=${FLOWCELL}_${LANE}_${INDEX1}_${INDEX2}_${LIBRARY}
+
+    # Create OUTPUT directory if needed.
+        OUTPUT=$PROJ/mpileup_genome
+        if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+        BAMOUT=$PROJ/aln_hg19_bam
+        if [ ! -e $BAMOUT ]; then mkdir -p $BAMOUT; fi
+
+    # Create LOG directory and start log
+        LOGS=$OUTPUT/logs 
+        if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+        MYLOG=$LOGS/${NAME}.log
+        printf "`date` $NAME PBS_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > "${MYLOG}"
+
+#### References
+    REF=$PROJ/references/hg19_all_chr_for_bedtools_plus_mito.fa
+    #REF=$PROJ/references/hg19_aceview_junctions_74bp.fa    
+
+    #if [ ! -e $REF.fai ]
+    #then
+    #    samtools faidx $REF
+    #fi
+
+#### Convert SAM to BAM and make mpileups
+    SAM=$PROJ/bwa_mem_aln_pe/${NAME}_aln.sam
+    #SAM=$PROJ/aln_junctions/${NAME}_aln.sam 
+    BAM=$BAMOUT/${NAME}
+
+    printf "<-------------------- Convert SAM to BAM -------------------->" >> "${MYLOG}"
+    echo `date`": Starting SAM to BAM conversion" >> "${MYLOG}"
+    samtools view -ut $REF.fai -o $BAM.bam $SAM 2>> "${MYLOG}" 
+    samtools sort -m 1000000000 $BAM.bam $BAM.sorted 2>> "${MYLOG}"
+    samtools index $BAM.sorted.bam >> "${MYLOG}"
+    echo `date`": Finished SAM to BAM conversion" >> "${MYLOG}"
+
+#### Make mpielup
+    PILEUP=$OUTPUT/${NAME}.mpileup
+
+    printf "<-------------------- Convert BAM to MPILEUP -------------------->" >> "${MYLOG}"
+    echo `date`": Generating pileup" >> "${MYLOG}"
+    samtools mpileup -d 1000000000 -f $REF $BAM.sorted.bam  > $PILEUP 2>> "${MYLOG}"
+
+
+echo `date`": Finished Script complete" >> "${MYLOG}"

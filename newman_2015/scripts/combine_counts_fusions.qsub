@@ -1,0 +1,31 @@
+#!/bin/bash
+#PBS -N CombineCountsFusions
+#PBS -M jrbnewman@ufl.edu
+#PBS -m n
+#PBS -W group_list=concannon
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/patcon/jnewman/scripts/PBS_LOGS/cc_fusion_summary2
+#PBS -l walltime=4:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=8gb
+
+
+PROJ=/scratch/lfs/patcon/jnewman
+ATZ=$PROJ/coverage_count_fusions
+OUT=$PROJ/all_counts_by_fusion_2.csv
+
+cd $ATZ
+#FLAG=0
+FLAG=1
+for FILE in *.csv
+do
+    if [ $FLAG == 0 ]
+    then
+    cat $FILE > $OUT
+    FLAG=1
+    else
+    tail -n +2 $FILE >> $OUT
+    fi
+done
+

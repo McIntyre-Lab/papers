@@ -1,0 +1,60 @@
+#!/bin/bash
+#PBS -M jrbnewman@ufl.edu
+#PBS -N bwa-mem
+#PBS -W group_list=concannon
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/patcon/jnewman/scripts/PBS_LOGS/aln_bwa_mem
+#PBS -l walltime=6:00:00
+#PBS -l nodes=1:ppn=2
+#PBS -l pmem=16gb
+#PBS -t 4500-5024
+
+###5024
+
+module load bwa/0.7.9a
+module load python/2.7.3
+
+
+## Set directories
+    PROJ=/scratch/lfs/patcon/jnewman
+    FNEW=/scratch/lfs/patcon/fnew
+    ORIG=$FNEW/original_data/PC2009
+    
+    OUTPUT=$PROJ/bwa_mem_aln_pe
+    if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+    ALN_LOGS=$OUTPUT/aln_logs
+    if [ ! -e $ALN_LOGS ]; then mkdir -p $ALN_LOGS; fi
+
+# Pull info from design file
+    DESIGN_FILE=$PROJ/new_design_file.csv
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+    IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+    FLOWCELL=${ARRAY[0]}
+    LANE=${ARRAY[1]}
+    REP=${ARRAY[2]}
+    INDEX1=${ARRAY[3]}
+    INDEX2=${ARRAY[4]}
+    LIBRARY=${ARRAY[5]}
+    NAME=${FLOWCELL}_${LANE}_${INDEX1}_${INDEX2}_${LIBRARY}
+    READ1=${FLOWCELL}_${LANE}_1_${INDEX1}_${INDEX2}_${LIBRARY}
+    READ2=${FLOWCELL}_${LANE}_2_${INDEX1}_${INDEX2}_${LIBRARY}
+
+    
+## Build the BWA indices only once. -p is the prefix for the output database, -a is the indexing algorithm ('bwtsw' is for ref>2G, 'is' for ref<2G).
+    #bwa index -p wiggle_BWA -a is /scratch/lfs/patcon/fnew/references/hg19/wiggle.fa
+
+## References
+    REF=$PROJ/references/hg19_all_chr_BWA
+    #REF=$PROJ/references/hg19_aceview_junctions_74bp_BWA
+    #REF=/scratch/lfs/patcon/fnew/references/hg19/wiggle_BWA
+    #REF=/scratch/lfs/mcintyre/references/dmel_fb551/dmel-non-redundant-r5.51_fusions_BWA
+
+    SAM=$OUTPUT/${NAME}_aln
+
+## Run BWA-MEM
+    bwa mem -M -T 30 -t 2 $REF $ORIG/$READ1.fastq  $ORIG/$READ2.fastq > $SAM.sam
+
+## Python script to output an alignment log with counts/percentages
+ python $FNEW/scripts/bwa_sam_parse.py -sam $SAM.sam -o $ALN_LOGS/$NAME.log
