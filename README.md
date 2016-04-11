@@ -4,6 +4,8 @@ This Repository contains all scripts and documentation for recent published pape
 
 * [Newell et al. 2016](https://github.com/McIntyre-Lab/papers/tree/master/newell_2016): In Revision
 
+* [New et al.] (https://github.com/McIntyre-Lab/papers/tree/master/new_popgen_2016): In Preparation
+
 ## 2015
 * [Fear et al. 2015](https://github.com/McIntyre-Lab/papers/tree/master/fear_sem_sd_2015):
 Fear JM, Arbeitman MN, Salomon MP, Dalton JE, Tower J, Nuzhdin SV, McIntyre LM. (2015).
