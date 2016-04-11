@@ -1,0 +1,32 @@
+#!/bin/bash
+#PBS -M fnew@ufl.edu
+#PBS -m n
+#PBS -r n
+#PBS -q mcintyre
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/dsim_pop/scripts/PBS_LOGS/windowMaker
+#PBS -l walltime=04:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=10G
+
+
+module load python/2.7.3
+
+## Set directories
+PROJ=/scratch/lfs/mcintyre/dsim_pop
+SCRIPT=$PROJ/scripts/windowMaker_2mai.py
+
+#BED=/scratch/lfs/mcintyre/references/dsimV2_w501/chrx_dsim_genes.bed
+VCF=$PROJ/Haplotype_Caller_merged/vcf_by_chrom/filter_10permiss_nolab_nomel_4.recode.vcf
+
+BED=$PROJ/lists/chr4_h12_peak.bed
+#VCF=$PROJ/Haplotype_Caller_merged/filter_10permiss_nolab_nomel.recode.vcf
+
+#OUT=$PROJ/Haplotype_Caller_merged/vcf_by_gene/chrx
+OUT=$PROJ/Haplotype_Caller_merged/vcf_by_h12peaks/chr4
+    if [ ! -e $OUT ]; then mkdir -p $OUT; fi
+LOGS=$OUT/logs
+    if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+
+## Run the program
+python $SCRIPT -v $VCF -o $OUT -b $BED

@@ -1,0 +1,36 @@
+#/bin/bash
+#PBS -M fnew@ufl.edu
+#PBS -m n
+#PBS -N h12_peaks
+#PBS -q mcintyre
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/dsim_pop/scripts/PBS_LOGS/h12
+#PBS -l walltime=3:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=3Gb
+#PBS -t 1
+
+module load python
+
+
+# Set up directories
+PROJ=/scratch/lfs/mcintyre/dsim_pop
+LIST=$PROJ/lists/chrom_list.txt
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $LIST)
+    NAME=`basename "$DESIGN"`
+
+SCRIPT=$PROJ/scripts/H12peakFinder.py
+
+DATA=$PROJ/h12/output_new_window_test/chr${NAME}_h12_output.txt
+#DATA=$PROJ/checking_gatk_output/chrX_H12_output.txt
+
+#OUT=$PROJ/h12/output/chr${NAME}_H12_peaks.txt
+#OUT=$PROJ/checking_gatk_output/chr${NAME}_H12_peaks.txt
+OUT=$PROJ/h12/output_new_window_test/chr${NAME}_h12_peaks.txt
+
+# Call the program
+python $SCRIPT $DATA -o $OUT 
+
+# Call the program with the reported threshold in Garud 2015
+#python $SCRIPT $DATA -t 0.0171 -o $OUT

@@ -1,0 +1,39 @@
+#!/bin/bash
+#PBS -M fnew@ufl.edu
+#PBS -m n
+#PBS -N vcf_split_ld_X
+#PBS -q mcintyre
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/dsim_pop/scripts/PBS_LOGS/vcf_split_ld
+#PBS -l walltime=8:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=10GB
+
+module load plink
+
+# SET DIRECTORIES
+
+PROJ=/scratch/lfs/mcintyre/dsim_pop
+#LIST=$PROJ/Haplotype_Caller_merged/split_vcf/chrX/windowList_names.tsv
+#    DESIGN=$(sed -n "${PBS_ARRAYID}p" $LIST)
+#    NAME=`basename "$DESIGN" .vcf`
+
+#VCF=$PROJ/Haplotype_Caller_merged/split_vcf/chrX/chrom_X/${NAME}.vcf
+OUT=$PROJ/checking_gatk_output/split_vcf_ld/gvcf
+
+    if [ ! -e $OUT ]; then mkdir -p $OUT; fi
+
+cd $OUT
+#plink --vcf $VCF --r2 --ld-window-r2 0 --memory 25000 --allow-extra-chr --out $OUT/${NAME}_ld
+
+
+for I in {1..2085}
+do
+    LIST=$PROJ/checking_gatk_output/split_vcf/chrX_10kb/windowList_names.tsv
+    DESIGN=$(sed -n "${I}p" $LIST)
+    NAME=`basename "$DESIGN" .vcf`
+    VCF=$PROJ/checking_gatk_output/split_vcf/chrX_10kb/chrom_X/${NAME}.vcf
+
+    plink --vcf $VCF --r2 --ld-window-r2 0 --memory 25000 --allow-extra-chr --out $OUT/${NAME}_ld
+done

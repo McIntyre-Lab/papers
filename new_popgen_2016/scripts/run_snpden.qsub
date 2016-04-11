@@ -1,0 +1,25 @@
+#!/bin/bash
+#PBS -M fnew@ufl.edu
+#PBS -m n
+#PBS -N snpden100
+#PBS -q mcintyre
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/dsim_pop/scripts/PBS_LOGS/snp_den
+#PBS -l walltime=5:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=1GB
+#PBS -t 1-6
+
+module load vcftools
+
+PROJ=/scratch/lfs/mcintyre/dsim_pop
+LIST=$PROJ/lists/genomic_features.txt
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $LIST)
+    NAME=`basename "$DESIGN"`
+REF=/scratch/lfs/mcintyre/references/dsimV2_w501
+VCF=$PROJ/Haplotype_Caller_merged
+OUT=$PROJ/Haplotype_Caller_merged
+
+vcftools --vcf $VCF/filter_biall_chr_nolab_${NAME}.recode.vcf --SNPdensity 100000 --out $OUT/snpden_100kb_filter_nolab_${NAME} 
+

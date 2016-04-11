@@ -1,0 +1,34 @@
+#/bin/bash
+#PBS -M fnew@ufl.edu
+#PBS -m n
+#PBS -N h12_viz
+#PBS -q mcintyre
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/dsim_pop/scripts/PBS_LOGS/h12
+#PBS -l walltime=3:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=3Gb
+#PBS -t 1
+
+module load R
+
+# Set up directories
+PROJ=/scratch/lfs/mcintyre/dsim_pop
+LIST=$PROJ/lists/chrom_list.txt
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $LIST)
+    NAME=`basename "$DESIGN"`
+
+SCRIPT=$PROJ/scripts/H12_viz.R
+
+#DATA1=$PROJ/checking_gatk_output/chr${NAME}_H12_output.txt
+#DATA2=$PROJ/checking_gatk_output/chr${NAME}_H12_peaks.txt
+
+DATA1=$PROJ/h12/output_new_window_test/chr${NAME}_h12_output.txt
+DATA2=$PROJ/h12/output_new_window_test/chr${NAME}_h12_peaks.txt
+
+OUT=$PROJ/h12/output_new_window_test/chr${NAME}_h12scan.pdf
+#OUT=$PROJ/checking_gatk_output/chr${NAME}_H12scan.pdf
+
+# Call the program
+Rscript $SCRIPT $DATA1 $DATA2  $OUT 50

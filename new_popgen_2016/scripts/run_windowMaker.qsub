@@ -1,0 +1,29 @@
+#/bin/bash
+#PBS -M fnew@ufl.edu
+#PBS -m n
+#PBS -N windowMaker_X
+#PBS -q mcintyre
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/dsim_pop/scripts/PBS_LOGS/windowMaker
+#PBS -l walltime=35:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=5Gb
+
+module load python
+
+## set directories
+PROJ=/scratch/lfs/mcintyre/dsim_pop
+VCF=$PROJ/checking_gatk_output/analysis_gvcf_10permiss_nolabmel.recode.vcf
+DESIGN=$PROJ/design_file/windowing_chr_X_design.csv
+OUTPUT=$PROJ/checking_gatk_output/split_vcf/chrX_10kb
+LOG=$OUTPUT/LOGS
+
+    if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+    if [ ! -e $LOG ]; then mkdir -p $LOG; fi
+
+PROG=$PROJ/scripts/windowMaker_1mai.py
+
+##Run the program
+python $PROG -v $VCF -e $DESIGN -o $OUTPUT -g $LOG/split_chrX.txt
+
