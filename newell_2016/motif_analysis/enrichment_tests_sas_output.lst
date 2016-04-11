@@ -1,0 +1,1093 @@
+                                           The SAS System          09:26 Monday, January 4, 2016 282
+
+                                         The FREQ Procedure
+
+                              Table of flag_fru_reg by flag_male_bias
+
+                                flag_fru_reg     flag_male_bias
+
+                                Frequency|
+                                Expected |
+                                Percent  |
+                                Row Pct  |
+                                Col Pct  |       0|       1|  Total
+                                ---------+--------+--------+
+                                       0 |   5881 |    960 |   6841
+                                         | 5791.7 | 1049.3 |
+                                         |  74.55 |  12.17 |  86.72
+                                         |  85.97 |  14.03 |
+                                         |  88.05 |  79.34 |
+                                ---------+--------+--------+
+                                       1 |    798 |    250 |   1048
+                                         | 887.26 | 160.74 |
+                                         |  10.12 |   3.17 |  13.28
+                                         |  76.15 |  23.85 |
+                                         |  11.95 |  20.66 |
+                                ---------+--------+--------+
+                                Total        6679     1210     7889
+                                            84.66    15.34   100.00
+                                           The SAS System          09:26 Monday, January 4, 2016 283
+
+                                         The FREQ Procedure
+
+                       Statistics for Table of flag_fru_reg by flag_male_bias
+
+                       Statistic                     DF       Value      Prob
+                       ------------------------------------------------------
+                       Chi-Square                     1     67.5148    <.0001
+                       Likelihood Ratio Chi-Square    1     60.7998    <.0001
+                       Continuity Adj. Chi-Square     1     66.7606    <.0001
+                       Mantel-Haenszel Chi-Square     1     67.5063    <.0001
+                       Phi Coefficient                       0.0925
+                       Contingency Coefficient               0.0921
+                       Cramer's V                            0.0925
+
+
+                                      Pearson Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                 67.5148
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 284
+
+                                         The FREQ Procedure
+
+                       Statistics for Table of flag_fru_reg by flag_male_bias
+
+                                  Likelihood Ratio Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                 60.7998
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                  Mantel-Haenszel Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                 67.5063
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 285
+
+                                         The FREQ Procedure
+
+                       Statistics for Table of flag_fru_reg by flag_male_bias
+
+                                        Fisher's Exact Test
+                                 ----------------------------------
+                                 Cell (1,1) Frequency (F)      5881
+                                 Left-sided Pr <= F          1.0000
+                                 Right-sided Pr >= F         <.0001
+
+                                 Table Probability (P)       <.0001
+                                 Two-sided Pr <= P           <.0001
+
+                                         Sample Size = 7889
+                                           The SAS System          09:26 Monday, January 4, 2016 286
+
+                                         The FREQ Procedure
+
+                                  Table of flag_x by flag_overlap
+
+                                flag_x     flag_overlap
+
+                                Frequency|
+                                Expected |
+                                Percent  |
+                                Row Pct  |
+                                Col Pct  |       0|       1|  Total
+                                ---------+--------+--------+
+                                       0 |   6349 |    187 |   6536
+                                         | 6328.9 | 207.12 |
+                                         |  80.48 |   2.37 |  82.85
+                                         |  97.14 |   2.86 |
+                                         |  83.11 |  74.80 |
+                                ---------+--------+--------+
+                                       1 |   1290 |     63 |   1353
+                                         | 1310.1 | 42.876 |
+                                         |  16.35 |   0.80 |  17.15
+                                         |  95.34 |   4.66 |
+                                         |  16.89 |  25.20 |
+                                ---------+--------+--------+
+                                Total        7639      250     7889
+                                            96.83     3.17   100.00
+                                           The SAS System          09:26 Monday, January 4, 2016 287
+
+                                         The FREQ Procedure
+
+                           Statistics for Table of flag_x by flag_overlap
+
+                       Statistic                     DF       Value      Prob
+                       ------------------------------------------------------
+                       Chi-Square                     1     11.7734    0.0006
+                       Likelihood Ratio Chi-Square    1     10.6359    0.0011
+                       Continuity Adj. Chi-Square     1     11.1956    0.0008
+                       Mantel-Haenszel Chi-Square     1     11.7719    0.0006
+                       Phi Coefficient                       0.0386
+                       Contingency Coefficient               0.0386
+                       Cramer's V                            0.0386
+
+
+                                      Pearson Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                 11.7734
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      0.0006
+                                 Exact      Pr >= ChiSq      0.0008
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 288
+
+                                         The FREQ Procedure
+
+                           Statistics for Table of flag_x by flag_overlap
+
+                                  Likelihood Ratio Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                 10.6359
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      0.0011
+                                 Exact      Pr >= ChiSq      0.0011
+
+
+                                  Mantel-Haenszel Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                 11.7719
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      0.0006
+                                 Exact      Pr >= ChiSq      0.0008
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 289
+
+                                         The FREQ Procedure
+
+                           Statistics for Table of flag_x by flag_overlap
+
+                                        Fisher's Exact Test
+                                 ----------------------------------
+                                 Cell (1,1) Frequency (F)      6349
+                                 Left-sided Pr <= F          0.9996
+                                 Right-sided Pr >= F         0.0007
+
+                                 Table Probability (P)       0.0003
+                                 Two-sided Pr <= P           0.0011
+
+                                         Sample Size = 7889
+                                           The SAS System          09:26 Monday, January 4, 2016 290
+
+                                         The FREQ Procedure
+
+                            Table of flag_male_bias by flag_fru_a_motif
+
+                                flag_male_bias     flag_fru_a_motif
+
+                                Frequency|
+                                Expected |
+                                Percent  |
+                                Row Pct  |
+                                Col Pct  |       0|       1|  Total
+                                ---------+--------+--------+
+                                       0 |   5977 |    702 |   6679
+                                         | 5292.2 | 1386.8 |
+                                         |  75.76 |   8.90 |  84.66
+                                         |  89.49 |  10.51 |
+                                         |  95.62 |  42.86 |
+                                ---------+--------+--------+
+                                       1 |    274 |    936 |   1210
+                                         | 958.77 | 251.23 |
+                                         |   3.47 |  11.86 |  15.34
+                                         |  22.64 |  77.36 |
+                                         |   4.38 |  57.14 |
+                                ---------+--------+--------+
+                                Total        6251     1638     7889
+                                            79.24    20.76   100.00
+                                           The SAS System          09:26 Monday, January 4, 2016 291
+
+                                         The FREQ Procedure
+
+                     Statistics for Table of flag_male_bias by flag_fru_a_motif
+
+                       Statistic                     DF       Value      Prob
+                       ------------------------------------------------------
+                       Chi-Square                     1   2782.2160    <.0001
+                       Likelihood Ratio Chi-Square    1   2274.4412    <.0001
+                       Continuity Adj. Chi-Square     1   2778.1545    <.0001
+                       Mantel-Haenszel Chi-Square     1   2781.8633    <.0001
+                       Phi Coefficient                       0.5939
+                       Contingency Coefficient               0.5106
+                       Cramer's V                            0.5939
+
+
+                                      Pearson Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square               2782.2160
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq           .
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 292
+
+                                         The FREQ Procedure
+
+                     Statistics for Table of flag_male_bias by flag_fru_a_motif
+
+                                  Likelihood Ratio Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square               2274.4412
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq           .
+
+
+                                  Mantel-Haenszel Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square               2781.8633
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq           .
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 293
+
+                                         The FREQ Procedure
+
+                     Statistics for Table of flag_male_bias by flag_fru_a_motif
+
+                                        Fisher's Exact Test
+                                 ----------------------------------
+                                 Cell (1,1) Frequency (F)      5977
+                                 Left-sided Pr <= F          1.0000
+                                 Right-sided Pr >= F         <.0001
+
+                                 Table Probability (P)       <.0001
+                                 Two-sided Pr <= P           <.0001
+
+                                         Sample Size = 7889
+                                           The SAS System          09:26 Monday, January 4, 2016 294
+
+                                         The FREQ Procedure
+
+                            Table of flag_male_bias by flag_fru_b_motif
+
+                                flag_male_bias     flag_fru_b_motif
+
+                                Frequency|
+                                Expected |
+                                Percent  |
+                                Row Pct  |
+                                Col Pct  |       0|       1|  Total
+                                ---------+--------+--------+
+                                       0 |   6247 |    432 |   6679
+                                         | 5931.4 | 747.57 |
+                                         |  79.19 |   5.48 |  84.66
+                                         |  93.53 |   6.47 |
+                                         |  89.17 |  48.92 |
+                                ---------+--------+--------+
+                                       1 |    759 |    451 |   1210
+                                         | 1074.6 | 135.43 |
+                                         |   9.62 |   5.72 |  15.34
+                                         |  62.73 |  37.27 |
+                                         |  10.83 |  51.08 |
+                                ---------+--------+--------+
+                                Total        7006      883     7889
+                                            88.81    11.19   100.00
+                                           The SAS System          09:26 Monday, January 4, 2016 295
+
+                                         The FREQ Procedure
+
+                     Statistics for Table of flag_male_bias by flag_fru_b_motif
+
+                       Statistic                     DF       Value      Prob
+                       ------------------------------------------------------
+                       Chi-Square                     1    977.9614    <.0001
+                       Likelihood Ratio Chi-Square    1    731.1497    <.0001
+                       Continuity Adj. Chi-Square     1    974.8648    <.0001
+                       Mantel-Haenszel Chi-Square     1    977.8374    <.0001
+                       Phi Coefficient                       0.3521
+                       Contingency Coefficient               0.3321
+                       Cramer's V                            0.3521
+
+
+                                      Pearson Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                977.9614
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 296
+
+                                         The FREQ Procedure
+
+                     Statistics for Table of flag_male_bias by flag_fru_b_motif
+
+                                  Likelihood Ratio Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                731.1497
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                  Mantel-Haenszel Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                977.8374
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 297
+
+                                         The FREQ Procedure
+
+                     Statistics for Table of flag_male_bias by flag_fru_b_motif
+
+                                        Fisher's Exact Test
+                                 ----------------------------------
+                                 Cell (1,1) Frequency (F)      6247
+                                 Left-sided Pr <= F          1.0000
+                                 Right-sided Pr >= F         <.0001
+
+                                 Table Probability (P)       <.0001
+                                 Two-sided Pr <= P           <.0001
+
+                                         Sample Size = 7889
+                                           The SAS System          09:26 Monday, January 4, 2016 298
+
+                                         The FREQ Procedure
+
+                            Table of flag_male_bias by flag_fru_c_motif
+
+                                flag_male_bias     flag_fru_c_motif
+
+                                Frequency|
+                                Expected |
+                                Percent  |
+                                Row Pct  |
+                                Col Pct  |       0|       1|  Total
+                                ---------+--------+--------+
+                                       0 |   6395 |    284 |   6679
+                                         | 6207.4 | 471.57 |
+                                         |  81.06 |   3.60 |  84.66
+                                         |  95.75 |   4.25 |
+                                         |  87.22 |  50.99 |
+                                ---------+--------+--------+
+                                       1 |    937 |    273 |   1210
+                                         | 1124.6 | 85.432 |
+                                         |  11.88 |   3.46 |  15.34
+                                         |  77.44 |  22.56 |
+                                         |  12.78 |  49.01 |
+                                ---------+--------+--------+
+                                Total        7332      557     7889
+                                            92.94     7.06   100.00
+                                           The SAS System          09:26 Monday, January 4, 2016 299
+
+                                         The FREQ Procedure
+
+                     Statistics for Table of flag_male_bias by flag_fru_c_motif
+
+                       Statistic                     DF       Value      Prob
+                       ------------------------------------------------------
+                       Chi-Square                     1    523.3722    <.0001
+                       Likelihood Ratio Chi-Square    1    385.0885    <.0001
+                       Continuity Adj. Chi-Square     1    520.5857    <.0001
+                       Mantel-Haenszel Chi-Square     1    523.3059    <.0001
+                       Phi Coefficient                       0.2576
+                       Contingency Coefficient               0.2494
+                       Cramer's V                            0.2576
+
+
+                                      Pearson Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                523.3722
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 300
+
+                                         The FREQ Procedure
+
+                     Statistics for Table of flag_male_bias by flag_fru_c_motif
+
+                                  Likelihood Ratio Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                385.0885
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                  Mantel-Haenszel Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                523.3059
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 301
+
+                                         The FREQ Procedure
+
+                     Statistics for Table of flag_male_bias by flag_fru_c_motif
+
+                                        Fisher's Exact Test
+                                 ----------------------------------
+                                 Cell (1,1) Frequency (F)      6395
+                                 Left-sided Pr <= F          1.0000
+                                 Right-sided Pr >= F         <.0001
+
+                                 Table Probability (P)       <.0001
+                                 Two-sided Pr <= P           <.0001
+
+                                         Sample Size = 7889
+                                           The SAS System          09:26 Monday, January 4, 2016 302
+
+                                         The FREQ Procedure
+
+                             Table of flag_fru_reg by flag_fru_a_motif
+
+                                flag_fru_reg     flag_fru_a_motif
+
+                                Frequency|
+                                Expected |
+                                Percent  |
+                                Row Pct  |
+                                Col Pct  |       0|       1|  Total
+                                ---------+--------+--------+
+                                       0 |   6139 |    702 |   6841
+                                         | 5420.6 | 1420.4 |
+                                         |  77.82 |   8.90 |  86.72
+                                         |  89.74 |  10.26 |
+                                         |  98.21 |  42.86 |
+                                ---------+--------+--------+
+                                       1 |    112 |    936 |   1048
+                                         |  830.4 |  217.6 |
+                                         |   1.42 |  11.86 |  13.28
+                                         |  10.69 |  89.31 |
+                                         |   1.79 |  57.14 |
+                                ---------+--------+--------+
+                                Total        6251     1638     7889
+                                            79.24    20.76   100.00
+                                           The SAS System          09:26 Monday, January 4, 2016 303
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_fru_reg by flag_fru_a_motif
+
+                       Statistic                     DF       Value      Prob
+                       ------------------------------------------------------
+                       Chi-Square                     1   3451.8958    <.0001
+                       Likelihood Ratio Chi-Square    1   2821.0104    <.0001
+                       Continuity Adj. Chi-Square     1   3447.0925    <.0001
+                       Mantel-Haenszel Chi-Square     1   3451.4583    <.0001
+                       Phi Coefficient                       0.6615
+                       Contingency Coefficient               0.5517
+                       Cramer's V                            0.6615
+
+
+                                      Pearson Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square               3451.8958
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq           .
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 304
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_fru_reg by flag_fru_a_motif
+
+                                  Likelihood Ratio Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square               2821.0104
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq           .
+
+
+                                  Mantel-Haenszel Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square               3451.4583
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq           .
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 305
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_fru_reg by flag_fru_a_motif
+
+                                        Fisher's Exact Test
+                                 ----------------------------------
+                                 Cell (1,1) Frequency (F)      6139
+                                 Left-sided Pr <= F          1.0000
+                                 Right-sided Pr >= F         <.0001
+
+                                 Table Probability (P)       <.0001
+                                 Two-sided Pr <= P           <.0001
+
+                                         Sample Size = 7889
+                                           The SAS System          09:26 Monday, January 4, 2016 306
+
+                                         The FREQ Procedure
+
+                             Table of flag_fru_reg by flag_fru_b_motif
+
+                                flag_fru_reg     flag_fru_b_motif
+
+                                Frequency|
+                                Expected |
+                                Percent  |
+                                Row Pct  |
+                                Col Pct  |       0|       1|  Total
+                                ---------+--------+--------+
+                                       0 |   6527 |    314 |   6841
+                                         | 6075.3 |  765.7 |
+                                         |  82.74 |   3.98 |  86.72
+                                         |  95.41 |   4.59 |
+                                         |  93.16 |  35.56 |
+                                ---------+--------+--------+
+                                       1 |    479 |    569 |   1048
+                                         |  930.7 |  117.3 |
+                                         |   6.07 |   7.21 |  13.28
+                                         |  45.71 |  54.29 |
+                                         |   6.84 |  64.44 |
+                                ---------+--------+--------+
+                                Total        7006      883     7889
+                                            88.81    11.19   100.00
+                                           The SAS System          09:26 Monday, January 4, 2016 307
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_fru_reg by flag_fru_b_motif
+
+                       Statistic                     DF       Value      Prob
+                       ------------------------------------------------------
+                       Chi-Square                     1   2258.6726    <.0001
+                       Likelihood Ratio Chi-Square    1   1537.1076    <.0001
+                       Continuity Adj. Chi-Square     1   2253.6750    <.0001
+                       Mantel-Haenszel Chi-Square     1   2258.3863    <.0001
+                       Phi Coefficient                       0.5351
+                       Contingency Coefficient               0.4718
+                       Cramer's V                            0.5351
+
+
+                                      Pearson Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square               2258.6726
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq           .
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 308
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_fru_reg by flag_fru_b_motif
+
+                                  Likelihood Ratio Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square               1537.1076
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq           .
+
+
+                                  Mantel-Haenszel Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square               2258.3863
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq           .
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 309
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_fru_reg by flag_fru_b_motif
+
+                                        Fisher's Exact Test
+                                 ----------------------------------
+                                 Cell (1,1) Frequency (F)      6527
+                                 Left-sided Pr <= F          1.0000
+                                 Right-sided Pr >= F         <.0001
+
+                                 Table Probability (P)       <.0001
+                                 Two-sided Pr <= P           <.0001
+
+                                         Sample Size = 7889
+                                           The SAS System          09:26 Monday, January 4, 2016 310
+
+                                         The FREQ Procedure
+
+                             Table of flag_fru_reg by flag_fru_c_motif
+
+                                flag_fru_reg     flag_fru_c_motif
+
+                                Frequency|
+                                Expected |
+                                Percent  |
+                                Row Pct  |
+                                Col Pct  |       0|       1|  Total
+                                ---------+--------+--------+
+                                       0 |   6662 |    179 |   6841
+                                         |   6358 | 483.01 |
+                                         |  84.45 |   2.27 |  86.72
+                                         |  97.38 |   2.62 |
+                                         |  90.86 |  32.14 |
+                                ---------+--------+--------+
+                                       1 |    670 |    378 |   1048
+                                         | 974.01 | 73.994 |
+                                         |   8.49 |   4.79 |  13.28
+                                         |  63.93 |  36.07 |
+                                         |   9.14 |  67.86 |
+                                ---------+--------+--------+
+                                Total        7332      557     7889
+                                            92.94     7.06   100.00
+                                           The SAS System          09:26 Monday, January 4, 2016 311
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_fru_reg by flag_fru_c_motif
+
+                       Statistic                     DF       Value      Prob
+                       ------------------------------------------------------
+                       Chi-Square                     1   1549.7892    <.0001
+                       Likelihood Ratio Chi-Square    1    998.5797    <.0001
+                       Continuity Adj. Chi-Square     1   1544.6955    <.0001
+                       Mantel-Haenszel Chi-Square     1   1549.5927    <.0001
+                       Phi Coefficient                       0.4432
+                       Contingency Coefficient               0.4052
+                       Cramer's V                            0.4432
+
+
+                                      Pearson Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square               1549.7892
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 312
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_fru_reg by flag_fru_c_motif
+
+                                  Likelihood Ratio Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                998.5797
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                  Mantel-Haenszel Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square               1549.5927
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 313
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_fru_reg by flag_fru_c_motif
+
+                                        Fisher's Exact Test
+                                 ----------------------------------
+                                 Cell (1,1) Frequency (F)      6662
+                                 Left-sided Pr <= F          1.0000
+                                 Right-sided Pr >= F         <.0001
+
+                                 Table Probability (P)       <.0001
+                                 Two-sided Pr <= P           <.0001
+
+                                         Sample Size = 7889
+                                           The SAS System          09:26 Monday, January 4, 2016 314
+
+                                         The FREQ Procedure
+
+                             Table of flag_overlap by flag_fru_a_motif
+
+                                flag_overlap     flag_fru_a_motif
+
+                                Frequency|
+                                Expected |
+                                Percent  |
+                                Row Pct  |
+                                Col Pct  |       0|       1|  Total
+                                ---------+--------+--------+
+                                       0 |   6235 |   1404 |   7639
+                                         | 6052.9 | 1586.1 |
+                                         |  79.03 |  17.80 |  96.83
+                                         |  81.62 |  18.38 |
+                                         |  99.74 |  85.71 |
+                                ---------+--------+--------+
+                                       1 |     16 |    234 |    250
+                                         | 198.09 | 51.908 |
+                                         |   0.20 |   2.97 |   3.17
+                                         |   6.40 |  93.60 |
+                                         |   0.26 |  14.29 |
+                                ---------+--------+--------+
+                                Total        6251     1638     7889
+                                            79.24    20.76   100.00
+                                           The SAS System          09:26 Monday, January 4, 2016 315
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_overlap by flag_fru_a_motif
+
+                       Statistic                     DF       Value      Prob
+                       ------------------------------------------------------
+                       Chi-Square                     1    832.5475    <.0001
+                       Likelihood Ratio Chi-Square    1    651.4013    <.0001
+                       Continuity Adj. Chi-Square     1    827.9817    <.0001
+                       Mantel-Haenszel Chi-Square     1    832.4420    <.0001
+                       Phi Coefficient                       0.3249
+                       Contingency Coefficient               0.3090
+                       Cramer's V                            0.3249
+
+
+                                      Pearson Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                832.5475
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 316
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_overlap by flag_fru_a_motif
+
+                                  Likelihood Ratio Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                651.4013
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                  Mantel-Haenszel Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                832.4420
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 317
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_overlap by flag_fru_a_motif
+
+                                        Fisher's Exact Test
+                                 ----------------------------------
+                                 Cell (1,1) Frequency (F)      6235
+                                 Left-sided Pr <= F          1.0000
+                                 Right-sided Pr >= F         <.0001
+
+                                 Table Probability (P)       <.0001
+                                 Two-sided Pr <= P           <.0001
+
+                                         Sample Size = 7889
+                                           The SAS System          09:26 Monday, January 4, 2016 318
+
+                                         The FREQ Procedure
+
+                             Table of flag_overlap by flag_fru_b_motif
+
+                                flag_overlap     flag_fru_b_motif
+
+                                Frequency|
+                                Expected |
+                                Percent  |
+                                Row Pct  |
+                                Col Pct  |       0|       1|  Total
+                                ---------+--------+--------+
+                                       0 |   6893 |    746 |   7639
+                                         |   6784 | 855.02 |
+                                         |  87.37 |   9.46 |  96.83
+                                         |  90.23 |   9.77 |
+                                         |  98.39 |  84.48 |
+                                ---------+--------+--------+
+                                       1 |    113 |    137 |    250
+                                         | 222.02 | 27.982 |
+                                         |   1.43 |   1.74 |   3.17
+                                         |  45.20 |  54.80 |
+                                         |   1.61 |  15.52 |
+                                ---------+--------+--------+
+                                Total        7006      883     7889
+                                            88.81    11.19   100.00
+                                           The SAS System          09:26 Monday, January 4, 2016 319
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_overlap by flag_fru_b_motif
+
+                       Statistic                     DF       Value      Prob
+                       ------------------------------------------------------
+                       Chi-Square                     1    493.9181    <.0001
+                       Likelihood Ratio Chi-Square    1    298.8676    <.0001
+                       Continuity Adj. Chi-Square     1    489.3979    <.0001
+                       Mantel-Haenszel Chi-Square     1    493.8555    <.0001
+                       Phi Coefficient                       0.2502
+                       Contingency Coefficient               0.2427
+                       Cramer's V                            0.2502
+
+
+                                      Pearson Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                493.9181
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 320
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_overlap by flag_fru_b_motif
+
+                                  Likelihood Ratio Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                298.8676
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                  Mantel-Haenszel Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                493.8555
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 321
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_overlap by flag_fru_b_motif
+
+                                        Fisher's Exact Test
+                                 ----------------------------------
+                                 Cell (1,1) Frequency (F)      6893
+                                 Left-sided Pr <= F          1.0000
+                                 Right-sided Pr >= F         <.0001
+
+                                 Table Probability (P)       <.0001
+                                 Two-sided Pr <= P           <.0001
+
+                                         Sample Size = 7889
+                                           The SAS System          09:26 Monday, January 4, 2016 322
+
+                                         The FREQ Procedure
+
+                             Table of flag_overlap by flag_fru_c_motif
+
+                                flag_overlap     flag_fru_c_motif
+
+                                Frequency|
+                                Expected |
+                                Percent  |
+                                Row Pct  |
+                                Col Pct  |       0|       1|  Total
+                                ---------+--------+--------+
+                                       0 |   7176 |    463 |   7639
+                                         | 7099.7 | 539.35 |
+                                         |  90.96 |   5.87 |  96.83
+                                         |  93.94 |   6.06 |
+                                         |  97.87 |  83.12 |
+                                ---------+--------+--------+
+                                       1 |    156 |     94 |    250
+                                         | 232.35 | 17.651 |
+                                         |   1.98 |   1.19 |   3.17
+                                         |  62.40 |  37.60 |
+                                         |   2.13 |  16.88 |
+                                ---------+--------+--------+
+                                Total        7332      557     7889
+                                            92.94     7.06   100.00
+                                           The SAS System          09:26 Monday, January 4, 2016 323
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_overlap by flag_fru_c_motif
+
+                       Statistic                     DF       Value      Prob
+                       ------------------------------------------------------
+                       Chi-Square                     1    366.9582    <.0001
+                       Likelihood Ratio Chi-Square    1    202.3083    <.0001
+                       Continuity Adj. Chi-Square     1    362.1676    <.0001
+                       Mantel-Haenszel Chi-Square     1    366.9117    <.0001
+                       Phi Coefficient                       0.2157
+                       Contingency Coefficient               0.2108
+                       Cramer's V                            0.2157
+
+
+                                      Pearson Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                366.9582
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 324
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_overlap by flag_fru_c_motif
+
+                                  Likelihood Ratio Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                202.3083
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                  Mantel-Haenszel Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                366.9117
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      <.0001
+                                 Exact      Pr >= ChiSq      <.0001
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 325
+
+                                         The FREQ Procedure
+
+                      Statistics for Table of flag_overlap by flag_fru_c_motif
+
+                                        Fisher's Exact Test
+                                 ----------------------------------
+                                 Cell (1,1) Frequency (F)      7176
+                                 Left-sided Pr <= F          1.0000
+                                 Right-sided Pr >= F         <.0001
+
+                                 Table Probability (P)       <.0001
+                                 Two-sided Pr <= P           <.0001
+
+                                         Sample Size = 7889
+                                           The SAS System          09:26 Monday, January 4, 2016 326
+
+                                         The FREQ Procedure
+
+                           Table of flag_downstream_fru by flag_male_bias
+
+                                flag_downstream_fru
+                                          flag_male_bias
+
+                                Frequency|
+                                Expected |
+                                Percent  |
+                                Row Pct  |
+                                Col Pct  |       0|       1|  Total
+                                ---------+--------+--------+
+                                       0 |   6399 |   1145 |   7544
+                                         | 6386.9 | 1157.1 |
+                                         |  81.11 |  14.51 |  95.63
+                                         |  84.82 |  15.18 |
+                                         |  95.81 |  94.63 |
+                                ---------+--------+--------+
+                                       1 |    280 |     65 |    345
+                                         | 292.08 | 52.915 |
+                                         |   3.55 |   0.82 |   4.37
+                                         |  81.16 |  18.84 |
+                                         |   4.19 |   5.37 |
+                                ---------+--------+--------+
+                                Total        6679     1210     7889
+                                            84.66    15.34   100.00
+                                           The SAS System          09:26 Monday, January 4, 2016 327
+
+                                         The FREQ Procedure
+
+                   Statistics for Table of flag_downstream_fru by flag_male_bias
+
+                       Statistic                     DF       Value      Prob
+                       ------------------------------------------------------
+                       Chi-Square                     1      3.4089    0.0648
+                       Likelihood Ratio Chi-Square    1      3.2274    0.0724
+                       Continuity Adj. Chi-Square     1      3.1326    0.0767
+                       Mantel-Haenszel Chi-Square     1      3.4084    0.0649
+                       Phi Coefficient                       0.0208
+                       Contingency Coefficient               0.0208
+                       Cramer's V                            0.0208
+
+
+                                      Pearson Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                  3.4089
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      0.0648
+                                 Exact      Pr >= ChiSq      0.0669
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 328
+
+                                         The FREQ Procedure
+
+                   Statistics for Table of flag_downstream_fru by flag_male_bias
+
+                                  Likelihood Ratio Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                  3.2274
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      0.0724
+                                 Exact      Pr >= ChiSq      0.0784
+
+
+                                  Mantel-Haenszel Chi-Square Test
+                                 ----------------------------------
+                                 Chi-Square                  3.4084
+                                 DF                               1
+                                 Asymptotic Pr >  ChiSq      0.0649
+                                 Exact      Pr >= ChiSq      0.0669
+
+
+                                           The SAS System          09:26 Monday, January 4, 2016 329
+
+                                         The FREQ Procedure
+
+                   Statistics for Table of flag_downstream_fru by flag_male_bias
+
+                                        Fisher's Exact Test
+                                 ----------------------------------
+                                 Cell (1,1) Frequency (F)      6399
+                                 Left-sided Pr <= F          0.9702
+                                 Right-sided Pr >= F         0.0410
+
+                                 Table Probability (P)       0.0112
+                                 Two-sided Pr <= P           0.0669
+
+                                         Sample Size = 7889
