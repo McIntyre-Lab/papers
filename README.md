@@ -1,6 +1,6 @@
 This Repository contains all scripts and documentation for recent published papers.
 ## 2016
-* [Fear et al. 2015](https://github.com/McIntyre-Lab/papers/tree/master/fear_ase_2016): Submitted
+* [Fear et al. 2016](https://github.com/McIntyre-Lab/papers/tree/master/fear_ase_2016): In Revision
 
 * [Newell et al. 2016](https://github.com/McIntyre-Lab/papers/tree/master/newell_2016): In Revision
 
