@@ -1,0 +1,27 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -r n
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/tier_yesyes/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/tier_yesyes/
+#PBS -l walltime=12:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=900mb
+#PBS -t 1-500
+
+module load R/3.0.2
+
+# Set Directories
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+RPOG=$PROJ/scripts/typeI_error/emp_PG_DNA_Random_NO_YESAI_YESBIAS.r
+
+for line in r361 r332 r365; do
+    OUTDIR=$PROJ/pipeline_output/typeI_error/output/${line}_split
+    if [ ! -e $OUTDIR ]; then mkdir -p $OUTDIR; fi
+
+    INPUT=$PROJ/pipeline_output/typeI_error/input/${line}_split/${line}_ai_bias_sim_${PBS_ARRAYID}.csv
+    OUTPUT=$OUTDIR/${line}_ai_bias_sim_${PBS_ARRAYID}.csv
+
+    Rscript $RPOG $INPUT $OUTPUT
+done

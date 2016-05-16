@@ -1,0 +1,5 @@
+*old/
+*.Rhistory
+PBS_LOGS
+.ipynb_*
+*.pyc

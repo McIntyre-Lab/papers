@@ -1,0 +1,32 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -r n
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/bayesian/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/bayesian/
+#PBS -l walltime=24:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=500mb
+#PBS -t 2-500
+
+module load R/3.0.2
+
+# Set Directories
+    PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+    RPROG=$PROJ/scripts/qsim/PG_model_w_qsim.r
+
+    OUTDIR=$PROJ/qsim/output/split
+    if [ ! -e $OUTDIR ] ; then mkdir -p $OUTDIR; fi
+    
+    LOGS=$PROJ/qsim/output/logs
+    if [ ! -e $LOGS ] ; then mkdir -p $LOGS; fi
+
+# Set Files
+    INPUT=$PROJ/qsim/input/split/ase_dataset_for_bayesian_w_qsim_${PBS_ARRAYID}.csv
+    OUTPUT=$OUTDIR/ase_dataset_for_bayesian_w_qsim_${PBS_ARRAYID}.csv
+    MYLOG=$LOGS/ase_dataset_for_bayesian_w_qsim_${PBS_ARRAYID}.log
+
+    echo "Running $INPUT [`date`]" > $MYLOG
+    Rscript $RPROG $INPUT $OUTPUT &>>$MYLOG
+    echo "Script Complete [`date`]" >> $MYLOG

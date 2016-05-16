@@ -1,0 +1,55 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -N 100sam
+#PBS -r n
+#PBS -q bigmem
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/100_genome_sam_compare/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/100_genome_sam_compare/
+#PBS -l walltime=05:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=75gb
+##PBS -t 1-100
+#PBS -t 2-100
+
+module load python/2.7.6
+
+# Set Directories
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+WORK=$PROJ/100_genome_simulation
+FUS=/scratch/lfs/mcintyre/references/dmel_fb557/dmel_si_nonredundant_fusions_r5.57.bed
+
+# Current Genotype
+LINE=Line$PBS_ARRAYID
+
+# Create output directories and logs
+OUTDIR=$WORK/ase_counts_fb557
+if [ ! -e $OUTDIR ]; then mkdir -p $OUTDIR; fi
+
+LOGS=$OUTDIR/logs
+if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+
+MYLOG=$LOGS/${LINE}.log
+printf "`date` $LINE SGE_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > $MYLOG
+
+# Grab FASTQ Reads 
+READS=$TMPDIR/${LINE}_reads.fq
+cat $WORK/reads/simulated_fb557_${LINE}_reads.fq $WORK/reads/simulated_fb557_Tester_reads.fq > $READS 
+
+
+# Grab Sam files
+SAM1=$WORK/alignments/${LINE}.sam
+SAM2=$WORK/alignments/Tester_${LINE}.sam
+
+# Run Sam Compare
+python /scratch/lfs/jfear/devel/sam-compare/sam_compare.py \
+    -l 95 \
+    -f $FUS \
+    -q $READS \
+    -A $SAM1 \
+    -B $SAM2 \
+    -c $OUTDIR/ase_counts_${LINE}.csv \
+    -t $OUTDIR/ase_totals_${LINE}.txt \
+    -g $LOGS/ase_counts_${LINE}.log 
+
+echo "Script Complete, [`date`]" >>$MYLOG

@@ -1,0 +1,101 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -N alnupd
+#PBS -r n
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/100_genome/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/100_genome/
+#PBS -l walltime=20:00:00
+#PBS -l nodes=1:ppn=4
+#PBS -l pmem=20gb
+#PBS -t 1-100
+
+module load bowtie/0.12.9 
+module load last/247 
+module load python/2.7.6
+module load samtools/1.1
+
+# Store number of processors used -- i.e. number of files to split into to run LAST
+NUMPROCS=4
+
+# Set Directories
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+READDIR=$PROJ/100_genome_simulation/reads
+REFDIR=$PROJ/100_genome_simulation/references
+
+# Select Line
+LINE=Line${PBS_ARRAYID}
+
+# Create output directories and logs
+ALNDIR=$PROJ/100_genome_simulation/alignments
+if [ ! -e $ALNDIR ]; then mkdir -p $ALNDIR; fi
+
+LOGS=$ALNDIR/logs
+if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+
+MYLOG=$LOGS/${LINE}.log
+printf "`date` $LINE SGE_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > $MYLOG
+
+ALNLOGS=$ALNDIR/aln_logs 
+if [ ! -e $ALNLOGS ]; then mkdir -p $ALNLOGS; fi
+
+# Start Alignment Pipeline
+## FUNCTIONS FOR ALIGNMENT PIPELINE ###
+source $PROJ/scripts/alignment_functions.sh
+
+for RUN in line tester
+do
+    if [ $RUN == 'line' ]
+    then
+        REF=$REFDIR/simulated_fb551_${LINE}_BT1
+        LASTREF=$REFDIR/simulated_fb551_${LINE}_LAST
+        FAREF=$REFDIR/simulated_fb551_${LINE}.fa
+        NAME=$LINE
+    elif [ $RUN == 'tester' ]
+    then
+        REF=$REFDIR/simulated_fb551_Tester_BT1
+        LASTREF=$REFDIR/simulated_fb551_Tester_LAST
+        FAREF=$REFDIR/simulated_fb551_Tester.fa
+        NAME=Tester_$LINE
+    fi
+
+    ## Start Alignment Pipeline
+    printf "<------------------- STARTING SE alignment process for $LINE to the $RUN REFERENCE [`date`] ------------------->\n" >> $MYLOG
+    READS=$TMPDIR/hybrid.fq
+    cat $READDIR/simulated_fb551_${LINE}_reads.fq $READDIR/simulated_fb551_Tester_reads.fq > $READS 
+
+    qual=`python /scratch/lfs/mcintyre/python.git/identify_quality.py -i $READS`
+    if [ $qual == 'phred64' ];
+    then
+        # set to old illumina quality scores phred64/solexa 1.3
+        btqual='--phred64-quals'
+        lastqual='3'
+    else
+        # change to sanger format which is what all new illumina data is
+        btqual='--phred33-quals'
+        lastqual='1'
+    fi
+
+    bowtie_se_uniq
+    last_se_uniq
+
+    ## Combine all Sam files
+    echo "START Combine SAM files">>$MYLOG
+    cat *.sam >$TMPDIR/${LINE}.sam 2>>$MYLOG
+    echo "FINISH Combining SAM files [`date`]" >>$MYLOG
+
+    ## Save copy to SCRATCH
+    if [ $RUN == 'line' ]
+    then
+        ONAME=$ALNDIR/${LINE}.sam
+    elif [ $RUN == 'tester' ]
+    then
+        ONAME=$ALNDIR/Tester_${LINE}.sam
+    fi
+
+    cp ${LINE}.sam $ONAME
+
+    cd $TMPDIR 
+    rm *
+done
+echo "Script Complete, [`date`]" >>$MYLOG

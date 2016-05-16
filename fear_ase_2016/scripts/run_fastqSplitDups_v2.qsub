@@ -1,0 +1,67 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -N CEGSSplit
+#PBS -q bio
+#PBS -r n
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/fastqSplitDups/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/fastqSplitDups/
+#PBS -l walltime=11:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=12gb
+##PBS -t 1-4924
+#PBS -t 333-340,4339-4342
+
+module load python/2.7.6
+
+# Set variables
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+ORIG=$PROJ/original_data/transcriptome/combined
+
+# Set Design info
+DESIGN_FILE=$PROJ/design_files/CEGS_combined_lines_design_r1.txt
+DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+IFS=',' read -ra ARRAY <<< "$DESIGN"
+
+LINE=${ARRAY[0]}
+REP=${ARRAY[1]}
+TECH=${ARRAY[2]}
+
+# Create output directories
+OUTDIR=$PROJ/fastq_split
+if [ ! -e $OUTDIR ]; then mkdir -p $OUTDIR; fi
+
+LOGS=$OUTDIR/logs
+if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+
+cd $ORIG
+
+NAME=`basename ${LINE}_${REP}.$TECH.txt .1.txt`
+R1=$NAME.1.txt
+R2=$NAME.2.txt
+
+if [ -e $R2 ]
+then
+    python /scratch/lfs/mcintyre/python.git/fastqSplitDups.py \
+        -r1 $R1 \
+        -r2 $R2 \
+        --outdir $OUTDIR \
+        -o $LOGS/${NAME}_duplicate_count.csv \
+        -g $LOGS/$NAME.log
+
+    OCOUNT=`sed -n "1~4p" $R1 $R2 | wc -l`
+else
+    python /scratch/lfs/mcintyre/python.git/fastqSplitDups.py \
+        -r1 $R1 \
+        --outdir $OUTDIR \
+        -o $LOGS/${NAME}_duplicate_count.csv \
+        -g $LOGS/$NAME.1.log
+    OCOUNT=`sed -n "1~4p" $R1 | wc -l`
+fi
+COUNT=`sed -n "1~4p" $OUTDIR/$NAME* | wc -l`
+if [ $OCOUNT == $COUNT ]
+then
+    echo "Count OK" >> $LOGS/$NAME.log
+else
+    echo "Count FAIL" >> $LOGS/$NAME.log
+fi

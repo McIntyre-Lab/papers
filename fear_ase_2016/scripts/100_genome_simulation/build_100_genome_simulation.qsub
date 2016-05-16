@@ -1,0 +1,66 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -N buildsim
+#PBS -m n
+#PBS -r n
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/100_genome/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/100_genome/
+#PBS -l walltime=11:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=3gb
+#PBS -t 1-101
+
+module load bowtie/0.12.9
+module load samtools/1.1
+module load last/247
+module load python/2.7.6
+
+# Set directories and variables
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+PYGIT=/scratch/lfs/mcintyre/python.git
+
+READDIR=$PROJ/100_genome_simulation/reads
+if [ ! -e $READDIR ]; then mkdir -p $READDIR; fi
+
+REFDIR=$PROJ/100_genome_simulation/references
+if [ ! -e $REFDIR ]; then mkdir -p $REFDIR; fi
+
+# Use fb551 non-redundant fusions
+REF=/scratch/lfs/mcintyre/references/dmel_fb551/dmel-non-redundant-r5.51_fusions.fa
+
+if [[ $PBS_ARRAYID == 101 ]]
+then
+    NAME=Tester
+else
+    NAME=Line$PBS_ARRAYID
+fi
+
+# Simulate SNPS 
+python $PYGIT/simulate_snps.py \
+    -i $REF \
+    -o $REFDIR/simulated_fb551_${NAME}.fa \
+    -t $REFDIR/simulated_fb551_${NAME}.csv \
+    -n 160000
+
+# Simulate Reads
+python $PYGIT/simulate_reads.py \
+    -i $REFDIR/simulated_fb551_${NAME}.fa \
+    -n 95 \
+    --prefix $NAME \
+    -g $READDIR/simulated_fb551_${NAME}_reads.log \
+    -o $READDIR/simulated_fb551_${NAME}_reads.fq
+
+# Build References
+bowtie-build \
+    ${REFDIR}/simulated_fb551_${NAME}.fa \
+    ${REFDIR}/simulated_fb551_${NAME}_BT1 \
+    &>${REFDIR}/simulated_fb551_${NAME}_bowtie_build.log
+
+echo `date`": building samtools index for ${NAME}"
+samtools faidx ${REFDIR}/simulated_fb551_${NAME}.fa
+
+echo `date`": building LAST db for ${NAME}"
+lastdb ${REFDIR}/simulated_fb551_${NAME}_LAST ${REFDIR}/simulated_fb551_${NAME}.fa
+
+echo "Script Complete"

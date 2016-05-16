@@ -1,0 +1,30 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -r n
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/bayesian/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/bayesian/
+#PBS -l walltime=20:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=500mb
+#PBS -t 2-500
+
+module load R/3.0.2
+
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+
+OUTDIR=$PROJ/typeI_error/output/r101_miss_split
+if [ ! -e $OUTDIR ]; then mkdir -p $OUTDIR; fi
+
+SCRIPT=$PROJ/scripts/typeI_error/r101_diffmodels_forTIER_Figure.R
+
+for QTRUE in 0.35 0.375 0.4 0.425 0.45 0.46 0.47 0.48 0.49 0.50 0.51 0.52 0.53 0.54 0.55 0.575 0.6 0.625 0.65
+do
+    QNAME=`bc <<< $QTRUE*1000 | cut -f1 -d'.'`
+
+    INPUT=$PROJ/typeI_error/input/r101_miss_split/r101_simulateddata_forTIER_FigureNOAIPoisson_q_true_0d${QNAME}_${PBS_ARRAYID}.csv
+    OUTPUT=$OUTDIR/r101_simulateddata_forTIER_FigureNOAIPoisson_q_true_results_0d${QNAME}_${PBS_ARRAYID}.csv
+
+    Rscript $SCRIPT $INPUT $OUTPUT $QTRUE
+done
