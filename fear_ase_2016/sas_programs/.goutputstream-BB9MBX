@@ -1,0 +1,144 @@
+/********************************************************************************/
+/*Create csv file with SNP information                                              */
+/********************************************************************************/
+
+/*
+"Z:\cegs_sergey\pipeline_output\ase_SNP_filtered_vcf_files\w11182&ID._vcf_MSKD.vcf"
+"Z:\cegs_sergey\pipeline_output\ase_SNP_filtered_vcf_files\w1118_w11182&ID._vcf_UPD.vcf"
+"Z:\cegs_sergey\pipeline_output\ase_SNP_filtered_vcf_files\&ID._w11182&ID._vcf_UPD.vcf"
+
+"Z:\cegs_sergey\pipeline_output\ase_SNP_consensus_VCF_files\w11182&ID._snp_flgs.csv"
+*/
+/*
+libname cegs "Z:\cegs_sergey\sas_data";
+libname mycegs "E:\cegs\sas_data";
+
+%include "Z:\cegs_sergey\design_files\top_7_lines.txt";
+%put &mylist;
+%include "Z:\macros\iterlist.sas";
+*/
+
+libname cegs '/home/ammorse/mclab/McIntyre_Lab/cegs_sergey/sas_data';
+libname mycegs '/home/ammorse/TB4/cegs/sas_data';
+*libname mycegs2 '/home/ammorse/TB1/cegs/sas_data';
+
+%include '/home/ammorse/mclab/McIntyre_Lab/cegs_sergey/design_files/CEGS_list_set2_lines_sas.txt';
+%put &mylist;
+%include '/home/ammorse/mclab/McIntyre_Lab/macros/iterlist.sas';
+
+
+%macro create_w11182line_SNP(ID);
+
+data mycegs.w11182&ID._snp_flgs ;
+set mycegs.w1118_2_&ID._vcf_flags2;   
+
+length w1118_base $ 1;
+length LINE_base $ 1;
+
+if Output_Lvl1_MSKD = 1;
+*case 1;
+*case 1 is if either is a het and I think this should be filtered in level 1 this is a double check;
+if case=1 then delete;
+
+*case 2;
+*case 2 is both are reference I think this should be filtered in level 1 this is a double check;
+ if case=2 then delete;
+*case 3;
+if case=3 then do;
+
+w1118_base = ALT_w1118;
+LINE_base = ALT_&ID; 
+ref_base=ref_w1118;
+end;
+*Case 4;
+
+if case = 4 and ALT_w1118 = "" then do;
+
+w1118_base = REF_&ID;
+LINE_base = ALT_&ID; 
+ref_base=ref_&id;
+end;
+
+*I added an else to the next line;
+else if case = 4 and ALT_&ID = "" then do;
+
+w1118_base = ALT_w1118;
+LINE_base = REF_w1118; 
+ref_base=ref_w1118;
+end;
+
+*Case 5;
+
+if case = 5 then do;
+
+w1118_base = ALT_w1118;
+LINE_base = ALT_&ID; 
+ref_base=ref_w1118;
+end;
+
+*Case 6;
+
+if case = 6 and VCF_in_&ID._only = 1 then do;
+
+w1118_base = REF_&ID;
+LINE_base = ALT_&ID; 
+ref_base=ref_&id;;
+end;
+* in case 6 the snp is missing from one of the two vcf files;
+*I added an else to the next line;
+ if case = 6 and VCF_in_w1118_only = 1 then do;
+
+w1118_base = ALT_w1118;
+LINE_base = REF_w1118;  
+REF_base=Ref_w1118;
+end;
+
+keep chrom pos REF_base w1118_base LINE_base case;
+
+run;
+
+%mend;
+
+%iterlist( list = &mylist.,
+                   code = %nrstr(
+
+%create_w11182line_SNP (?);
+
+                                                )
+ );
+
+/*
+%macro freq_w11182line_snp(ID);
+proc freq data = mycegs.w11182&ID._snp_flgs noprint;
+tables case*ref_base*w1118_base*LINE_base/ out = check_SNP_file_flgs_&ID.;
+run;
+%mend;
+
+%iterlist( list = &mylist.,
+                   code = %nrstr(
+
+%freq_w11182line_snp (?);
+
+                                                )
+ );
+*/
+
+%macro output_snp_file(ID);
+
+proc export data = mycegs.w11182&ID._snp_flgs
+           OUTFILE= "/home/ammorse/TB4/cegs/ase_SNP_consensus_VCF_files/w11182&ID._snp_flgs.csv"
+           DBMS=TAB REPLACE;
+RUN;   
+%mend;
+
+%iterlist( list = &mylist.,
+                   code = %nrstr(
+
+%output_snp_file (?);
+
+                                                )
+ );
+
+
+
+

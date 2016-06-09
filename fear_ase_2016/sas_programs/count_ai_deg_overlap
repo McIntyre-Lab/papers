@@ -1,0 +1,154 @@
+
+
+libname dmel "/home/mcintyre/S/SHARE/McIntyre_Lab/useful_dmel_data/flybase551/sasdata";
+libname cegs "/home/mcintyre/S/SHARE/McIntyre_Lab/cegs_ase_paper/sas_data";
+libname oe "/home/mcintyre/S/SHARE/McIntyre_Lab/svn_lmm_dros_head_data/mel_cegs_expression_1st_106_F/oe_counts/sas_data";
+ 
+
+libname gwas '/home/mcintyre/S/SHARE/McIntyre_Lab/cegs_gwas_paper/pipeline_output';
+
+PROC IMPORT OUT= WORK.dge 
+            DATAFILE= '/home/mcintyre/S/SHARE/McIntyre_Lab/cegs_gwas_paper/pipeline_output/dge_results_summary.csv' 
+            DBMS=CSV REPLACE;
+     GETNAMES=YES;
+     DATAROW=2; 
+RUN;
+
+
+data count_de;
+set dge;
+if fdr_bh le 0.2 then flag_sig=1;
+else flag_sig=0;
+if heritability ge 0.4 then flag_herit_high=1;
+else flag_herit_high=0;
+
+proc contents data=oe.results_by_fusion_w_fdr;
+run;
+
+data apn_dge;
+set oe.results_by_fusion_w_fdr;
+*keep fusion_id fbgn_cat flag_fusion_fdr05 flag_fusion_p05;
+
+proc sort data=count_de;
+by fusion_id;
+
+proc sort data= apn_dge;
+by fusion_id;
+
+data compare check;
+merge count_de (in=in1) apn_dge (in=in2);
+by fusion_id;
+if in1 and in2 then ouptut compare;
+else if in2 then output check;
+
+run;
+
+proc print data=check (obs=10);
+run;
+
+proc freq data=compare;
+tables flag_sig*flag_fusion_p05;
+run;
+
+
+
+data cis_est;
+set cegs.Cis_est_v13;
+if direction_cis ne direction_trans then flag_buffer=1;
+else flag_buffer=0;
+run;
+
+proc sort data=count_de;
+by fusion_id;
+
+proc sort data=dmel.Fb551_si_fusions_unique_flagged;
+by fusion_id;
+
+proc sort data=cis_est;
+by fusion_id;
+run;
+
+proc sort data=corr_ct_by_e;
+by fusion_id;
+*from correlations cis_trans_v4;
+run;
+
+proc contents data=corr_ct_by_e;
+run;
+
+data ai_vs_de oops1 de_only not_tested;
+merge cis_est(in=in1) dmel.Fb551_si_fusions_unique_flagged(in=in2) count_de(in=in3) ;
+by fusion_id;
+if in1 and in3 then output ai_vs_de;
+ else if in1 then output oops1;
+else if in3 then output de_only;
+else output not_tested;
+run;
+
+
+proc means data=ai_vs_de noprint;
+by fusion_id;
+var flag_sig flag_all_ai ;
+output out=sum sum(flag_sig flag_all_ai ) =/autoname;
+run;
+
+
+data sum_flags;
+set sum;
+if flag_sig_sum >0 then flag_de=1;
+else flag_de=0;
+if flag_all_ai_sum> 0 then flag_ai =1;
+else flag_ai=0;
+run;
+
+proc freq data=sum_flags;
+tables flag_de*flag_ai;
+run;
+
+proc print data=sum (obs=10);
+run;
+
+data buffered;
+merge corr_ct_by_e (in=in1) sum_flags(in=in2);
+by fusion_id;
+if in1 and in2;
+
+run;
+
+
+proc freq data=buffered;
+tables flag_de*(direction_ct_mated_corr direction_ct_virgin_corr);
+run;
+
+
+proc print data=corr_ct_by_e(obs=10);
+run;
+
+proc freq data=ai_vs_de;
+tables flag_buffer*flag_sig;
+run;
+
+proc sort data=ai_vs_de ;
+by symbol_cat;
+
+
+proc means data=ai_vs_de noprint;
+by symbol_cat;
+var flag_sig flag_all_ai flag_buffer;
+output out=sum sum(flag_sig flag_all_ai flag_buffer) =/autoname;
+run;
+
+proc print data=sum (obs=10);
+run;
+
+
+*are compensation exons more buffered from the environment;
+
+proc print data=ai_vs_de;
+where symbol_cat ? "sxl";
+run;
+
+
+
+
+

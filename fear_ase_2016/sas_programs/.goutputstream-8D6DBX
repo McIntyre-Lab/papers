@@ -1,0 +1,90 @@
+/********************************************************************************/
+/*merge flag file to level 1 filtered vcf for updaing                          */
+/*                                                                              */
+/********************************************************************************/
+
+/*
+"Z:\cegs_sergey\pipeline_output\ase_SNP_filtered_vcf_files\w11182&ID._vcf_MSKD.vcf"
+"Z:\cegs_sergey\pipeline_output\ase_SNP_filtered_vcf_files\w1118_w11182&ID._vcf_UPD.vcf"
+"Z:\cegs_sergey\pipeline_output\ase_SNP_filtered_vcf_files\&ID._w11182&ID._vcf_UPD.vcf"
+*/
+/*
+libname cegs "Z:\cegs_sergey\sas_data";
+libname mycegs "E:\cegs\sas_data";
+
+%include "Z:\cegs_sergey\design_files\top_7_lines.txt";
+%put &mylist;
+%include "Z:\macros\iterlist.sas";
+*/
+
+
+libname test '/home/ammorse/TB4/cegs/sas_data/nocat';
+libname cegs '/home/ammorse/mclab/McIntyre_Lab/cegs_sergey/sas_data';
+libname mycegs '/home/ammorse/TB4/cegs/sas_data';
+*libname mycegs2 '/home/ammorse/cegs/sas_data';
+
+%include '/home/ammorse/mclab/McIntyre_Lab/cegs_sergey/design_files/CEGS_list_1to9_lines_sas.txt';
+%put &mylist;
+%include '/home/ammorse/mclab/McIntyre_Lab/macros/iterlist.sas';
+
+
+*Merge the flag file to the level 1 filtered VCF file for updating;
+ 
+%macro merge_flags2vcf(ID);
+
+data w1118_2_&ID._vcf_flags3;
+set mycegs.w1118_2_&ID._vcf_flags2;
+if Output_Lvl1_UPD = 1;
+run;
+
+proc sort data = w1118_2_&ID._vcf_flags3;
+by chrom pos;
+proc sort data = test.w1118_2_&ID._all_lvl2_flags ;
+by chrom pos;
+run;
+
+data test.w1118_2_&ID._flg2vcf;
+merge w1118_2_&ID._vcf_flags3 (in=in1) test.w1118_2_&ID._all_lvl2_flags (in=in2);
+by chrom pos;
+*if in1 ;
+run;
+
+%mend;
+
+
+%iterlist( list = &mylist.,
+                   code = %nrstr(
+
+%merge_flags2vcf(?);
+                                                )
+ );
+
+
+
+  *quick check below ;
+ proc contents data = test.w1118_2_r101_flg2vcf; run;
+
+ proc freq data = test.w1118_2_r101_flg2vcf noprint ; 
+ tables r101_filter_indel * r101_SNP_verified * r101_not_biallelic * 
+        w1118_r101_DNA_5X_SNP_cvg * w1118_r101_RNA_10X_SNP_cvg / out = ck_cnts ;
+run;
+
+/*
+ data test.w1118_2_r101_flg2vcf ;
+set test.w1118_2_r101_flg2vcf;
+run;  
+
+proc contents data = test.w1118_2_r101_flg2vcf ; run;
+*/
+
+proc freq data = test.w1118_2_r101_flg2vcf  noprint;
+tables  r101_flag_in_mpileup * r101_flag_in_snpfile * r101_filter_indel * r101_not_biallelic * 
+        r101_snp_verified * w1118_r101_RNA_10X_SNP_cvg * w1118_r101_DNA_5X_SNP_cvg / out=cnts_r101 ;
+run;
+
+*data find_missing ;
+*set test.w1118_2_&ID._flg2vcf ;
+*if &ID._flag_not_mpileup = .;
+*run;
+
+

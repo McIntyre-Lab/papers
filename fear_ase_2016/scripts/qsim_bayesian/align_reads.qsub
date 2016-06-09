@@ -1,0 +1,101 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -N aln_simulation
+#PBS -r n
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/qsim_bayesian/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/qsim_bayesian/
+#PBS -l walltime=20:00:00
+#PBS -l nodes=1:ppn=4
+#PBS -l pmem=20gb
+#PBS -t 1-68
+
+set -o nounset
+set -e
+
+module load bowtie/1.1.1 
+module load last/247
+module load python/2.7.6
+module load samtools/1.2
+
+# Store number of processors used -- i.e. number of files to split into to run LAST
+NUMPROCS=$PBS_NUM_PPN
+
+# Set Directories
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+READDIR=$PROJ/qsim_bayesian/reads
+REFDIR=$PROJ/references/upd_genome
+
+# Select Line
+DESIGN_FILE=$PROJ/design_files/CEGS_list_68_lines.txt
+LINE=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+
+# Create output directories and logs
+ALNDIR=$PROJ/qsim_bayesian/alignments
+if [ ! -e $ALNDIR ]; then mkdir -p $ALNDIR; fi
+
+LOGS=$ALNDIR/logs
+if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+
+MYLOG=$LOGS/${LINE}.log
+printf "`date` $LINE SGE_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > $MYLOG
+
+ALNLOGS=$ALNDIR/aln_logs 
+if [ ! -e $ALNLOGS ]; then mkdir -p $ALNLOGS; fi
+
+# Start Alignment Pipeline
+## FUNCTIONS FOR ALIGNMENT PIPELINE ###
+source $PROJ/scripts/alignment_functions.sh
+
+for RUN in line tester
+do
+    if [ $RUN == 'line' ]; then
+        REF=$REFDIR/$LINE/${LINE}_w11182${LINE}_UPD_fusions_BT1
+        LASTREF=$REFDIR/$LINE/${LINE}_w11182${LINE}_UPD_fusions_LAST
+        FAREF=$REFDIR/$LINE/${LINE}_w11182${LINE}_UPD_fusions.fa
+        NAME=$LINE
+    elif [ $RUN == 'tester' ]; then
+        REF=$REFDIR/$LINE/w1118_w11182${LINE}_UPD_fusions_BT1
+        LASTREF=$REFDIR/$LINE/w1118_w11182${LINE}_UPD_fusions_LAST
+        FAREF=$REFDIR/$LINE/w1118_w11182${LINE}_UPD_fusions.fa
+        NAME=w1118_$LINE
+    fi
+
+    ## Start Alignment Pipeline
+    printf "<------------------- STARTING SE alignment process for $LINE to the $RUN REFERENCE [`date`] ------------------->\n" >> $MYLOG
+    cd $TMPDIR
+    READS=hybrid.fq
+    cat $READDIR/${LINE}_simulated.fastq $READDIR/w1118_${LINE}_simulated.fastq > $READS 
+
+    qual=`python /scratch/lfs/mcintyre/python.git/identify_quality.py -i $READS`
+    if [ $qual == 'phred64' ]; then
+        # set to old illumina quality scores phred64/solexa 1.3
+        btqual='--phred64-quals'
+        lastqual='3'
+    else
+        # change to sanger format which is what all new illumina data is
+        btqual='--phred33-quals'
+        lastqual='1'
+    fi
+
+    bowtie_se_uniq
+    last_se_uniq
+
+    ## Combine all Sam files
+    echo "START Combine SAM files">>$MYLOG
+    cat *.sam >${LINE}.sam 2>>$MYLOG
+    echo "FINISH Combining SAM files [`date`]" >>$MYLOG
+
+    ## Save copy to SCRATCH
+    if [ $RUN == 'line' ]; then
+        ONAME=$ALNDIR/${LINE}.sam
+    elif [ $RUN == 'tester' ]; then
+        ONAME=$ALNDIR/w1118_${LINE}.sam
+    fi
+
+    cp ${LINE}.sam $ONAME
+
+    cd $TMPDIR 
+    rm *
+done
+echo "Script Complete, [`date`]" >>$MYLOG

@@ -1,0 +1,41 @@
+#!/bin/bash
+#PBS -M fnew@ufl.edu
+#PBS -N sim_bwamem
+#PBS -m abe
+#PBS -q bio
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/cegs/scripts/PBS_LOGS/sim_aln_bwa_mem
+#PBS -l walltime=8:00:00
+#PBS -l nodes=1:ppn=2
+#PBS -l pmem=16gb
+#PBS -t 1-100
+
+module load bwa
+module load python/2.7.3
+
+#Set directories
+    PROJ=/scratch/lfs/mcintyre/cegs
+    ORIG=$PROJ/simulation_ase/reads
+    OUTPUT=$PROJ/simulation_ase/bwa_mem_aln
+    if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+    
+
+
+#Pull info from design file
+    DESIGN_FILE=$PROJ/design_files/simulation_file_list.txt
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+
+    NAME=`basename "$DESIGN" .fq`
+
+#References
+    REF=/scratch/lfs/mcintyre/references/dmel_fb551/dmel-non-redundant-r5.51_fusions
+
+#bwa index -p dmel-non-redundant-r5.51_fusions -a bwtsw $REF/dmel-non-redundant-r5.51_fusions.fa
+
+
+bwa mem -t 4 $REF $ORIG/$NAME.fq > $OUTPUT/$NAME.sam
+
+
+
+

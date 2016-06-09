@@ -1,0 +1,34 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -r n
+#PBS -N sim_reads
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/qsim_bayesian/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/qsim_bayesian/
+#PBS -l walltime=24:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=6gb
+#PBS -t 1-68
+
+set -o nounset
+set -e
+
+module load python/2.7.3
+
+## Set directories
+
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+REFS=$PROJ/references/upd_genome
+PROG=/scratch/lfs/mcintyre/python.git/simulate_reads.py
+OUTPUT=$PROJ/qsim_bayesian/reads
+if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+## Pull in info from design file
+DESIGN_FILE=$PROJ/design_files/CEGS_list_68_lines.txt
+LINE=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+
+cd $REFS/$LINE
+python $PROG --prefix ${LINE} -i ${LINE}_w11182${LINE}_UPD_fusions.fa -o $OUTPUT/${LINE}_simulated.fastq -n 95 
+
+python $PROG --prefix w1118 -i w1118_w11182${LINE}_UPD_fusions.fa -o $OUTPUT/w1118_${LINE}_simulated.fastq -n 95 

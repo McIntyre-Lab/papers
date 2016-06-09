@@ -1,0 +1,36 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -m n
+#PBS -N rnaSupport
+#PBS -r n
+#PBS -q bio
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/ase_pipeline/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/ase_pipeline/
+#PBS -l walltime=11:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=10gb
+#PBS -t 1-68
+
+module load python/2.7.6
+module load samtools/1.2
+
+# Set Directories
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+
+OUTPUT=$PROJ/ase_pipeline_output/ase_masked_aln_rna_support
+if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+# Pull design information 
+DESIGN_FILE=$PROJ/design_files/CEGS_list_68_lines.txt
+DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+IFS=',' read -ra ARRAY <<< "$DESIGN"
+LINE=${ARRAY[0]}
+
+python $PROJ/scripts/ase_pipeline/get_rna_support_v2.py \
+            --vcf $PROJ/ase_pipeline_output/ase_lvl1_filtered_vcf_files/w11182${LINE}_MSKD.vcf \
+                  $PROJ/ase_pipeline_output/ase_lvl1_filtered_vcf_files/${LINE}_w11182${LINE}_lvl1.vcf \
+                  $PROJ/ase_pipeline_output/ase_lvl1_filtered_vcf_files/w1118_w11182${LINE}_lvl1.vcf \
+                  $PROJ/ase_pipeline_output/ase_lvl1_filtered_vcf_files/${LINE}_w11182${LINE}_lvl1_indel.vcf \
+                  $PROJ/ase_pipeline_output/ase_lvl1_filtered_vcf_files/w1118_w11182${LINE}_lvl1_indel.vcf \
+            --cnts $PROJ/ase_pipeline_output/rna_counts/${LINE}_*.csv \
+            -o $OUTPUT/$LINE.csv

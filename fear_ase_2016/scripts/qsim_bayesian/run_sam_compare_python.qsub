@@ -1,0 +1,56 @@
+#!/bin/bash
+#PBS -M jfear@ufl.edu
+#PBS -N sam_compare
+#PBS -r n
+#PBS -q bigmem
+#PBS -o /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/qsim_bayesian/
+#PBS -e /scratch/lfs/mcintyre/cegs_ase_paper/scripts/PBS_LOGS/qsim_bayesian/
+#PBS -l walltime=11:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=75gb
+#PBS -t 1-68
+
+set -o nounset
+set -e
+
+module load python/2.7.6
+
+# Set Directories
+PROJ=/scratch/lfs/mcintyre/cegs_ase_paper
+INDIR=$PROJ/qsim_bayesian
+FUS=/scratch/lfs/mcintyre/references/dmel_fb551/dmel-non-redundant-r5.51_fusions.bed
+
+# Set Design info
+DESIGN_FILE=$PROJ/design_files/CEGS_list_68_lines.txt
+LINE=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+
+# Create output directories and logs
+OUTDIR=$PROJ/qsim_bayesian/ase_counts_fb551
+if [ ! -e $OUTDIR ]; then mkdir -p $OUTDIR; fi
+
+LOGS=$OUTDIR/logs
+if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+
+MYLOG=$LOGS/${LINE}.log
+printf "`date` $LINE SGE_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > $MYLOG
+
+# Grab combined read information
+cd $TMPDIR
+READS=hybrid.fq
+cat $PROJ/qsim_bayesian/reads/${LINE}_simulated.fastq $PROJ/qsim_bayesian/reads/w1118_${LINE}_simulated.fastq > $READS
+
+# Grab Sam files
+SAM1=$PROJ/qsim_bayesian/alignments/${LINE}.sam
+SAM2=$PROJ/qsim_bayesian/alignments/w1118_${LINE}.sam
+
+python /scratch/lfs/jfear/devel/sam-compare/sam_compare.py \
+    -l 95 \
+    -f $FUS \
+    -q $READS \
+    -A $SAM1 \
+    -B $SAM2 \
+    -c $OUTDIR/ase_counts_${LINE}.csv \
+    -t $OUTDIR/ase_totals_${LINE}.txt \
+    -g $LOGS/ase_counts_${LINE}.log 
+
+echo "Script Complete, [`date`]" >>$MYLOG
