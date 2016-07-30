@@ -5,7 +5,7 @@ libname dsim "/home/fnew/ufgi_share/SHARE/McIntyre_Lab/ethanol/Sim_Pop_Gen/sas_d
 
 data WORK.tsd100    ;
       %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
-      infile '/home/fnew/dsim/tajima_d/filter_nolab_tajd_100kb.Tajima.D' delimiter='09'x
+      infile ‘!MCLAB/ethanol/Sim_Pop_Gen/output/tajima_d/filter_nolab_tajd_100kb.Tajima.D' delimiter='09'x
  MISSOVER DSD lrecl=32767 firstobs=2 ;
          informat CHROM $2. ;
          informat BIN_START best32. ;
@@ -28,7 +28,7 @@ data WORK.tsd100    ;
 
 data WORK.tsd10    ;
       %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
-      infile '/home/fnew/dsim/tajima_d/filter_nolab_tajd_10kb.Tajima.D' delimiter='09'x
+      infile '!MCLAB/ethanol/Sim_Pop_Gen/output/tajima_d/filter_nolab_tajd_10kb.Tajima.D' delimiter='09'x
  MISSOVER DSD lrecl=32767 firstobs=2 ;
          informat CHROM $2. ;
          informat BIN_START best32. ;

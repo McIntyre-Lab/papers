@@ -1,5 +1,8 @@
 libname dsim "/home/fnew/ufgi_share/SHARE/McIntyre_Lab/ethanol/Sim_Pop_Gen/sas_data";
 
+/* The files “all_chrom#_tajimaD_10kb.Tajima.D are located on the HPC: dsim_pop/vcftools_output/tajima_d_split_vcf/all_chrom*_tajimaD_10kb.Tajima.D */
+
+/* The files “chrom*_ld_window_avg.txt” are located on the HPC: dsim_pop/plink/split_vcf_ld/chrom*_ld_window_avg.txt */
 
 
 /* chromosome 4*/
@@ -67,7 +70,7 @@ data ld_td;
   run;
 
 proc export data=ld_td
-    outfile="/home/fnew/dsim/vcf_split_td_ld/chr4_ld_and_td.txt"
+    outfile=“!MCLAB/ethanol/Sim_Pop_Gen/output/ld_and_D/chr4_ld_and_td.txt"
     DBMS=TAB REPLACE;
     run;
 
@@ -139,7 +142,7 @@ data ld_td;
   run;
 
 proc export data=ld_td
-    outfile="/home/fnew/dsim/vcf_split_td_ld/chr2l_ld_and_td.txt"
+    outfile="!MCLAB/ethanol/Sim_Pop_Gen/output/ld_and_D/chr2l_ld_and_td.txt"
     DBMS=TAB REPLACE;
     run;
 
@@ -211,7 +214,7 @@ data ld_td_x;
   run;
 
 proc export data=ld_td_x
-    outfile="/home/fnew/dsim/vcf_split_td_ld/chrX_ld_and_td.txt"
+    outfile="!MCLAB/ethanol/Sim_Pop_Gen/output/ld_and_D/chrX_ld_and_td.txt"
     DBMS=TAB REPLACE;
     run;
 
@@ -282,7 +285,7 @@ data ld_td_3L;
   run;
 
 proc export data=ld_td_3L
-    outfile="/home/fnew/dsim/vcf_split_td_ld/chr3L_ld_and_td.txt"
+    outfile="!MCLAB/ethanol/Sim_Pop_Gen/output/ld_and_D/chr3L_ld_and_td.txt"
     DBMS=TAB REPLACE;
     run;
 
@@ -352,7 +355,7 @@ data ld_td_3R;
   run;
 
 proc export data=ld_td_3R
-    outfile="/home/fnew/dsim/vcf_split_td_ld/chr3R_ld_and_td.txt"
+    outfile="!MCLAB/ethanol/Sim_Pop_Gen/output/ld_and_D/chr3R_ld_and_td.txt"
     DBMS=TAB REPLACE;
     run;
 
@@ -421,7 +424,7 @@ data ld_td_2R;
   run;
 
 proc export data=ld_td_2R
-    outfile="/home/fnew/dsim/vcf_split_td_ld/chr2R_ld_and_td.txt"
+    outfile="!MCLAB/ethanol/Sim_Pop_Gen/output/ld_and_D/chr2R_ld_and_td.txt"
     DBMS=TAB REPLACE;
     run;
 

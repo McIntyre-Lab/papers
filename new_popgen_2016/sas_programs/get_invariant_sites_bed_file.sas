@@ -9,7 +9,7 @@
 libname chk "!MCLAB/ethanol/Sim_Pop_Gen/sas_data/checks";
 
 %macro import(chr,window);
-proc import datafile = '/home/fnew/popgenome/dsim_10kb_chrom4_6.vcf'
+proc import datafile = ‘!MCLAB/ethanol/Sim_Pop_Gen/output/checks/getPopStat_test/dsim_10kb_chrom4_6.vcf'
     out=vcf
     dbms=TAB REPLACE;
     delimiter='09'x;
@@ -29,7 +29,7 @@ data chk.vcf_&chr._window&window._10kb;
   These should be the positions from start to finish in the VCF, with no gaps
   */
 
-proc import datafile ="/home/fnew/popgenome/chr4_w6_all_sites.csv"
+proc import datafile ="!MCLAB/ethanol/Sim_Pop_Gen/output/checks/getPopStat_test/chr4_w6_all_sites.csv"
     out = all_sites
     dbms = CSV REPLACE;
     datarow=2; getnames=yes;
@@ -51,7 +51,7 @@ data variants invariants;
 
 *Export the invariants file;
 proc export data=invariants
-    outfile="/home/fnew/popgenome/chr4_w6_invariants_for_R.txt"
+    outfile="!MCLAB/ethanol/Sim_Pop_Gen/output/checks/getPopStat_test/chr4_w6_invariants_for_R.txt"
     dbms=TAB REPLACE;
     run;
 

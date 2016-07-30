@@ -1,11 +1,11 @@
 /* Create a bed file of the coordinates of the H12 peaks*/
 
-
+%macro make_bed(chr);
 
  data WORK.COORD    ;
      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
-     infile '/home/fnew/dsim/h12/chr4_h12_window_coords.txt' delimiter='09'x MISSOVER DSD
- lrecl=32767 firstobs=2 ;
+     infile ‘!MCLAB/ethanol/Sim_Pop_Gen/output/H12/h12_coords_of_peaks/chr&chr._H12_coords.txt' delimiter='09'x MISSOVER DSD
+ lrecl=32767 firstobs=1 ;
         informat center best32. ;
         informat start best32. ;
         informat end best32. ;
@@ -23,7 +23,7 @@
 
 data coord2;
   set coord;
-  chr="4";
+  chr="&chr";
    run;
 
 data coord3;
@@ -45,6 +45,15 @@ data coord5;
 
 
 proc export data=coord5
-    outfile="/home/fnew/dsim/h12/chr4_h12_peak.bed"
+    outfile=“!MCLAB/ethanol/Sim_Pop_Gen/output/H12/bed_files/chr&chr._h12_peak.bed"
     dbms=TAB REPLACE;
     run;
+    
+%mend;
+
+%make_bed(X);
+%make_bed(4);
+%make_bed(2L);
+%make_bed(2R);
+%make_bed(3L);
+%make_bed(3R);

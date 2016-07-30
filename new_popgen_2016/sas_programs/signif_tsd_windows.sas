@@ -2,7 +2,7 @@ libname dsim "!MCLAB/ethanol/Sim_Pop_Gen/sas_data";
 
 data dsim.Tsd_10kb    ;
      %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
-     infile '/home/fnew/dsim/tajima_d/filter_nolab_tajd_10kb.Tajima.D' delimiter='09'x
+     infile ‘!MCLAB/ethanol/Sim_Pop_Gen/output/tajima_d/filter_nolab_tajd_10kb.Tajima.D' delimiter='09'x
  MISSOVER DSD lrecl=32767 firstobs=2 ;
         informat CHROM $2. ;
         informat BIN_START best32. ;
@@ -33,6 +33,6 @@ data signif;
 
 
 proc export data=signif
-    outfile="/home/fnew/dsim/tajima_d/significant_windows_10kb_tsd.txt"
+    outfile=“!MCLAB/ethanol/Sim_Pop_Gen/output/tajima_d/significant_windows_10kb_tsd.txt"
     DBMS=TAB REPLACE;
     run;

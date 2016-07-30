@@ -5,6 +5,8 @@ The SelectHapStats.py program requires a specific format
     The remaining columns are the nucleotide state for each individual
 */
 
+/**** VCFs are not saved on MCLAB — they are on HPC: dsim_pop/Haplotype_Caller_Merged/vcf_by_chrom/*.vcf ****/
+
 libname dsim "!MCLAB/ethanol/Sim_Pop_Gen/sas_data";
 
 proc import datafile = '/home/fnew/dsim/vcf/no_missing/no_missing_biall_chr_nolab_nomel_noindel_2R.recode.vcf'

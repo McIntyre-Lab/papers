@@ -35,7 +35,7 @@ data het_qual;
   keep chrom pos qual per_het;
   run;
 proc export data=het_qual
-    outfile='/home/fnew/dsim/vcf/chr4_het_qual.txt'
+    outfile=‘!MCLAB/ethanol/Sim_Pop_Gen/output/checks/het_vs_qual_check/chr4_het_qual.txt'
     DBMS=TAB REPLACE;
     run;
 

@@ -61,7 +61,7 @@ proc sort data=vcf&chrom._c;
   by pos;
   run;
 proc export data=vcf&chrom._c
-    outfile="/home/fnew/dsim/checking_gatk_output/chr&chrom._for_h12.csv"
+    outfile=“!MCLAB/ethanol/Sim_Pop_Gen/output/checking_gatk_output/gvcf/output/data/chr&chrom._for_h12.csv"
     DBMS=CSV REPLACE;
     run;
 %mend;
