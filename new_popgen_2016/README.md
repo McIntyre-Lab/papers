@@ -17,4 +17,4 @@ Data available at http://bio.rc.ufl.edu/pub/mcintyre/dsimulans_population_genomi
 Raw sequencing data deposited to the NCBI gen bank SRA
   * Accession ID: SRP075682
 
-VCFs will be available soon. 
+Unfiltered VCF is available here: https://data.mendeley.com/datasets/2gbd9jbw3g/draft?a=60a506d7-8e7e-4400-8026-ac492c2dda16 
