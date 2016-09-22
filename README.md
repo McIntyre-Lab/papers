@@ -1,6 +1,6 @@
 This Repository contains all scripts and documentation for recent published papers.
 ## 2016
-* [Fear et al. 2016](https://github.com/McIntyre-Lab/papers/tree/master/fear_ase_2016): In Revision
+* [Fear et al. 2016](https://github.com/McIntyre-Lab/papers/tree/master/fear_ase_2016): Fear, Justin M., Luis G. Leon-Novelo, Alison M. Morse, Alison R. Gerken, Kjong Van Lehman, John Tower, Sergey V. Nuzhdin, and Lauren M. McIntyre. 2016. “Buffering of Genetic Regulatory Networks in Drosophila Melanogaster.” Genetics, January, genetics.116.188797. doi:10.1534/genetics.116.188797. [Pubmed](http://www.ncbi.nlm.nih.gov/pubmed/27194752)
 
 * [Newell et al. 2016](https://github.com/McIntyre-Lab/papers/tree/master/newell_2016): Newell NR, New FN, Dalton JE, McIntyre LM, Arbeitman MN. (2016). Neurons that Underlie Drosophila melanogaster Reproductive Behaviors: Detection of a Large Male-Bias in Gene Expression in Fruitless-Expressing Neurons. G3, Epub ahead of print. [Pubmed](http://www.ncbi.nlm.nih.gov/pubmed/27247289)
 
@@ -13,7 +13,6 @@ The wright stuff: reimagining path analysis reveals novel components of the sex
 determination hierarchy in *Drosophila melanogaster*. BMC Syst Biol, 9(1).
 [Pubmed](http://www.ncbi.nlm.nih.gov/pubmed/26335107)
 
-* [Lehmann et al. 2015](https://github.com/McIntyre-Lab/papers/tree/master/lehmann_2015): Submitted
 
 ## 2013
 * [Dalton et. al. 2013](https://github.com/McIntyre-Lab/papers/tree/master/dalton_2013):
