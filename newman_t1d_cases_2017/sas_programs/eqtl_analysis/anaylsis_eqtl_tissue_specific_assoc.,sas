@@ -1,0 +1,418 @@
+/* Rechecking tissue specificity of splicing eQTLs */
+
+/* We want to know the number of significant eQTLs tested in ALL THREE TISSUES that are tissue-specific associations. This should not include features that have tissue-specific expression!
+
+Should have:
+# Num tested in all (total)
+# Num tested in all but are significant in only one tissue (Each)
+# Num tested in all but are significant in two tissues (each pair)
+# Num tested in all but are significant in only one tissue + two tissues
+
+# Num tested in only CD4/CD8/CD19
+# Num tested in only CD4-CD8/CD4-CD19/CD8-CD19
+
+*/
+
+/* Set libraries */
+
+libname eqtl '/home/jrbnewman/concannon/eqtl_analysis/sas_data';
+
+/* Set flags for tissue-specific features and tissue-specific associations */
+
+data tissue_spec_flags;
+   set eqtl.eqtl_results_summary_table;
+   /* Need to add back in the FDR 5% flags */
+   if CD4_FDR_P=. then flag_cd4_fdr05=0; else if CD4_FDR_P lt 0.05 then flag_cd4_fdr05=1; else flag_cd4_fdr05=0;
+   if CD8_FDR_P=. then flag_cd8_fdr05=0; else if CD8_FDR_P lt 0.05 then flag_cd8_fdr05=1; else flag_cd8_fdr05=0;
+   if CD19_FDR_P=. then flag_cd19_fdr05=0; else if CD19_FDR_P lt 0.05 then flag_cd19_fdr05=1; else flag_cd19_fdr05=0;
+
+   if CD4_FDR_P=. and CD8_FDR_P=. and CD19_FDR_P=. then flag_eqtl_off=1; else flag_eqtl_off=0; *shouldn't be invoked;
+
+   /* Set flags for single-tissue spec features */
+   if CD4_FDR_P ne . and CD8_FDR_P=. and CD19_FDR_P=. then flag_cd4_feat_spec=1; else flag_cd4_feat_spec=0;
+   if CD4_FDR_P=. and CD8_FDR_P ne . and CD19_FDR_P=. then flag_cd8_feat_spec=1; else flag_cd8_feat_spec=0;
+   if CD4_FDR_P=. and CD8_FDR_P=. and CD19_FDR_P ne . then flag_cd19_feat_spec=1; else flag_cd19_feat_spec=0;
+
+   /* Set flags for two-tissue spec features */
+   if CD4_FDR_P ne . and CD8_FDR_P ne . and CD19_FDR_P=. then flag_cd4cd8_feat_spec=1; else flag_cd4cd8_feat_spec=0;
+   if CD4_FDR_P ne . and CD8_FDR_P=. and CD19_FDR_P ne . then flag_cd4cd19_feat_spec=1; else flag_cd4cd19_feat_spec=0;
+   if CD4_FDR_P=. and CD8_FDR_P ne . and CD19_FDR_P ne . then flag_cd8cd19_feat_spec=1; else flag_cd8cd19_feat_spec=0;
+
+   /* Set flags for tested in all */
+   if CD4_FDR_P ne . and CD8_FDR_P ne . and CD19_FDR_P ne . then flag_tested_all=1; else flag_tested_all=0;
+
+run;
+
+/* Check counts */
+
+proc freq data=tissue_spec_flags noprint;
+   tables flag_cd4_fdr05*flag_cd8_fdr05*flag_cd19_fdr05 / out=eqtl_sig_counts;
+run;
+
+/* COUNTS:
+
+CD4	1906
+CD8	1936
+CD19	2063
+CD4/8	333
+CD4/19	326
+CD8/19	219
+ALL	964
+NONE	435421
+
+Okay, counts match old */
+
+/* Counts for tissue-specific features */
+
+proc freq data=tissue_spec_flags noprint;
+   tables flag_eqtl_off / out=eqtl_check;
+run;
+
+proc freq data=tissue_spec_flags noprint;
+   tables flag_cd4_feat_spec*flag_cd8_feat_spec*flag_cd19_feat_spec*flag_cd4cd8_feat_spec*flag_cd4cd19_feat_spec*flag_cd8cd19_feat_spec / out=eqtl_spec_features;
+run;
+
+/* Number of tissue-specific features
+CD4-Feature	8127
+CD8-Feature	8255
+CD19-Feature	30937
+CD4/8-Feature	30152
+CD4/19-Feature	4927
+CD8/19-Feature	6526
+all-tested-feat	354244
+*/
+
+/* eQTL associations -- tested in all tissues */
+
+proc freq data=tissue_spec_flags noprint;
+   where flag_tested_all=1;
+   tables flag_cd4_fdr05*flag_cd8_fdr05*flag_cd19_fdr05 / out=eqtl_sig_counts;
+run;
+
+
+/* NEW COUNTS - ALL EQTLS:
+CD4-Assoc	1760
+CD8-Assoc	1813
+CD19-Assoc	1740
+CD4/8-Assoc	291
+CD4/19-Assoc	313
+CD8/19-Assoc	213
+All-Assoc	964
+No-assoc	347150
+*/
+
+proc freq data=tissue_spec_flags noprint;
+   where flag_eqtl_sig=1;
+   tables flag_cd4_feat_spec*flag_cd8_feat_spec*flag_cd19_feat_spec*flag_cd4cd8_feat_spec*flag_cd4cd19_feat_spec*flag_cd8cd19_feat_spec / out=eqtl_spec_features;
+run;
+
+/* Number of tissue-specific features with significant assoc
+CD4-Feature	25
+CD8-Feature	30
+CD19-Feature	252
+CD4/8-Feature	239
+CD4/19-Feature	38
+CD8/19-Feature	69
+all-tested-feat	7094
+*/
+
+
+/* Two-tissue specific features: which tissues with assoc? */
+
+ods listing; ods html close;
+proc freq data=tissue_spec_flags;
+   where flag_cd4cd8_feat_spec=1;
+   tables flag_cd4_fdr05*flag_cd8_fdr05;
+run;
+
+proc freq data=tissue_spec_flags;
+   where flag_cd4cd19_feat_spec=1;
+   tables flag_cd4_fdr05*flag_cd19_fdr05;
+run;
+
+proc freq data=tissue_spec_flags;
+   where flag_cd8cd19_feat_spec=1;
+   tables flag_cd8_fdr05*flag_cd19_fdr05;
+run;
+
+
+/* Counts:
+
+FEAT
+TISSUE	CD4	CD8	CD4+CD8
+CD4/8	116	81	42
+
+	CD4	CD19	CD4+CD19
+CD4/19	5	20	13
+
+	CD8	CD19	CD8+CD19
+CD8/19	12	51	6
+
+*/
+
+
+
+/* EXON EQTLS */
+/* Counts for tissue-specific features */
+
+proc freq data=tissue_spec_flags noprint;
+   where feature_type='exon';
+   tables flag_cd4_feat_spec*flag_cd8_feat_spec*flag_cd19_feat_spec*flag_cd4cd8_feat_spec*flag_cd4cd19_feat_spec*flag_cd8cd19_feat_spec / out=eqtl_spec_features;
+run;
+
+/* Number of tissue-specific features
+CD4-Feature	2074
+CD8-Feature	2067
+CD19-Feature	10122
+CD4/8-Feature	9999
+CD4/19-Feature	1900
+CD8/19-Feature	2071
+all-tested-feat	164611
+*/
+
+/* eQTL associations -- tested in all tissues */
+
+proc freq data=tissue_spec_flags noprint;
+   where feature_type='exon' and flag_tested_all=1;
+   tables flag_cd4_fdr05*flag_cd8_fdr05*flag_cd19_fdr05 / out=eqtl_sig_counts;
+run;
+
+
+/* NEW COUNTS - EXON EQTLS:
+CD4-Assoc	787
+CD8-Assoc	720
+CD19-Assoc	657
+CD4/8-Assoc	158
+CD4/19-Assoc	151
+CD8/19-Assoc	110
+All-Assoc	425
+No-assoc	161603
+*/
+
+proc freq data=tissue_spec_flags noprint;
+   where feature_type='exon' and flag_eqtl_sig=1;
+   tables flag_cd4_feat_spec*flag_cd8_feat_spec*flag_cd19_feat_spec*flag_cd4cd8_feat_spec*flag_cd4cd19_feat_spec*flag_cd8cd19_feat_spec / out=eqtl_spec_features;
+run;
+
+/* Number of tissue-specific features with significant assoc
+CD4-Feature	10
+CD8-Feature	1
+CD19-Feature	59
+CD4/8-Feature	84
+CD4/19-Feature	19
+CD8/19-Feature	11
+all-tested-feat	3008
+*/
+
+
+/* Two-tissue specific features: which tissues with assoc? */
+
+ods listing; ods html close;
+proc freq data=tissue_spec_flags;
+   where feature_type='exon' and flag_cd4cd8_feat_spec=1;
+   tables flag_cd4_fdr05*flag_cd8_fdr05;
+run;
+
+proc freq data=tissue_spec_flags;
+   where feature_type='exon' and flag_cd4cd19_feat_spec=1;
+   tables flag_cd4_fdr05*flag_cd19_fdr05;
+run;
+
+proc freq data=tissue_spec_flags;
+   where feature_type='exon' and flag_cd8cd19_feat_spec=1;
+   tables flag_cd8_fdr05*flag_cd19_fdr05;
+run;
+
+
+/* Counts:
+
+FEAT
+TISSUE	CD4	CD8	CD4+CD8
+CD4/8	39	29	16
+
+	CD4	CD19	CD4+CD19
+CD4/19	4	15	0
+
+	CD8	CD19	CD8+CD19
+CD8/19	1	9	1
+
+*/
+
+
+/* JUNCTION EQTLS */
+/* Counts for tissue-specific features */
+
+proc freq data=tissue_spec_flags noprint;
+   where feature_type='Junc';
+   tables flag_cd4_feat_spec*flag_cd8_feat_spec*flag_cd19_feat_spec*flag_cd4cd8_feat_spec*flag_cd4cd19_feat_spec*flag_cd8cd19_feat_spec / out=eqtl_spec_features;
+run;
+
+/* Number of tissue-specific features
+CD4-Feature	3897
+CD8-Feature	3669
+CD19-Feature	14916
+CD4/8-Feature	14802
+CD4/19-Feature	2048
+CD8/19-Feature	3372
+all-tested-feat	163444
+*/
+
+/* eQTL associations -- tested in all tissues */
+
+proc freq data=tissue_spec_flags noprint;
+   where feature_type='Junc' and flag_tested_all=1;
+   tables flag_cd4_fdr05*flag_cd8_fdr05*flag_cd19_fdr05 / out=eqtl_sig_counts;
+run;
+
+
+/* NEW COUNTS - JUNCTION EQTLS:
+
+CD4-Assoc	897
+CD8-Assoc	980
+CD19-Assoc	974
+CD4/8-Assoc	122
+CD4/19-Assoc	147
+CD8/19-Assoc	100
+All-Assoc	507
+No-assoc	159717
+
+*/
+
+
+proc freq data=tissue_spec_flags noprint;
+   where feature_type='Junc' and flag_eqtl_sig=1;
+   tables flag_cd4_feat_spec*flag_cd8_feat_spec*flag_cd19_feat_spec*flag_cd4cd8_feat_spec*flag_cd4cd19_feat_spec*flag_cd8cd19_feat_spec / out=eqtl_spec_features;
+run;
+
+/* Number of tissue-specific features with significant assoc
+CD4-Feature	11
+CD8-Feature	25
+CD19-Feature	168
+CD4/8-Feature	129
+CD4/19-Feature	17
+CD8/19-Feature	51
+all-tested-feat	3727
+*/
+
+
+/* Two-tissue specific features: which tissues with assoc? */
+
+ods listing; ods html close;
+proc freq data=tissue_spec_flags;
+   where feature_type='Junc' and flag_cd4cd8_feat_spec=1;
+   tables flag_cd4_fdr05*flag_cd8_fdr05;
+run;
+
+proc freq data=tissue_spec_flags;
+   where feature_type='Junc' and flag_cd4cd19_feat_spec=1;
+   tables flag_cd4_fdr05*flag_cd19_fdr05;
+run;
+
+proc freq data=tissue_spec_flags;
+   where feature_type='Junc' and flag_cd8cd19_feat_spec=1;
+   tables flag_cd8_fdr05*flag_cd19_fdr05;
+run;
+
+
+/* Counts:
+
+FEAT
+TISSUE	CD4	CD8	CD4+CD8
+CD4/8	59	46	24
+
+	CD4	CD19	CD4+CD19
+CD4/19	0	4	13
+
+	CD8	CD19	CD8+CD19
+CD8/19	9	37	5
+
+*/
+
+
+/* IR EQTLS */
+/* Counts for tissue-specific features */
+
+proc freq data=tissue_spec_flags noprint;
+   where feature_type='IR';
+   tables flag_cd4_feat_spec*flag_cd8_feat_spec*flag_cd19_feat_spec*flag_cd4cd8_feat_spec*flag_cd4cd19_feat_spec*flag_cd8cd19_feat_spec / out=eqtl_spec_features;
+run;
+
+/* Number of tissue-specific features
+CD4-Feature	2156
+CD8-Feature	2519
+CD19-Feature	5899
+CD4/8-Feature	5351
+CD4/19-Feature	979
+CD8/19-Feature	1083
+all-tested-feat	26189
+*/
+
+/* eQTL associations -- tested in all tissues */
+
+proc freq data=tissue_spec_flags noprint;
+   where feature_type='IR' and flag_tested_all=1;
+   tables flag_cd4_fdr05*flag_cd8_fdr05*flag_cd19_fdr05 / out=eqtl_sig_counts;
+run;
+
+
+/* NEW COUNTS - IR EQTLS:
+
+CD4-Assoc	76
+CD8-Assoc	113
+CD19-Assoc	109
+CD4/8-Assoc	11
+CD4/19-Assoc	15
+CD8/19-Assoc	3
+All-Assoc	32
+No-assoc	25830
+
+*/
+
+
+proc freq data=tissue_spec_flags noprint;
+   where feature_type='IR' and flag_eqtl_sig=1;
+   tables flag_cd4_feat_spec*flag_cd8_feat_spec*flag_cd19_feat_spec*flag_cd4cd8_feat_spec*flag_cd4cd19_feat_spec*flag_cd8cd19_feat_spec / out=eqtl_spec_features;
+run;
+
+/* Number of tissue-specific features with significant assoc
+CD4-Feature	4
+CD8-Feature	4
+CD19-Feature	25
+CD4/8-Feature	26
+CD4/19-Feature	2
+CD8/19-Feature	7
+all-tested-feat	359
+*/
+
+
+/* Two-tissue specific features: which tissues with assoc? */
+
+ods listing; ods html close;
+proc freq data=tissue_spec_flags;
+   where feature_type='IR' and flag_cd4cd8_feat_spec=1;
+   tables flag_cd4_fdr05*flag_cd8_fdr05;
+run;
+
+proc freq data=tissue_spec_flags;
+   where feature_type='IR' and flag_cd4cd19_feat_spec=1;
+   tables flag_cd4_fdr05*flag_cd19_fdr05;
+run;
+
+proc freq data=tissue_spec_flags;
+   where feature_type='IR' and flag_cd8cd19_feat_spec=1;
+   tables flag_cd8_fdr05*flag_cd19_fdr05;
+run;
+
+
+/* Counts:
+
+FEAT
+TISSUE	CD4	CD8	CD4+CD8
+CD4/8	18	6	2
+
+	CD4	CD19	CD4+CD19
+CD4/19	1	1	0
+
+	CD8	CD19	CD8+CD19
+CD8/19	2	5	0
+*/

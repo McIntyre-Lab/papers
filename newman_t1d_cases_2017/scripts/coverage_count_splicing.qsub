@@ -1,0 +1,74 @@
+#!/bin/bash
+#PBS -M jrbnewman@ufl.edu
+#PBS -m n
+#PBS -W group_list=concannon
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/patcon/jnewman/scripts/PBS_LOGS/coverage_counts
+#PBS -l walltime=4:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=8gb
+#PBS -t 4001-5024
+
+
+###5024, 4000
+module load python
+
+    PROJ=/scratch/lfs/patcon/jnewman
+    #Pull info from design file
+    DESIGN_FILE=$PROJ/new_design_file.csv
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+    IFS=',' read -ra ARRAY <<<"$DESIGN"
+
+
+
+    FLOWCELL=${ARRAY[0]}
+    LANE=${ARRAY[1]}
+    REP=${ARRAY[2]}
+    INDEX1=${ARRAY[3]}
+    INDEX2=${ARRAY[4]}
+    LIBRARY=${ARRAY[5]}
+    NAME=${FLOWCELL}_${LANE}_2_${INDEX1}_${INDEX2}_${LIBRARY}
+
+### BED file was split by chromosome. Going to define chrom list to iterate though
+
+   CHROM=$PROJ/design_files/chrom_list.txt
+
+#### Make Output Directory
+    # Create OUTPUT directory if needed.
+
+        OUTPUT=$PROJ/coverage_splicing_by_chr
+        if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+    # Create LOG directory and start log
+        LOGS=$OUTPUT/logs
+        if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+        MYLOG=$LOGS/${NAME}.log
+        printf "`date` $NAME PBS_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > "${MYLOG}"
+
+#### COVERAGE COUNTS
+    #BED=$PROJ/references/splicing/hg19_splicing_catalogue_74bp_${CHROM}.bed
+    #BED=$PROJ/references/splicing/hg19_splicing_catalogue_74bp.bed
+    SAM=$PROJ/aln_splicing/${NAME}.sam
+    MPILEUP=$PROJ/mpileup_splicing/${NAME}.mpileup
+
+
+
+COUNT=0
+for chrom in $(cat $CHROM)
+do
+    BED=$PROJ/references/splicing/hg19_splicing_catalogue_74bp_${chrom}.bed
+
+    echo "Starting Coverage Counts for $NAME `date`" >> "${MYLOG}"
+    python $PROJ/scripts/rpkm_calculate.py \
+        -b $BED \
+        -m $MPILEUP \
+        -s $SAM \
+        -n ${NAME} \
+        --cv \
+        -g "${MYLOG}" \
+        -o $OUTPUT/${NAME}_${chrom}.csv
+    echo "Finished Coverage Counts for $NAME `date`" >> "${MYLOG}"
+
+done
+

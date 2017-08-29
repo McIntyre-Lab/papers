@@ -1,0 +1,91 @@
+#!/bin/bash
+#PBS -M jrbnewman@ufl.edu
+#PBS -m n
+#PBS -W group_list=concannon
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/patcon/jnewman/scripts/PBS_LOGS2/coverage_counts
+#PBS -l walltime=12:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=20gb
+#PBS -t 1-500
+
+##5024
+
+
+module load python
+
+    PROJ=/scratch/lfs/patcon/jnewman
+    #Pull info from design file
+    #DESIGN_FILE=$PROJ/diabetes_rep1_design_2.csv
+    DESIGN_FILE=$PROJ/new_design_file.csv
+    #DESIGN_FILE=$PROJ/last_repeats.csv
+    DESIGN=$(sed -n "${PBS_ARRAYID}p" $DESIGN_FILE)
+    IFS=',' read -ra ARRAY <<<"$DESIGN"
+
+
+    FLOWCELL=${ARRAY[0]}
+    LANE=${ARRAY[1]}
+    REP=${ARRAY[2]}
+    INDEX1=${ARRAY[3]}
+    INDEX2=${ARRAY[4]}
+    LIBRARY=${ARRAY[5]}
+    NAME=${FLOWCELL}_${LANE}_${INDEX1}_${INDEX2}_${LIBRARY}
+
+    
+#### Make Output Directory
+    # Create OUTPUT directory if needed.
+
+        #OUTPUT=$PROJ/coverage_count_exons
+        OUTPUT=$PROJ/coverage_count_fusions
+
+        if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+    # Create LOG directory and start log
+        LOGS=$OUTPUT/logs 
+        if [ ! -e $LOGS ]; then mkdir -p $LOGS; fi
+        MYLOG=$LOGS/${NAME}.log
+        printf "`date` $NAME PBS_ID:$PBS_ARRAYID HOSTNAME:$HOSTNAME \n\n" > "${MYLOG}"
+
+#### COVERAGE COUNTS
+#     BED=$PROJ/references/hg19_aceview_exons_4col
+    BED=$PROJ/references/hg19_aceview_fusions_si
+
+    SAM=$PROJ/bwa_mem_aln_pe/${NAME}_aln
+    MPILEUP=$PROJ/mpileup_genome/${NAME}.mpileup
+
+## List of chromosomes including X and Y.
+CHROM=/scratch/lfs/patcon/jnewman/design_files/chrom_list.txt
+
+
+COUNT=0
+for chrom in $(cat $CHROM)
+do
+    awk '{if ($3 == '$chrom') print $0}' $SAM.sam > $TMPDIR/${NAME}_${chrom}.sam
+
+#    awk '{if ($1 == '$chrom') print $0}' $BED.bed > $TMPDIR/hg19_exons_${chrom}.bed
+    awk '{if ($1 == '$chrom') print $0}' $BED.bed > $TMPDIR/hg19_fusions_${chrom}.bed
+
+
+    echo "Starting Coverage Counts for $NAME `date`" >> "${MYLOG}"
+    python /scratch/lfs/patcon/jnewman/scripts/rpkm_calculate.py \
+        -b $TMPDIR/hg19_fusions_${chrom}.bed \
+        -m $MPILEUP \
+        -s $TMPDIR/${NAME}_${chrom}.sam \
+        -n ${NAME} \
+        --cv \
+        -g "${MYLOG}" \
+        -o $TMPDIR/${NAME}_${chrom}.csv
+    echo "Finished Coverage Counts for $NAME `date`" >> "${MYLOG}"
+
+    if [ $COUNT == 0 ]
+    then
+        cat $TMPDIR/${NAME}_${chrom}.csv > $OUTPUT/${NAME}.csv
+        COUNT=1
+    else
+        tail -n+2 $TMPDIR/${NAME}_${chrom}.csv >> $OUTPUT/${NAME}.csv
+    fi
+done
+
+
+echo "Script complete [`date`]" >> "${MYLOG}"
