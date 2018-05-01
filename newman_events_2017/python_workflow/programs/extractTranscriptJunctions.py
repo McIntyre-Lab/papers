@@ -64,7 +64,7 @@ def main():
     csvOut = open(args.outCSV, 'w')
     
     # Write column headers for TSV
-    csvHeader = ','.join(['chrom','start','stop','strand','exon_id','transcript_id','gene_id']) + "\n"
+    csvHeader = ','.join(['junction_id','junction_coordinates','transcript_id','gene_id']) + "\n"
     csvOut.write(csvHeader)
 
 
