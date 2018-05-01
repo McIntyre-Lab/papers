@@ -1,0 +1,607 @@
+1                                                          The SAS System                                 14:38 Sunday, July 2, 2017
+
+NOTE: Unable to open SASUSER.REGSTRY. WORK.REGSTRY will be opened instead.
+NOTE: All registry changes will be lost at the end of the session.
+
+WARNING: Unable to copy SASUSER registry to WORK registry. Because of this, you will not see registry customizations during this 
+         session.
+NOTE: Unable to open SASUSER.PROFILE. WORK.PROFILE will be opened instead.
+NOTE: All profile changes will be lost at the end of the session.
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to UNIVERSITY OF FLORIDA - SFA T&R, Site 70095659.
+NOTE: This session is executing on the Linux 4.4.0-81-generic (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 4.4.0-81-generic #104~14.04.1-Ubuntu SMP Wed Jun 14 12:45:52 UTC 2017 x86_64 Unrecognized Linux Distribution 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.13 seconds
+      cpu time            0.02 seconds
+      
+1          /* need to make PacBio-plus transcriptomes, so first I need to take the Refseq lists and exclude ones with PB matches */
+2          
+3          ods listing; ods html close;
+4          
+5          libname event '!MCLAB/event_analysis/sas_data';
+NOTE: Libref EVENT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/sas_data
+6          
+7          /* get APN<0/5 50% and 75% lists */
+2                                                          The SAS System                                 14:38 Sunday, July 2, 2017
+
+8          
+9          data list1 list2;
+10           set event.xscripts_w_unique_by_bin;
+11           if perc_features_dtct >= 0.5 then output list1;
+12           if perc_features_dtct >= 0.75 then output list2;
+13            keep transcript_id;
+14         run;
+
+NOTE: There were 73535 observations read from the data set EVENT.XSCRIPTS_W_UNIQUE_BY_BIN.
+NOTE: The data set WORK.LIST1 has 45883 observations and 1 variables.
+NOTE: The data set WORK.LIST2 has 34622 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.20 seconds
+      cpu time            0.02 seconds
+      
+
+15         
+16         data list3 list4;
+17           set event.bin_xscripts_by_dtct_apn5;
+18           if perc_features_dtct >= 0.5 then output list3;
+19           if perc_features_dtct >= 0.75 then output list4;
+20            keep transcript_id;
+21         run;
+
+NOTE: There were 73535 observations read from the data set EVENT.BIN_XSCRIPTS_BY_DTCT_APN5.
+NOTE: The data set WORK.LIST3 has 20336 observations and 1 variables.
+NOTE: The data set WORK.LIST4 has 13740 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.17 seconds
+      cpu time            0.02 seconds
+      
+
+22         
+23         
+24         
+25         data pb_gene2xs;
+26            set event.pacbio_transcripts;
+27            keep pacbio_gene_id pacbio_id;
+28         run;
+
+NOTE: There were 16104 observations read from the data set EVENT.PACBIO_TRANSCRIPTS.
+NOTE: The data set WORK.PB_GENE2XS has 16104 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.00 seconds
+      
+
+29         
+30              data WORK.SPLICE_MATCH    ;
+31              %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+32              infile '!MCLAB/event_analysis/references/pacbio_isoforms_list_for_import.txt'
+33          delimiter='09'x MISSOVER DSD lrecl=32767 ;
+34                 informat pacbio_id $10. ; informat source $6.;    informat feature_type $10. ;
+35                 informat start best32. ;  informat end best32.;   informat frame best32. ;
+36                 informat strand $1. ;     informat score best32.; informat transcript_id $18. ;
+37                 informat match_type $23.; informat note $28. ;
+38                 format pacbio_id $10. ;   format source $6. ;     format feature_type $10. ;
+39                 format start best12. ;    format end best12. ;    format frame best12. ;
+3                                                          The SAS System                                 14:38 Sunday, July 2, 2017
+
+40                 format strand $1. ;       format score best12. ;  format transcript_id $18. ;
+41                 format match_type $23. ;  format note $28. ;
+42                 input pacbio_id $ source $ feature_type $ start end
+43                       frame strand $ score transcript_id $ match_type $ note $
+44                       ;
+45              if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+46              run;
+
+NOTE: The infile '!MCLAB/event_analysis/references/pacbio_isoforms_list_for_import.txt' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/references/pacbio_isoforms_list_for_import.txt,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Thu Apr 20 17:08:59 2017,
+      File Size (bytes)=710982
+
+NOTE: 9645 records were read from the infile '!MCLAB/event_analysis/references/pacbio_isoforms_list_for_import.txt'.
+      The minimum record length was 67.
+      The maximum record length was 107.
+NOTE: The data set WORK.SPLICE_MATCH has 9645 observations and 11 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.02 seconds
+      
+
+47         
+48         data pb2refseq;
+49            set splice_match;
+50            where transcript_id ^? "ENSMUST";
+51            length splice_match_id $18.;
+52            splice_match_id=scan(transcript_id,1,".");
+53            keep pacbio_id splice_match_id ;
+54            rename splice_match_id=transcript_id;
+55         run;
+
+NOTE: There were 8722 observations read from the data set WORK.SPLICE_MATCH.
+      WHERE transcript_id not contains 'ENSMUST';
+NOTE: The data set WORK.PB2REFSEQ has 8722 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+55       !      *8722;
+56         
+57         
+58         data pb2keep;
+59           set event.pacbio2refseq_id_nomulti;
+60           keep pacbio_id;
+61         run;
+
+NOTE: There were 6926 observations read from the data set EVENT.PACBIO2REFSEQ_ID_NOMULTI.
+NOTE: The data set WORK.PB2KEEP has 6926 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.09 seconds
+      cpu time            0.00 seconds
+      
+
+62         
+4                                                          The SAS System                                 14:38 Sunday, July 2, 2017
+
+63         proc sort data=pb2keep nodup;
+64           by pacbio_id;
+
+NOTE: There were 6926 observations read from the data set WORK.PB2KEEP.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.PB2KEEP has 6926 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+65         proc sort data=pb2refseq nodup;
+66           by pacbio_id transcript_id;
+67         run;
+
+NOTE: There were 8722 observations read from the data set WORK.PB2REFSEQ.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.PB2REFSEQ has 8722 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+68         
+69         data xs_w_pb;
+70           merge pb2refseq (in=in1) pb2keep (in=in2);
+71           by pacbio_id;
+72           if in1 and in2;
+73         run;
+
+NOTE: There were 8722 observations read from the data set WORK.PB2REFSEQ.
+NOTE: There were 6926 observations read from the data set WORK.PB2KEEP.
+NOTE: The data set WORK.XS_W_PB has 6286 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+74         
+75         
+76         proc sort data=xs_w_pb;
+77            by transcript_id;
+
+NOTE: There were 6286 observations read from the data set WORK.XS_W_PB.
+NOTE: The data set WORK.XS_W_PB has 6286 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+78         proc sort data=list1;
+79            by transcript_id;
+
+NOTE: There were 45883 observations read from the data set WORK.LIST1.
+NOTE: The data set WORK.LIST1 has 45883 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+5                                                          The SAS System                                 14:38 Sunday, July 2, 2017
+
+      
+
+80         proc sort data=xs_w_pb;
+81            by transcript_id;
+
+NOTE: Input data set is already sorted, no sorting done.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+82         proc sort data=list2;
+83            by transcript_id;
+
+NOTE: There were 34622 observations read from the data set WORK.LIST2.
+NOTE: The data set WORK.LIST2 has 34622 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+84         proc sort data=xs_w_pb;
+85            by transcript_id;
+
+NOTE: Input data set is already sorted, no sorting done.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+86         proc sort data=list3;
+87            by transcript_id;
+
+NOTE: There were 20336 observations read from the data set WORK.LIST3.
+NOTE: The data set WORK.LIST3 has 20336 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+88         proc sort data=xs_w_pb;
+89            by transcript_id;
+
+NOTE: Input data set is already sorted, no sorting done.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+90         proc sort data=list4;
+91            by transcript_id;
+92         run;
+
+NOTE: There were 13740 observations read from the data set WORK.LIST4.
+NOTE: The data set WORK.LIST4 has 13740 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+6                                                          The SAS System                                 14:38 Sunday, July 2, 2017
+
+      
+
+93         
+94         
+95         
+96         data list1_2;
+97            merge list1 (in=in1) xs_w_pb (in=in2);
+98            by transcript_id;
+99            if in1 and in2 then delete;
+100           if in1 then output;
+101           keep transcript_id;
+102           run;
+
+NOTE: There were 45883 observations read from the data set WORK.LIST1.
+NOTE: There were 6286 observations read from the data set WORK.XS_W_PB.
+NOTE: The data set WORK.LIST1_2 has 40053 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+103        
+104           data list2_2;
+105           merge list2 (in=in1) xs_w_pb (in=in2);
+106           by transcript_id;
+107           if in1 and in2 then delete;
+108           if in1 then output;
+109              keep transcript_id;
+110           run;
+
+NOTE: There were 34622 observations read from the data set WORK.LIST2.
+NOTE: There were 6286 observations read from the data set WORK.XS_W_PB.
+NOTE: The data set WORK.LIST2_2 has 28936 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+111        
+112           data list3_2;
+113           merge list3 (in=in1) xs_w_pb (in=in2);
+114           by transcript_id;
+115           if in1 and in2 then delete;
+116           if in1 then output;
+117              keep transcript_id;
+118           run;
+
+NOTE: There were 20336 observations read from the data set WORK.LIST3.
+NOTE: There were 6286 observations read from the data set WORK.XS_W_PB.
+NOTE: The data set WORK.LIST3_2 has 15263 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+119        
+120           data list4_2;
+121           merge list4 (in=in1) xs_w_pb (in=in2);
+7                                                          The SAS System                                 14:38 Sunday, July 2, 2017
+
+122           by transcript_id;
+123           if in1 and in2 then delete;
+124           if in1 then output;
+125              keep transcript_id;
+126           run;
+
+NOTE: There were 13740 observations read from the data set WORK.LIST4.
+NOTE: There were 6286 observations read from the data set WORK.XS_W_PB.
+NOTE: The data set WORK.LIST4_2 has 9338 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+127        
+128        proc export data=list1_2
+129        outfile="!MCLAB/event_analysis/references/event_only_apn0_50perc.txt"
+130        dbms=tab replace;
+130      !                   putnames=no;
+131        run;
+
+132         /**********************************************************************
+133         *   PRODUCT:   SAS
+134         *   VERSION:   9.4
+135         *   CREATOR:   External File Interface
+136         *   DATE:      02JUL17
+137         *   DESC:      Generated SAS Datastep Code
+138         *   TEMPLATE SOURCE:  (None Specified.)
+139         ***********************************************************************/
+140            data _null_;
+141            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+142            %let _EFIREC_ = 0;     /* clear export record count macro variable */
+143            file '!MCLAB/event_analysis/references/event_only_apn0_50perc.txt' delimiter='09'x DSD DROPOVER lrecl=32767;
+144           set  LIST1_2   end=EFIEOD;
+145               format transcript_id $12. ;
+146             do;
+147               EFIOUT + 1;
+148               put transcript_id $ ;
+149               ;
+150             end;
+151            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+152            if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+153            run;
+
+NOTE: The file '!MCLAB/event_analysis/references/event_only_apn0_50perc.txt' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/references/event_only_apn0_50perc.txt,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Sun Jul  2 14:38:37 2017
+
+NOTE: 40053 records were written to the file '!MCLAB/event_analysis/references/event_only_apn0_50perc.txt'.
+      The minimum record length was 9.
+      The maximum record length was 12.
+NOTE: There were 40053 observations read from the data set WORK.LIST1_2.
+NOTE: DATA statement used (Total process time):
+      real time           0.09 seconds
+      cpu time            0.03 seconds
+      
+8                                                          The SAS System                                 14:38 Sunday, July 2, 2017
+
+
+40053 records created in !MCLAB/event_analysis/references/event_only_apn0_50perc.txt from LIST1_2.
+  
+  
+NOTE: "!MCLAB/event_analysis/references/event_only_apn0_50perc.txt" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.15 seconds
+      cpu time            0.07 seconds
+      
+
+154        
+155        proc export data=list2_2
+156        outfile="!MCLAB/event_analysis/references/event_only_apn0_75perc.txt"
+157        dbms=tab replace;
+157      !                   putnames=no;
+158        run;
+
+159         /**********************************************************************
+160         *   PRODUCT:   SAS
+161         *   VERSION:   9.4
+162         *   CREATOR:   External File Interface
+163         *   DATE:      02JUL17
+164         *   DESC:      Generated SAS Datastep Code
+165         *   TEMPLATE SOURCE:  (None Specified.)
+166         ***********************************************************************/
+167            data _null_;
+168            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+169            %let _EFIREC_ = 0;     /* clear export record count macro variable */
+170            file '!MCLAB/event_analysis/references/event_only_apn0_75perc.txt' delimiter='09'x DSD DROPOVER lrecl=32767;
+171           set  LIST2_2   end=EFIEOD;
+172               format transcript_id $12. ;
+173             do;
+174               EFIOUT + 1;
+175               put transcript_id $ ;
+176               ;
+177             end;
+178            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+179            if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+180            run;
+
+NOTE: The file '!MCLAB/event_analysis/references/event_only_apn0_75perc.txt' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/references/event_only_apn0_75perc.txt,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Sun Jul  2 14:38:37 2017
+
+NOTE: 28936 records were written to the file '!MCLAB/event_analysis/references/event_only_apn0_75perc.txt'.
+      The minimum record length was 9.
+      The maximum record length was 12.
+NOTE: There were 28936 observations read from the data set WORK.LIST2_2.
+NOTE: DATA statement used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.01 seconds
+      
+
+28936 records created in !MCLAB/event_analysis/references/event_only_apn0_75perc.txt from LIST2_2.
+  
+  
+9                                                          The SAS System                                 14:38 Sunday, July 2, 2017
+
+NOTE: "!MCLAB/event_analysis/references/event_only_apn0_75perc.txt" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.04 seconds
+      
+
+181        
+182        proc export data=list3_2
+183        outfile="!MCLAB/event_analysis/references/event_only_apn5_50perc.txt"
+184        dbms=tab replace;
+184      !                   putnames=no;
+185        run;
+
+186         /**********************************************************************
+187         *   PRODUCT:   SAS
+188         *   VERSION:   9.4
+189         *   CREATOR:   External File Interface
+190         *   DATE:      02JUL17
+191         *   DESC:      Generated SAS Datastep Code
+192         *   TEMPLATE SOURCE:  (None Specified.)
+193         ***********************************************************************/
+194            data _null_;
+195            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+196            %let _EFIREC_ = 0;     /* clear export record count macro variable */
+197            file '!MCLAB/event_analysis/references/event_only_apn5_50perc.txt' delimiter='09'x DSD DROPOVER lrecl=32767;
+198           set  LIST3_2   end=EFIEOD;
+199               format transcript_id $12. ;
+200             do;
+201               EFIOUT + 1;
+202               put transcript_id $ ;
+203               ;
+204             end;
+205            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+206            if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+207            run;
+
+NOTE: The file '!MCLAB/event_analysis/references/event_only_apn5_50perc.txt' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/references/event_only_apn5_50perc.txt,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Sun Jul  2 14:38:37 2017
+
+NOTE: 15263 records were written to the file '!MCLAB/event_analysis/references/event_only_apn5_50perc.txt'.
+      The minimum record length was 9.
+      The maximum record length was 12.
+NOTE: There were 15263 observations read from the data set WORK.LIST3_2.
+NOTE: DATA statement used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.01 seconds
+      
+
+15263 records created in !MCLAB/event_analysis/references/event_only_apn5_50perc.txt from LIST3_2.
+  
+  
+NOTE: "!MCLAB/event_analysis/references/event_only_apn5_50perc.txt" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.09 seconds
+      cpu time            0.05 seconds
+10                                                         The SAS System                                 14:38 Sunday, July 2, 2017
+
+      
+
+208        
+209        proc export data=list4_2
+210        outfile="!MCLAB/event_analysis/references/event_only_apn5_75perc.txt"
+211        dbms=tab replace;
+211      !                   putnames=no;
+212        run;
+
+213         /**********************************************************************
+214         *   PRODUCT:   SAS
+215         *   VERSION:   9.4
+216         *   CREATOR:   External File Interface
+217         *   DATE:      02JUL17
+218         *   DESC:      Generated SAS Datastep Code
+219         *   TEMPLATE SOURCE:  (None Specified.)
+220         ***********************************************************************/
+221            data _null_;
+222            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+223            %let _EFIREC_ = 0;     /* clear export record count macro variable */
+224            file '!MCLAB/event_analysis/references/event_only_apn5_75perc.txt' delimiter='09'x DSD DROPOVER lrecl=32767;
+225           set  LIST4_2   end=EFIEOD;
+226               format transcript_id $12. ;
+227             do;
+228               EFIOUT + 1;
+229               put transcript_id $ ;
+230               ;
+231             end;
+232            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+233            if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+234            run;
+
+NOTE: The file '!MCLAB/event_analysis/references/event_only_apn5_75perc.txt' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/references/event_only_apn5_75perc.txt,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Sun Jul  2 14:38:37 2017
+
+NOTE: 9338 records were written to the file '!MCLAB/event_analysis/references/event_only_apn5_75perc.txt'.
+      The minimum record length was 9.
+      The maximum record length was 12.
+NOTE: There were 9338 observations read from the data set WORK.LIST4_2.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.00 seconds
+      
+
+9338 records created in !MCLAB/event_analysis/references/event_only_apn5_75perc.txt from LIST4_2.
+  
+  
+NOTE: "!MCLAB/event_analysis/references/event_only_apn5_75perc.txt" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.10 seconds
+      cpu time            0.03 seconds
+      
+
+235        
+
+11                                                         The SAS System                                 14:38 Sunday, July 2, 2017
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           1.43 seconds
+      cpu time            0.45 seconds
+      

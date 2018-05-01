@@ -1,0 +1,102 @@
+
+
+libname event '/home/mcintyre/S/SHARE/McIntyre_Lab/event_analysis/sas_data';
+
+data aacs;
+set event.t1d_flag_mei_cell_sbys;
+if gene_id ="AACS";
+run;
+
+data check;
+set event.t1d_flag_mei_cell_sbys;
+if gene_id ="PTGS1" or gene_id="FAIM";
+run;
+
+
+data check;
+set event.t1d_flag_mei_cell_sbys;
+if gene_id ="FOXP4" or gene_id="SH3BP2";
+
+run;
+
+
+proc sort data=check;
+by transcript_id subject_id;
+run;
+
+proc freq data=check;
+    by gene_id;
+    tables CD4*CD8/agree ;
+    tables cd4*cd19/agree;
+	tables cd8*cd19/agree;
+   
+run;
+
+
+
+proc freq data=aacs ;
+   tables subject_id;
+   
+run;
+
+proc contents data=cd4_cd19_agree;
+run;
+
+proc sort data=cd4_cd19_agree;
+by descending _kappa_;
+run;
+
+proc univariate data=cd8_cd19_agree;
+var _kappa_;
+run;
+
+
+data count_cd4_cd19_disagree;
+set cd4_cd19_agree;
+if _kappa_ le 0.6 then flag_cd4_cd19=1;
+else flag_cd4_cd19=0;
+keep gene_id flag_cd4_cd19;
+run;
+
+
+data count_cd4_cd8_disagree;
+set cd4_cd8_agree;
+if _kappa_ le 0.6 then flag_cd4_cd8=1;
+else flag_cd4_cd8=0;
+keep gene_id flag_cd4_cd8;
+run;
+
+
+data count_cd8_cd19_disagree;
+set cd8_cd19_agree;
+if _kappa_ le 0.6 then flag_cd8_cd19=1;
+else flag_cd8_cd19=0;
+keep gene_id flag_cd8_cd19;
+run;
+
+
+data compare_genes;
+merge count_cd8_cd19_disagree count_cd4_cd8_disagree count_cd4_cd19_disagree;
+by gene_id;
+run;
+
+
+proc sort data=compare_genes;
+by flag_cd4_cd8;
+proc freq data=compare_genes;
+by flag_cd4_cd8;
+tables flag_cd8_cd19*flag_cd4_cd19/agree;
+run;
+
+
+data check;
+set compare_genes;
+if flag_cd4_cd8=1 and  flag_cd8_cd19=1 and flag_cd4_cd19=1;
+run;
+
+
+
+
+
+
+

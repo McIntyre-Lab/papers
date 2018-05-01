@@ -1,0 +1,56 @@
+
+ods listing; ods html close;
+libname event '!MCLAB/event_analysis/sas_data';
+libname eventloc '/mnt/store/event_sandbox/sas_data';
+libname splicing '/mnt/store/splice';
+libname con '!PATCON/sas_data';
+libname hg19 '!PATCON/useful_human_data/aceview_hg19/fusions/sas_data';
+
+/* Subset transcripts with at least 75% of features detected in at least 1 cell type
+   at APN>5 */
+
+data xs2keep;
+   set event.hg19_flag_xscripts_w_unique;
+   if perc_features_dtct_cd4 >= 0.75 
+   or perc_features_dtct_cd8 >= 0.75 
+   or perc_features_dtct_cd19 >= 0.75 
+   then output;
+   keep transcript_id;
+run;
+
+/* Export transcript list */
+
+data xs2av;
+  set event.hg19_aceview_xs2gene_fasta_index;
+  keep gene_id transcript_id transcript_fasta_id;
+run;
+
+proc sort data=xs2keep;
+  by transcript_id;
+proc sort data=xs2av;
+  by transcript_id;
+run;
+
+data xs2av_keep;
+  merge xs2av (in=in1) xs2keep (in=in2);
+  by transcript_id;
+  if in1 and in2;
+run;
+
+data xs_list;
+  set xs2av_keep;
+  keep transcript_fasta_id;
+run;
+
+data gene2xs_list;
+   set xs2av_keep;
+   keep gene_id transcript_fasta_id;
+run;
+
+proc export data=xs_list outfile="!MCLAB/event_analysis/references/t1d_xscripts_75perc_apn5.txt"
+   dbms=tab replace; putnames=no;
+run;
+
+proc export data=gene2xs_list outfile="!MCLAB/event_analysis/references/t1d_xscripts_75perc_apn5.txt"
+   dbms=tab replace; putnames=no;
+run;

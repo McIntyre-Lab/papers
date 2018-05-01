@@ -1,0 +1,244 @@
+                                                           The SAS System                         23:27 Wednesday, June 28, 2017   1
+
+                                                         The CORR Procedure
+
+                                 4  Variables:    tpm_nsc1     tpm_nsc2     log_tpm_nsc1 log_tpm_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                   Variable               N          Mean       Std Dev           Sum       Minimum       Maximum
+
+                   tpm_nsc1              11         90909        125852       1000000       0.78000        420136
+                   tpm_nsc2              11         90909        117305       1000000       3.09000        391296
+                   log_tpm_nsc1          11       9.24346       3.74253     101.67807       0.57661      12.94834
+                   log_tpm_nsc2          11       9.52044       3.44951     104.72486       1.40854      12.87722
+
+
+                                             Pearson Correlation Coefficients, N = 11 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                              log_tpm_      log_tpm_
+                                                  tpm_nsc1      tpm_nsc2          nsc1          nsc2
+
+                                tpm_nsc1           1.00000       0.87161       0.62141       0.55138
+                                                                  0.0005        0.0413        0.0787
+
+                                tpm_nsc2           0.87161       1.00000       0.60544       0.63712
+                                                    0.0005                      0.0484        0.0350
+
+                                log_tpm_nsc1       0.62141       0.60544       1.00000       0.85338
+                                                    0.0413        0.0484                      0.0008
+
+                                log_tpm_nsc2       0.55138       0.63712       0.85338       1.00000
+                                                    0.0787        0.0350        0.0008              
+                                                           The SAS System                         23:27 Wednesday, June 28, 2017   2
+
+                                                         The CORR Procedure
+
+                                 4  Variables:    tpm_nsc1     tpm_nsc2     log_tpm_nsc1 log_tpm_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                   Variable               N          Mean       Std Dev        Median       Minimum       Maximum
+
+                   tpm_nsc1              11         90909        125852         53380       0.78000        420136
+                   tpm_nsc2              11         90909        117305         47856       3.09000        391296
+                   log_tpm_nsc1          11       9.24346       3.74253      10.88522       0.57661      12.94834
+                   log_tpm_nsc2          11       9.52044       3.44951      10.77597       1.40854      12.87722
+
+
+                                             Spearman Correlation Coefficients, N = 11 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                              log_tpm_      log_tpm_
+                                                  tpm_nsc1      tpm_nsc2          nsc1          nsc2
+
+                                tpm_nsc1           1.00000       0.80909       1.00000       0.80909
+                                                                  0.0026        <.0001        0.0026
+
+                                tpm_nsc2           0.80909       1.00000       0.80909       1.00000
+                                                    0.0026                      0.0026        <.0001
+
+                                log_tpm_nsc1       1.00000       0.80909       1.00000       0.80909
+                                                    <.0001        0.0026                      0.0026
+
+                                log_tpm_nsc2       0.80909       1.00000       0.80909       1.00000
+                                                    0.0026        <.0001        0.0026              
+                                                           The SAS System                         23:27 Wednesday, June 28, 2017   3
+
+                                                         transcript_
+                                                  Obs    id               mean_tpm
+
+                                                    1    NM_001243064    145322.90
+                                                    2    NM_007616        82625.56
+                                                    3    PB.5785.1       103840.08
+                                                    4    PB.5785.2         3497.46
+                                                    5    PB.5785.3        97511.05
+                                                    6    PB.5785.4         5196.58
+                                                    7    PB.5785.5           55.18
+                                                    8    PB.5785.6       123748.02
+                                                    9    XM_006504974    405716.12
+                                                   10    XM_006504975        98.84
+                                                   11    XM_006504976     32388.23
+                                                           The SAS System                         23:27 Wednesday, June 28, 2017   4
+
+                                                         The CORR Procedure
+
+                                 4  Variables:    tpm_nsc1     tpm_nsc2     log_tpm_nsc1 log_tpm_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                   Variable               N          Mean       Std Dev           Sum       Minimum       Maximum
+
+                   tpm_nsc1               7        142857        141146       1000000          1445        367115
+                   tpm_nsc2               7        142857        129362       1000000          5126        385948
+                   log_tpm_nsc1           7      10.87077       2.08653      76.09540       7.27642      12.81343
+                   log_tpm_nsc2           7      11.30869       1.42483      79.16083       8.54224      12.86346
+
+
+                                              Pearson Correlation Coefficients, N = 7 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                              log_tpm_      log_tpm_
+                                                  tpm_nsc1      tpm_nsc2          nsc1          nsc2
+
+                                tpm_nsc1           1.00000       0.92059       0.82707       0.74136
+                                                                  0.0033        0.0217        0.0565
+
+                                tpm_nsc2           0.92059       1.00000       0.60341       0.82637
+                                                    0.0033                      0.1514        0.0219
+
+                                log_tpm_nsc1       0.82707       0.60341       1.00000       0.57406
+                                                    0.0217        0.1514                      0.1777
+
+                                log_tpm_nsc2       0.74136       0.82637       0.57406       1.00000
+                                                    0.0565        0.0219        0.1777              
+                                                           The SAS System                         23:27 Wednesday, June 28, 2017   5
+
+                                                         The CORR Procedure
+
+                                 4  Variables:    tpm_nsc1     tpm_nsc2     log_tpm_nsc1 log_tpm_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                   Variable               N          Mean       Std Dev        Median       Minimum       Maximum
+
+                   tpm_nsc1               7        142857        141146        120326          1445        367115
+                   tpm_nsc2               7        142857        129362        110315          5126        385948
+                   log_tpm_nsc1           7      10.87077       2.08653      11.69797       7.27642      12.81343
+                   log_tpm_nsc2           7      11.30869       1.42483      11.61110       8.54224      12.86346
+
+
+                                             Spearman Correlation Coefficients, N = 7 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                              log_tpm_      log_tpm_
+                                                  tpm_nsc1      tpm_nsc2          nsc1          nsc2
+
+                                tpm_nsc1           1.00000       0.85714       1.00000       0.85714
+                                                                  0.0137        <.0001        0.0137
+
+                                tpm_nsc2           0.85714       1.00000       0.85714       1.00000
+                                                    0.0137                      0.0137        <.0001
+
+                                log_tpm_nsc1       1.00000       0.85714       1.00000       0.85714
+                                                    <.0001        0.0137                      0.0137
+
+                                log_tpm_nsc2       0.85714       1.00000       0.85714       1.00000
+                                                    0.0137        <.0001        0.0137              
+                                                           The SAS System                         23:27 Wednesday, June 28, 2017   6
+
+                                                         transcript_
+                                                  Obs    id               mean_tpm
+
+                                                   1     NM_001243064    122242.86
+                                                   2     PB.5785.1       267919.34
+                                                   3     PB.5785.2       376531.90
+                                                   4     PB.5785.3       116190.37
+                                                   5     PB.5785.4         5508.39
+                                                   6     PB.5785.5        58063.48
+                                                   7     PB.5785.6        53543.68
+                                                           The SAS System                         23:27 Wednesday, June 28, 2017   7
+
+                                                         The CORR Procedure
+
+                                 4  Variables:    tpm_nsc1     tpm_nsc2     log_tpm_nsc1 log_tpm_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                   Variable               N          Mean       Std Dev           Sum       Minimum       Maximum
+
+                   tpm_nsc1               7        142857        146932       1000000         11819        428986
+                   tpm_nsc2               7        142857        156530       1000000          4592        449312
+                   log_tpm_nsc1           7      11.25140       1.34139      78.75981       9.37753      12.96918
+                   log_tpm_nsc2           7      11.05144       1.66438      77.36010       8.43228      13.01548
+
+
+                                              Pearson Correlation Coefficients, N = 7 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                              log_tpm_      log_tpm_
+                                                  tpm_nsc1      tpm_nsc2          nsc1          nsc2
+
+                                tpm_nsc1           1.00000       0.97692       0.89639       0.83501
+                                                                  0.0002        0.0063        0.0194
+
+                                tpm_nsc2           0.97692       1.00000       0.86648       0.84521
+                                                    0.0002                      0.0116        0.0166
+
+                                log_tpm_nsc1       0.89639       0.86648       1.00000       0.94111
+                                                    0.0063        0.0116                      0.0016
+
+                                log_tpm_nsc2       0.83501       0.84521       0.94111       1.00000
+                                                    0.0194        0.0166        0.0016              
+                                                           The SAS System                         23:27 Wednesday, June 28, 2017   8
+
+                                                         The CORR Procedure
+
+                                 4  Variables:    tpm_nsc1     tpm_nsc2     log_tpm_nsc1 log_tpm_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                   Variable               N          Mean       Std Dev        Median       Minimum       Maximum
+
+                   tpm_nsc1               7        142857        146932        149474         11819        428986
+                   tpm_nsc2               7        142857        156530        107319          4592        449312
+                   log_tpm_nsc1           7      11.25140       1.34139      11.91489       9.37753      12.96918
+                   log_tpm_nsc2           7      11.05144       1.66438      11.58357       8.43228      13.01548
+
+
+                                             Spearman Correlation Coefficients, N = 7 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                              log_tpm_      log_tpm_
+                                                  tpm_nsc1      tpm_nsc2          nsc1          nsc2
+
+                                tpm_nsc1           1.00000       0.92857       1.00000       0.92857
+                                                                  0.0025        <.0001        0.0025
+
+                                tpm_nsc2           0.92857       1.00000       0.92857       1.00000
+                                                    0.0025                      0.0025        <.0001
+
+                                log_tpm_nsc1       1.00000       0.92857       1.00000       0.92857
+                                                    <.0001        0.0025                      0.0025
+
+                                log_tpm_nsc2       0.92857       1.00000       0.92857       1.00000
+                                                    0.0025        <.0001        0.0025              
+                                                           The SAS System                         23:27 Wednesday, June 28, 2017   9
+
+                                                         transcript_
+                                                  Obs    id               mean_tpm
+
+                                                   1     NM_001243064    184102.05
+                                                   2     NM_007616       185309.46
+                                                   3     PB.5785.3       128396.44
+                                                   4     PB.5785.5        12289.13
+                                                   5     XM_006504974    439149.34
+                                                   6     XM_006504975     11432.32
+                                                   7     XM_006504976     39321.27

@@ -1,0 +1,1146 @@
+1                                                          The SAS System                         01:02 Wednesday, November 23, 2016
+
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to UNIVERSITY OF FLORIDA - SFA T&R, Site 70095659.
+NOTE: This session is executing on the Linux 4.4.0-47-generic (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 4.4.0-47-generic #68~14.04.1-Ubuntu SMP Wed Oct 26 19:42:11 UTC 2016 x86_64 Unrecognized Linux Distribution 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.12 seconds
+      cpu time            0.03 seconds
+      
+1          /* Import counts */
+2          
+3          libname conesa '!MCLAB/conesa_pacbio/sas_data';
+NOTE: Libref CONESA was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data
+4          %include '!MCLAB/conesa_pacbio/sas_programs/macros/iterdataset.sas';
+39         
+40         data sample_list;
+41            format sample $4.;
+42            input sample $;
+43            datalines;
+
+NOTE: The data set WORK.SAMPLE_LIST has 4 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+2                                                          The SAS System                         01:02 Wednesday, November 23, 2016
+
+      
+
+48            ;
+49         run;
+50         
+51         
+52         %macro import_counts(sample);
+53         
+54         proc import datafile="!MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_&sample..csv"
+55                out=chunk_&sample. dbms=csv replace; guessingrows=100000;
+56         run;
+57         
+58         proc import datafile="!MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_&sample..csv"
+59                out=fusion_&sample. dbms=csv replace; guessingrows=100000;
+60         run;
+61         
+62         proc import datafile="!MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_&sample..csv"
+63                out=splicing_&sample. dbms=csv replace; guessingrows=686000;
+64         run;
+65         
+66         %mend;
+67         
+68         %iterdataset(dataset=sample_list, function=%nrstr(%import_counts(&sample);));
+
+69          /**********************************************************************
+70          *   PRODUCT:   SAS
+71          *   VERSION:   9.4
+72          *   CREATOR:   External File Interface
+73          *   DATE:      23NOV16
+74          *   DESC:      Generated SAS Datastep Code
+75          *   TEMPLATE SOURCE:  (None Specified.)
+76          ***********************************************************************/
+77             data WORK.CHUNK_NSC1    ;
+78             %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+79             infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_NSC1.csv' delimiter = ',' MISSOVER DSD
+79       !  lrecl=32767 firstobs=2 ;
+80                informat sample_id $4. ;
+81                informat fusion_id $12. ;
+82                informat mapped_reads best32. ;
+83                informat read_length best32. ;
+84                informat region_length best32. ;
+85                informat region_depth best32. ;
+86                informat reads_in_region best32. ;
+87                informat apn best32. ;
+88                informat rpkm best32. ;
+89                informat mean best32. ;
+90                informat std best32. ;
+91                informat cv best32. ;
+92                format sample_id $4. ;
+93                format fusion_id $12. ;
+94                format mapped_reads best12. ;
+95                format read_length best12. ;
+96                format region_length best12. ;
+97                format region_depth best12. ;
+98                format reads_in_region best12. ;
+99                format apn best12. ;
+100               format rpkm best12. ;
+101               format mean best12. ;
+3                                                          The SAS System                         01:02 Wednesday, November 23, 2016
+
+102               format std best12. ;
+103               format cv best12. ;
+104            input
+105                        sample_id $
+106                        fusion_id $
+107                        mapped_reads
+108                        read_length
+109                        region_length
+110                        region_depth
+111                        reads_in_region
+112                        apn
+113                        rpkm
+114                        mean
+115                        std
+116                        cv
+117            ;
+118            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+119            run;
+
+NOTE: The infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_NSC1.csv' is:
+      Filename=/home/jrbnewman/McLab/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_NSC1.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Tue Nov 22 16:51:00 2016,
+      File Size (bytes)=10566487
+
+NOTE: 92832 records were read from the infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_NSC1.csv'.
+      The minimum record length was 45.
+      The maximum record length was 133.
+NOTE: The data set WORK.CHUNK_NSC1 has 92832 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.41 seconds
+      cpu time            0.21 seconds
+      
+
+92832 rows created in WORK.CHUNK_NSC1 from !MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_NSC1.csv.
+  
+  
+  
+NOTE: WORK.CHUNK_NSC1 data set was successfully created.
+NOTE: The data set WORK.CHUNK_NSC1 has 92832 observations and 12 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           54.03 seconds
+      cpu time            53.31 seconds
+      
+
+
+120         /**********************************************************************
+121         *   PRODUCT:   SAS
+122         *   VERSION:   9.4
+123         *   CREATOR:   External File Interface
+124         *   DATE:      23NOV16
+125         *   DESC:      Generated SAS Datastep Code
+126         *   TEMPLATE SOURCE:  (None Specified.)
+127         ***********************************************************************/
+128            data WORK.FUSION_NSC1    ;
+129            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+130            infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_NSC1.csv' delimiter = ',' MISSOVER
+4                                                          The SAS System                         01:02 Wednesday, November 23, 2016
+
+130      ! DSD lrecl=32767 firstobs=2 ;
+131               informat sample_id $4. ;
+132               informat fusion_id $9. ;
+133               informat mapped_reads best32. ;
+134               informat read_length best32. ;
+135               informat region_length best32. ;
+136               informat region_depth best32. ;
+137               informat reads_in_region best32. ;
+138               informat apn best32. ;
+139               informat rpkm best32. ;
+140               informat mean best32. ;
+141               informat std best32. ;
+142               informat cv best32. ;
+143               format sample_id $4. ;
+144               format fusion_id $9. ;
+145               format mapped_reads best12. ;
+146               format read_length best12. ;
+147               format region_length best12. ;
+148               format region_depth best12. ;
+149               format reads_in_region best12. ;
+150               format apn best12. ;
+151               format rpkm best12. ;
+152               format mean best12. ;
+153               format std best12. ;
+154               format cv best12. ;
+155            input
+156                        sample_id $
+157                        fusion_id $
+158                        mapped_reads
+159                        read_length
+160                        region_length
+161                        region_depth
+162                        reads_in_region
+163                        apn
+164                        rpkm
+165                        mean
+166                        std
+167                        cv
+168            ;
+169            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+170            run;
+
+NOTE: The infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_NSC1.csv' is:
+      Filename=/home/jrbnewman/McLab/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_NSC1.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Tue Nov 22 16:51:02 2016,
+      File Size (bytes)=8385273
+
+NOTE: 73221 records were read from the infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_NSC1.csv'.
+      The minimum record length was 44.
+      The maximum record length was 129.
+NOTE: The data set WORK.FUSION_NSC1 has 73221 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.29 seconds
+      cpu time            0.15 seconds
+      
+
+5                                                          The SAS System                         01:02 Wednesday, November 23, 2016
+
+73221 rows created in WORK.FUSION_NSC1 from !MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_NSC1.csv.
+  
+  
+  
+NOTE: WORK.FUSION_NSC1 data set was successfully created.
+NOTE: The data set WORK.FUSION_NSC1 has 73221 observations and 12 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           42.60 seconds
+      cpu time            42.03 seconds
+      
+
+
+171         /**********************************************************************
+172         *   PRODUCT:   SAS
+173         *   VERSION:   9.4
+174         *   CREATOR:   External File Interface
+175         *   DATE:      23NOV16
+176         *   DESC:      Generated SAS Datastep Code
+177         *   TEMPLATE SOURCE:  (None Specified.)
+178         ***********************************************************************/
+179            data WORK.SPLICING_NSC1    ;
+180            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+181            infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_NSC1.csv' delimiter = ',' MISSOVER
+181      ! DSD lrecl=32767 firstobs=2 ;
+182               informat sample_id $4. ;
+183               informat fusion_id $617. ;
+184               informat mapped_reads best32. ;
+185               informat read_length best32. ;
+186               informat region_length best32. ;
+187               informat region_depth best32. ;
+188               informat reads_in_region best32. ;
+189               informat apn best32. ;
+190               informat rpkm best32. ;
+191               informat mean best32. ;
+192               informat std best32. ;
+193               informat cv best32. ;
+194               format sample_id $4. ;
+195               format fusion_id $617. ;
+196               format mapped_reads best12. ;
+197               format read_length best12. ;
+198               format region_length best12. ;
+199               format region_depth best12. ;
+200               format reads_in_region best12. ;
+201               format apn best12. ;
+202               format rpkm best12. ;
+203               format mean best12. ;
+204               format std best12. ;
+205               format cv best12. ;
+206            input
+207                        sample_id $
+208                        fusion_id $
+209                        mapped_reads
+210                        read_length
+211                        region_length
+212                        region_depth
+213                        reads_in_region
+214                        apn
+215                        rpkm
+6                                                          The SAS System                         01:02 Wednesday, November 23, 2016
+
+216                        mean
+217                        std
+218                        cv
+219            ;
+220            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+221            run;
+
+NOTE: The infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_NSC1.csv' is:
+      Filename=/home/jrbnewman/McLab/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_NSC1.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Tue Nov 22 16:51:15 2016,
+      File Size (bytes)=41180116
+
+NOTE: 685162 records were read from the infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_NSC1.csv'.
+      The minimum record length was 45.
+      The maximum record length was 654.
+NOTE: The data set WORK.SPLICING_NSC1 has 685162 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.14 seconds
+      cpu time            1.62 seconds
+      
+
+685162 rows created in WORK.SPLICING_NSC1 from !MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_NSC1.csv.
+  
+  
+  
+NOTE: WORK.SPLICING_NSC1 data set was successfully created.
+NOTE: The data set WORK.SPLICING_NSC1 has 685162 observations and 12 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           5:36.15
+      cpu time            5:33.96
+      
+
+
+222         /**********************************************************************
+223         *   PRODUCT:   SAS
+224         *   VERSION:   9.4
+225         *   CREATOR:   External File Interface
+226         *   DATE:      23NOV16
+227         *   DESC:      Generated SAS Datastep Code
+228         *   TEMPLATE SOURCE:  (None Specified.)
+229         ***********************************************************************/
+230            data WORK.CHUNK_NSC2    ;
+231            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+232            infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_NSC2.csv' delimiter = ',' MISSOVER DSD
+232      !  lrecl=32767 firstobs=2 ;
+233               informat sample_id $4. ;
+234               informat fusion_id $12. ;
+235               informat mapped_reads best32. ;
+236               informat read_length best32. ;
+237               informat region_length best32. ;
+238               informat region_depth best32. ;
+239               informat reads_in_region best32. ;
+240               informat apn best32. ;
+241               informat rpkm best32. ;
+242               informat mean best32. ;
+243               informat std best32. ;
+7                                                          The SAS System                         01:02 Wednesday, November 23, 2016
+
+244               informat cv best32. ;
+245               format sample_id $4. ;
+246               format fusion_id $12. ;
+247               format mapped_reads best12. ;
+248               format read_length best12. ;
+249               format region_length best12. ;
+250               format region_depth best12. ;
+251               format reads_in_region best12. ;
+252               format apn best12. ;
+253               format rpkm best12. ;
+254               format mean best12. ;
+255               format std best12. ;
+256               format cv best12. ;
+257            input
+258                        sample_id $
+259                        fusion_id $
+260                        mapped_reads
+261                        read_length
+262                        region_length
+263                        region_depth
+264                        reads_in_region
+265                        apn
+266                        rpkm
+267                        mean
+268                        std
+269                        cv
+270            ;
+271            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+272            run;
+
+NOTE: The infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_NSC2.csv' is:
+      Filename=/home/jrbnewman/McLab/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_NSC2.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Tue Nov 22 16:50:59 2016,
+      File Size (bytes)=10437529
+
+NOTE: 92832 records were read from the infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_NSC2.csv'.
+      The minimum record length was 45.
+      The maximum record length was 132.
+NOTE: The data set WORK.CHUNK_NSC2 has 92832 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.34 seconds
+      cpu time            0.18 seconds
+      
+
+92832 rows created in WORK.CHUNK_NSC2 from !MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_NSC2.csv.
+  
+  
+  
+NOTE: WORK.CHUNK_NSC2 data set was successfully created.
+NOTE: The data set WORK.CHUNK_NSC2 has 92832 observations and 12 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           53.54 seconds
+      cpu time            52.86 seconds
+      
+
+
+8                                                          The SAS System                         01:02 Wednesday, November 23, 2016
+
+273         /**********************************************************************
+274         *   PRODUCT:   SAS
+275         *   VERSION:   9.4
+276         *   CREATOR:   External File Interface
+277         *   DATE:      23NOV16
+278         *   DESC:      Generated SAS Datastep Code
+279         *   TEMPLATE SOURCE:  (None Specified.)
+280         ***********************************************************************/
+281            data WORK.FUSION_NSC2    ;
+282            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+283            infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_NSC2.csv' delimiter = ',' MISSOVER
+283      ! DSD lrecl=32767 firstobs=2 ;
+284               informat sample_id $4. ;
+285               informat fusion_id $9. ;
+286               informat mapped_reads best32. ;
+287               informat read_length best32. ;
+288               informat region_length best32. ;
+289               informat region_depth best32. ;
+290               informat reads_in_region best32. ;
+291               informat apn best32. ;
+292               informat rpkm best32. ;
+293               informat mean best32. ;
+294               informat std best32. ;
+295               informat cv best32. ;
+296               format sample_id $4. ;
+297               format fusion_id $9. ;
+298               format mapped_reads best12. ;
+299               format read_length best12. ;
+300               format region_length best12. ;
+301               format region_depth best12. ;
+302               format reads_in_region best12. ;
+303               format apn best12. ;
+304               format rpkm best12. ;
+305               format mean best12. ;
+306               format std best12. ;
+307               format cv best12. ;
+308            input
+309                        sample_id $
+310                        fusion_id $
+311                        mapped_reads
+312                        read_length
+313                        region_length
+314                        region_depth
+315                        reads_in_region
+316                        apn
+317                        rpkm
+318                        mean
+319                        std
+320                        cv
+321            ;
+322            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+323            run;
+
+NOTE: The infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_NSC2.csv' is:
+      Filename=/home/jrbnewman/McLab/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_NSC2.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Tue Nov 22 16:51:02 2016,
+9                                                          The SAS System                         01:02 Wednesday, November 23, 2016
+
+      File Size (bytes)=8295411
+
+NOTE: 73221 records were read from the infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_NSC2.csv'.
+      The minimum record length was 44.
+      The maximum record length was 129.
+NOTE: The data set WORK.FUSION_NSC2 has 73221 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.45 seconds
+      cpu time            0.17 seconds
+      
+
+73221 rows created in WORK.FUSION_NSC2 from !MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_NSC2.csv.
+  
+  
+  
+NOTE: WORK.FUSION_NSC2 data set was successfully created.
+NOTE: The data set WORK.FUSION_NSC2 has 73221 observations and 12 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           42.82 seconds
+      cpu time            42.09 seconds
+      
+
+
+324         /**********************************************************************
+325         *   PRODUCT:   SAS
+326         *   VERSION:   9.4
+327         *   CREATOR:   External File Interface
+328         *   DATE:      23NOV16
+329         *   DESC:      Generated SAS Datastep Code
+330         *   TEMPLATE SOURCE:  (None Specified.)
+331         ***********************************************************************/
+332            data WORK.SPLICING_NSC2    ;
+333            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+334            infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_NSC2.csv' delimiter = ',' MISSOVER
+334      ! DSD lrecl=32767 firstobs=2 ;
+335               informat sample_id $4. ;
+336               informat fusion_id $617. ;
+337               informat mapped_reads best32. ;
+338               informat read_length best32. ;
+339               informat region_length best32. ;
+340               informat region_depth best32. ;
+341               informat reads_in_region best32. ;
+342               informat apn best32. ;
+343               informat rpkm best32. ;
+344               informat mean best32. ;
+345               informat std best32. ;
+346               informat cv best32. ;
+347               format sample_id $4. ;
+348               format fusion_id $617. ;
+349               format mapped_reads best12. ;
+350               format read_length best12. ;
+351               format region_length best12. ;
+352               format region_depth best12. ;
+353               format reads_in_region best12. ;
+354               format apn best12. ;
+355               format rpkm best12. ;
+356               format mean best12. ;
+357               format std best12. ;
+10                                                         The SAS System                         01:02 Wednesday, November 23, 2016
+
+358               format cv best12. ;
+359            input
+360                        sample_id $
+361                        fusion_id $
+362                        mapped_reads
+363                        read_length
+364                        region_length
+365                        region_depth
+366                        reads_in_region
+367                        apn
+368                        rpkm
+369                        mean
+370                        std
+371                        cv
+372            ;
+373            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+374            run;
+
+NOTE: The infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_NSC2.csv' is:
+      Filename=/home/jrbnewman/McLab/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_NSC2.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Tue Nov 22 16:51:12 2016,
+      File Size (bytes)=40692381
+
+NOTE: 685162 records were read from the infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_NSC2.csv'.
+      The minimum record length was 45.
+      The maximum record length was 654.
+NOTE: The data set WORK.SPLICING_NSC2 has 685162 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.23 seconds
+      cpu time            1.57 seconds
+      
+
+685162 rows created in WORK.SPLICING_NSC2 from !MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_NSC2.csv.
+  
+  
+  
+NOTE: WORK.SPLICING_NSC2 data set was successfully created.
+NOTE: The data set WORK.SPLICING_NSC2 has 685162 observations and 12 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           5:34.59
+      cpu time            5:32.26
+      
+
+
+375         /**********************************************************************
+376         *   PRODUCT:   SAS
+377         *   VERSION:   9.4
+378         *   CREATOR:   External File Interface
+379         *   DATE:      23NOV16
+380         *   DESC:      Generated SAS Datastep Code
+381         *   TEMPLATE SOURCE:  (None Specified.)
+382         ***********************************************************************/
+383            data WORK.CHUNK_OLD1    ;
+384            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+385            infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_OLD1.csv' delimiter = ',' MISSOVER DSD
+385      !  lrecl=32767 firstobs=2 ;
+11                                                         The SAS System                         01:02 Wednesday, November 23, 2016
+
+386               informat sample_id $4. ;
+387               informat fusion_id $12. ;
+388               informat mapped_reads best32. ;
+389               informat read_length best32. ;
+390               informat region_length best32. ;
+391               informat region_depth best32. ;
+392               informat reads_in_region best32. ;
+393               informat apn best32. ;
+394               informat rpkm best32. ;
+395               informat mean best32. ;
+396               informat std best32. ;
+397               informat cv best32. ;
+398               format sample_id $4. ;
+399               format fusion_id $12. ;
+400               format mapped_reads best12. ;
+401               format read_length best12. ;
+402               format region_length best12. ;
+403               format region_depth best12. ;
+404               format reads_in_region best12. ;
+405               format apn best12. ;
+406               format rpkm best12. ;
+407               format mean best12. ;
+408               format std best12. ;
+409               format cv best12. ;
+410            input
+411                        sample_id $
+412                        fusion_id $
+413                        mapped_reads
+414                        read_length
+415                        region_length
+416                        region_depth
+417                        reads_in_region
+418                        apn
+419                        rpkm
+420                        mean
+421                        std
+422                        cv
+423            ;
+424            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+425            run;
+
+NOTE: The infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_OLD1.csv' is:
+      Filename=/home/jrbnewman/McLab/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_OLD1.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Tue Nov 22 16:50:58 2016,
+      File Size (bytes)=10573848
+
+NOTE: 92832 records were read from the infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_OLD1.csv'.
+      The minimum record length was 45.
+      The maximum record length was 132.
+NOTE: The data set WORK.CHUNK_OLD1 has 92832 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.51 seconds
+      cpu time            0.20 seconds
+      
+
+92832 rows created in WORK.CHUNK_OLD1 from !MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_OLD1.csv.
+12                                                         The SAS System                         01:02 Wednesday, November 23, 2016
+
+  
+  
+  
+NOTE: WORK.CHUNK_OLD1 data set was successfully created.
+NOTE: The data set WORK.CHUNK_OLD1 has 92832 observations and 12 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           54.08 seconds
+      cpu time            53.05 seconds
+      
+
+
+426         /**********************************************************************
+427         *   PRODUCT:   SAS
+428         *   VERSION:   9.4
+429         *   CREATOR:   External File Interface
+430         *   DATE:      23NOV16
+431         *   DESC:      Generated SAS Datastep Code
+432         *   TEMPLATE SOURCE:  (None Specified.)
+433         ***********************************************************************/
+434            data WORK.FUSION_OLD1    ;
+435            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+436            infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_OLD1.csv' delimiter = ',' MISSOVER
+436      ! DSD lrecl=32767 firstobs=2 ;
+437               informat sample_id $4. ;
+438               informat fusion_id $9. ;
+439               informat mapped_reads best32. ;
+440               informat read_length best32. ;
+441               informat region_length best32. ;
+442               informat region_depth best32. ;
+443               informat reads_in_region best32. ;
+444               informat apn best32. ;
+445               informat rpkm best32. ;
+446               informat mean best32. ;
+447               informat std best32. ;
+448               informat cv best32. ;
+449               format sample_id $4. ;
+450               format fusion_id $9. ;
+451               format mapped_reads best12. ;
+452               format read_length best12. ;
+453               format region_length best12. ;
+454               format region_depth best12. ;
+455               format reads_in_region best12. ;
+456               format apn best12. ;
+457               format rpkm best12. ;
+458               format mean best12. ;
+459               format std best12. ;
+460               format cv best12. ;
+461            input
+462                        sample_id $
+463                        fusion_id $
+464                        mapped_reads
+465                        read_length
+466                        region_length
+467                        region_depth
+468                        reads_in_region
+469                        apn
+470                        rpkm
+471                        mean
+13                                                         The SAS System                         01:02 Wednesday, November 23, 2016
+
+472                        std
+473                        cv
+474            ;
+475            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+476            run;
+
+NOTE: The infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_OLD1.csv' is:
+      Filename=/home/jrbnewman/McLab/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_OLD1.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Tue Nov 22 16:51:01 2016,
+      File Size (bytes)=8394123
+
+NOTE: 73221 records were read from the infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_OLD1.csv'.
+      The minimum record length was 44.
+      The maximum record length was 129.
+NOTE: The data set WORK.FUSION_OLD1 has 73221 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.39 seconds
+      cpu time            0.16 seconds
+      
+
+73221 rows created in WORK.FUSION_OLD1 from !MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_OLD1.csv.
+  
+  
+  
+NOTE: WORK.FUSION_OLD1 data set was successfully created.
+NOTE: The data set WORK.FUSION_OLD1 has 73221 observations and 12 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           42.50 seconds
+      cpu time            41.67 seconds
+      
+
+
+477         /**********************************************************************
+478         *   PRODUCT:   SAS
+479         *   VERSION:   9.4
+480         *   CREATOR:   External File Interface
+481         *   DATE:      23NOV16
+482         *   DESC:      Generated SAS Datastep Code
+483         *   TEMPLATE SOURCE:  (None Specified.)
+484         ***********************************************************************/
+485            data WORK.SPLICING_OLD1    ;
+486            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+487            infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_OLD1.csv' delimiter = ',' MISSOVER
+487      ! DSD lrecl=32767 firstobs=2 ;
+488               informat sample_id $4. ;
+489               informat fusion_id $617. ;
+490               informat mapped_reads best32. ;
+491               informat read_length best32. ;
+492               informat region_length best32. ;
+493               informat region_depth best32. ;
+494               informat reads_in_region best32. ;
+495               informat apn best32. ;
+496               informat rpkm best32. ;
+497               informat mean best32. ;
+498               informat std best32. ;
+499               informat cv best32. ;
+14                                                         The SAS System                         01:02 Wednesday, November 23, 2016
+
+500               format sample_id $4. ;
+501               format fusion_id $617. ;
+502               format mapped_reads best12. ;
+503               format read_length best12. ;
+504               format region_length best12. ;
+505               format region_depth best12. ;
+506               format reads_in_region best12. ;
+507               format apn best12. ;
+508               format rpkm best12. ;
+509               format mean best12. ;
+510               format std best12. ;
+511               format cv best12. ;
+512            input
+513                        sample_id $
+514                        fusion_id $
+515                        mapped_reads
+516                        read_length
+517                        region_length
+518                        region_depth
+519                        reads_in_region
+520                        apn
+521                        rpkm
+522                        mean
+523                        std
+524                        cv
+525            ;
+526            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+527            run;
+
+NOTE: The infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_OLD1.csv' is:
+      Filename=/home/jrbnewman/McLab/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_OLD1.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Tue Nov 22 16:51:09 2016,
+      File Size (bytes)=41035372
+
+NOTE: 685162 records were read from the infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_OLD1.csv'.
+      The minimum record length was 45.
+      The maximum record length was 654.
+NOTE: The data set WORK.SPLICING_OLD1 has 685162 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.03 seconds
+      cpu time            1.55 seconds
+      
+
+685162 rows created in WORK.SPLICING_OLD1 from !MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_OLD1.csv.
+  
+  
+  
+NOTE: WORK.SPLICING_OLD1 data set was successfully created.
+NOTE: The data set WORK.SPLICING_OLD1 has 685162 observations and 12 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           5:34.43
+      cpu time            5:32.19
+      
+
+
+528         /**********************************************************************
+15                                                         The SAS System                         01:02 Wednesday, November 23, 2016
+
+529         *   PRODUCT:   SAS
+530         *   VERSION:   9.4
+531         *   CREATOR:   External File Interface
+532         *   DATE:      23NOV16
+533         *   DESC:      Generated SAS Datastep Code
+534         *   TEMPLATE SOURCE:  (None Specified.)
+535         ***********************************************************************/
+536            data WORK.CHUNK_OLD2    ;
+537            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+538            infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_OLD2.csv' delimiter = ',' MISSOVER DSD
+538      !  lrecl=32767 firstobs=2 ;
+539               informat sample_id $4. ;
+540               informat fusion_id $12. ;
+541               informat mapped_reads best32. ;
+542               informat read_length best32. ;
+543               informat region_length best32. ;
+544               informat region_depth best32. ;
+545               informat reads_in_region best32. ;
+546               informat apn best32. ;
+547               informat rpkm best32. ;
+548               informat mean best32. ;
+549               informat std best32. ;
+550               informat cv best32. ;
+551               format sample_id $4. ;
+552               format fusion_id $12. ;
+553               format mapped_reads best12. ;
+554               format read_length best12. ;
+555               format region_length best12. ;
+556               format region_depth best12. ;
+557               format reads_in_region best12. ;
+558               format apn best12. ;
+559               format rpkm best12. ;
+560               format mean best12. ;
+561               format std best12. ;
+562               format cv best12. ;
+563            input
+564                        sample_id $
+565                        fusion_id $
+566                        mapped_reads
+567                        read_length
+568                        region_length
+569                        region_depth
+570                        reads_in_region
+571                        apn
+572                        rpkm
+573                        mean
+574                        std
+575                        cv
+576            ;
+577            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+578            run;
+
+NOTE: The infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_OLD2.csv' is:
+      Filename=/home/jrbnewman/McLab/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_OLD2.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Tue Nov 22 16:50:57 2016,
+      File Size (bytes)=10519388
+16                                                         The SAS System                         01:02 Wednesday, November 23, 2016
+
+
+NOTE: 92832 records were read from the infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_OLD2.csv'.
+      The minimum record length was 45.
+      The maximum record length was 131.
+NOTE: The data set WORK.CHUNK_OLD2 has 92832 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.35 seconds
+      cpu time            0.19 seconds
+      
+
+92832 rows created in WORK.CHUNK_OLD2 from !MCLAB/conesa_pacbio/alignment_output/coverage_counts_chunks/cvrg_cnts_OLD2.csv.
+  
+  
+  
+NOTE: WORK.CHUNK_OLD2 data set was successfully created.
+NOTE: The data set WORK.CHUNK_OLD2 has 92832 observations and 12 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           53.66 seconds
+      cpu time            53.00 seconds
+      
+
+
+579         /**********************************************************************
+580         *   PRODUCT:   SAS
+581         *   VERSION:   9.4
+582         *   CREATOR:   External File Interface
+583         *   DATE:      23NOV16
+584         *   DESC:      Generated SAS Datastep Code
+585         *   TEMPLATE SOURCE:  (None Specified.)
+586         ***********************************************************************/
+587            data WORK.FUSION_OLD2    ;
+588            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+589            infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_OLD2.csv' delimiter = ',' MISSOVER
+589      ! DSD lrecl=32767 firstobs=2 ;
+590               informat sample_id $4. ;
+591               informat fusion_id $9. ;
+592               informat mapped_reads best32. ;
+593               informat read_length best32. ;
+594               informat region_length best32. ;
+595               informat region_depth best32. ;
+596               informat reads_in_region best32. ;
+597               informat apn best32. ;
+598               informat rpkm best32. ;
+599               informat mean best32. ;
+600               informat std best32. ;
+601               informat cv best32. ;
+602               format sample_id $4. ;
+603               format fusion_id $9. ;
+604               format mapped_reads best12. ;
+605               format read_length best12. ;
+606               format region_length best12. ;
+607               format region_depth best12. ;
+608               format reads_in_region best12. ;
+609               format apn best12. ;
+610               format rpkm best12. ;
+611               format mean best12. ;
+612               format std best12. ;
+613               format cv best12. ;
+17                                                         The SAS System                         01:02 Wednesday, November 23, 2016
+
+614            input
+615                        sample_id $
+616                        fusion_id $
+617                        mapped_reads
+618                        read_length
+619                        region_length
+620                        region_depth
+621                        reads_in_region
+622                        apn
+623                        rpkm
+624                        mean
+625                        std
+626                        cv
+627            ;
+628            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+629            run;
+
+NOTE: The infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_OLD2.csv' is:
+      Filename=/home/jrbnewman/McLab/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_OLD2.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Tue Nov 22 16:51:00 2016,
+      File Size (bytes)=8359742
+
+NOTE: 73221 records were read from the infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_OLD2.csv'.
+      The minimum record length was 44.
+      The maximum record length was 129.
+NOTE: The data set WORK.FUSION_OLD2 has 73221 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.30 seconds
+      cpu time            0.15 seconds
+      
+
+73221 rows created in WORK.FUSION_OLD2 from !MCLAB/conesa_pacbio/alignment_output/coverage_counts_fusions/cvrg_cnts_OLD2.csv.
+  
+  
+  
+NOTE: WORK.FUSION_OLD2 data set was successfully created.
+NOTE: The data set WORK.FUSION_OLD2 has 73221 observations and 12 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           42.61 seconds
+      cpu time            42.05 seconds
+      
+
+
+630         /**********************************************************************
+631         *   PRODUCT:   SAS
+632         *   VERSION:   9.4
+633         *   CREATOR:   External File Interface
+634         *   DATE:      23NOV16
+635         *   DESC:      Generated SAS Datastep Code
+636         *   TEMPLATE SOURCE:  (None Specified.)
+637         ***********************************************************************/
+638            data WORK.SPLICING_OLD2    ;
+639            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+640            infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_OLD2.csv' delimiter = ',' MISSOVER
+640      ! DSD lrecl=32767 firstobs=2 ;
+641               informat sample_id $4. ;
+18                                                         The SAS System                         01:02 Wednesday, November 23, 2016
+
+642               informat fusion_id $617. ;
+643               informat mapped_reads best32. ;
+644               informat read_length best32. ;
+645               informat region_length best32. ;
+646               informat region_depth best32. ;
+647               informat reads_in_region best32. ;
+648               informat apn best32. ;
+649               informat rpkm best32. ;
+650               informat mean best32. ;
+651               informat std best32. ;
+652               informat cv best32. ;
+653               format sample_id $4. ;
+654               format fusion_id $617. ;
+655               format mapped_reads best12. ;
+656               format read_length best12. ;
+657               format region_length best12. ;
+658               format region_depth best12. ;
+659               format reads_in_region best12. ;
+660               format apn best12. ;
+661               format rpkm best12. ;
+662               format mean best12. ;
+663               format std best12. ;
+664               format cv best12. ;
+665            input
+666                        sample_id $
+667                        fusion_id $
+668                        mapped_reads
+669                        read_length
+670                        region_length
+671                        region_depth
+672                        reads_in_region
+673                        apn
+674                        rpkm
+675                        mean
+676                        std
+677                        cv
+678            ;
+679            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+680            run;
+
+NOTE: The infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_OLD2.csv' is:
+      Filename=/home/jrbnewman/McLab/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_OLD2.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Tue Nov 22 16:51:05 2016,
+      File Size (bytes)=40688281
+
+NOTE: 685162 records were read from the infile '!MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_OLD2.csv'.
+      The minimum record length was 45.
+      The maximum record length was 654.
+NOTE: The data set WORK.SPLICING_OLD2 has 685162 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.10 seconds
+      cpu time            1.61 seconds
+      
+
+685162 rows created in WORK.SPLICING_OLD2 from !MCLAB/conesa_pacbio/alignment_output/coverage_counts_splicing/cvrg_cnts_OLD2.csv.
+  
+19                                                         The SAS System                         01:02 Wednesday, November 23, 2016
+
+  
+  
+NOTE: WORK.SPLICING_OLD2 data set was successfully created.
+NOTE: The data set WORK.SPLICING_OLD2 has 685162 observations and 12 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           5:33.64
+      cpu time            5:31.38
+      
+
+681        
+682        
+683        data conesa.coverage_fusions;
+684           set fusion_: ;
+685        run;
+
+NOTE: There were 73221 observations read from the data set WORK.FUSION_NSC1.
+NOTE: There were 73221 observations read from the data set WORK.FUSION_NSC2.
+NOTE: There were 73221 observations read from the data set WORK.FUSION_OLD1.
+NOTE: There were 73221 observations read from the data set WORK.FUSION_OLD2.
+NOTE: The data set CONESA.COVERAGE_FUSIONS has 292884 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.07 seconds
+      cpu time            0.10 seconds
+      
+
+686        
+687        data conesa.coverage_exon_chunks;
+688           set chunk_: ;
+689        run;
+
+NOTE: There were 92832 observations read from the data set WORK.CHUNK_NSC1.
+NOTE: There were 92832 observations read from the data set WORK.CHUNK_NSC2.
+NOTE: There were 92832 observations read from the data set WORK.CHUNK_OLD1.
+NOTE: There were 92832 observations read from the data set WORK.CHUNK_OLD2.
+NOTE: The data set CONESA.COVERAGE_EXON_CHUNKS has 371328 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.07 seconds
+      cpu time            0.11 seconds
+      
+
+690        
+691        data conesa.coverage_splicing;
+692           set splicing_: ;
+693        run;
+
+NOTE: There were 685162 observations read from the data set WORK.SPLICING_NSC1.
+NOTE: There were 685162 observations read from the data set WORK.SPLICING_NSC2.
+NOTE: There were 685162 observations read from the data set WORK.SPLICING_OLD1.
+NOTE: There were 685162 observations read from the data set WORK.SPLICING_OLD2.
+NOTE: The data set CONESA.COVERAGE_SPLICING has 2740648 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           50.96 seconds
+      cpu time            4.12 seconds
+      
+
+694        
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+20                                                         The SAS System                         01:02 Wednesday, November 23, 2016
+
+NOTE: The SAS System used:
+      real time           29:38.07
+      cpu time            28:34.25
+      

@@ -1,0 +1,53 @@
+                                                           The SAS System                             14:48 Monday, May 15, 2017   1
+
+                                                         The FREQ Procedure
+
+                                                                            Cumulative    Cumulative
+                                flag_same_chrom    Frequency     Percent     Frequency      Percent
+                                --------------------------------------------------------------------
+                                              0         418       27.66           418        27.66  
+                                              1        1093       72.34          1511       100.00  
+                                                           The SAS System                             14:48 Monday, May 15, 2017   2
+
+                                                         The FREQ Procedure
+
+                                                                           Cumulative    Cumulative
+                                flag_same_gene    Frequency     Percent     Frequency      Percent
+                                -------------------------------------------------------------------
+                                             0        1325       87.69          1325        87.69  
+                                             1         186       12.31          1511       100.00  
+
+
+                                             Table of flag_same_gene by flag_same_chrom
+
+                                                flag_same_gene     flag_same_chrom
+
+                                                Frequency|
+                                                Percent  |
+                                                Row Pct  |
+                                                Col Pct  |       0|       1|  Total
+                                                ---------+--------+--------+
+                                                       0 |    418 |    907 |   1325
+                                                         |  27.66 |  60.03 |  87.69
+                                                         |  31.55 |  68.45 |
+                                                         | 100.00 |  82.98 |
+                                                ---------+--------+--------+
+                                                       1 |      0 |    186 |    186
+                                                         |   0.00 |  12.31 |  12.31
+                                                         |   0.00 | 100.00 |
+                                                         |   0.00 |  17.02 |
+                                                ---------+--------+--------+
+                                                Total         418     1093     1511
+                                                            27.66    72.34   100.00
+                                                           The SAS System                             14:48 Monday, May 15, 2017   3
+
+                             flag_    flag_same_                  flag_same_
+                             same_      feat1_      flag_same_      feat2_      flag_same_
+                      Obs    event       start      feat1_stop       start      feat2_stop    COUNT    PERCENT
+
+                       1       0           0             0             0             0         9759    99.2474
+                       2       0           0             0             0             1            2     0.0203
+                       3       0           0             0             1             1           23     0.2339
+                       4       0           0             1             1             1            5     0.0508
+                       5       0           1             1             0             0           40     0.4068
+                       6       0           1             1             1             0            4     0.0407

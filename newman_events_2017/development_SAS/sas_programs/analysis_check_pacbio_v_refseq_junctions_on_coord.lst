@@ -1,0 +1,90 @@
+                                                           The SAS System                             13:59 Friday, May 26, 2017   1
+
+                                                         The FREQ Procedure
+
+                                       Table of flag_has_pb_match by flag_junction_annotated
+
+                                                flag_has_pb_match
+                                                          flag_junction_annotated
+
+                                                Frequency|
+                                                Percent  |
+                                                Row Pct  |
+                                                Col Pct  |       0|       1|  Total
+                                                ---------+--------+--------+
+                                                       0 |1781231 | 155329 |1936560
+                                                         |  89.75 |   7.83 |  97.58
+                                                         |  91.98 |   8.02 |
+                                                         |  99.98 |  76.50 |
+                                                ---------+--------+--------+
+                                                       1 |    388 |  47718 |  48106
+                                                         |   0.02 |   2.40 |   2.42
+                                                         |   0.81 |  99.19 |
+                                                         |   0.02 |  23.50 |
+                                                ---------+--------+--------+
+                                                Total     1781619   203047  1984666
+                                                            89.77    10.23   100.00
+                                                           The SAS System                             13:59 Friday, May 26, 2017   2
+
+                                                         The FREQ Procedure
+
+                                                Table of flag_seq_ok by flag_size_ok
+
+                                                     flag_seq_ok
+                                                               flag_size_ok
+
+                                                     Frequency|
+                                                     Percent  |
+                                                     Row Pct  |
+                                                     Col Pct  |       1|  Total
+                                                     ---------+--------+
+                                                            1 |  48106 |  48106
+                                                              | 100.00 | 100.00
+                                                              | 100.00 |
+                                                              | 100.00 |
+                                                     ---------+--------+
+                                                     Total       48106    48106
+                                                                100.00   100.00
+
+                                                    Frequency Missing = 1936560
+                                                           The SAS System                             13:59 Friday, May 26, 2017   3
+
+                                                         The FREQ Procedure
+
+                                          Table of flag_seq_ok by flag_junction_annotated
+
+                                                flag_seq_ok
+                                                          flag_junction_annotated
+
+                                                Frequency|
+                                                Percent  |
+                                                Row Pct  |
+                                                Col Pct  |       0|       1|  Total
+                                                ---------+--------+--------+
+                                                       1 |    388 |  47718 |  48106
+                                                         |   0.81 |  99.19 | 100.00
+                                                         |   0.81 |  99.19 |
+                                                         | 100.00 | 100.00 |
+                                                ---------+--------+--------+
+                                                Total         388    47718    48106
+                                                             0.81    99.19   100.00
+
+                                                    Frequency Missing = 1936560
+                                                           The SAS System                             13:59 Friday, May 26, 2017   4
+
+                                      flag_                            flag_
+                   flag_junction_    has_pb_     flag_     flag_     splicing_    flag_redundant_
+            Obs       annotated       match     seq_ok    size_ok        on           sequence         COUNT    PERCENT
+
+              1           0             0          .         .           0               0           1729226      .    
+              2           0             0          .         .           0               1             16319      .    
+              3           0             0          .         .           1               0             35686      .    
+              4           0             1          1         1           0               0               163     0.3388
+              5           0             1          1         1           0               1                 2     0.0042
+              6           0             1          1         1           1               0               223     0.4636
+              7           1             0          .         .           0               0            108232      .    
+              8           1             0          .         .           0               1              2404      .    
+              9           1             0          .         .           1               0             44693      .    
+             10           1             1          1         1           0               0              1738     3.6129
+             11           1             1          1         1           0               1               124     0.2578
+             12           1             1          1         1           1               0             45856    95.3228

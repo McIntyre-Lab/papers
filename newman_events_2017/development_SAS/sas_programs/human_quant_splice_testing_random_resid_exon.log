@@ -1,0 +1,453 @@
+1                                                          The SAS System                             12:28 Wednesday, June 28, 2017
+
+NOTE: Unable to open SASUSER.REGSTRY. WORK.REGSTRY will be opened instead.
+NOTE: All registry changes will be lost at the end of the session.
+
+WARNING: Unable to copy SASUSER registry to WORK registry. Because of this, you will not see registry customizations during this 
+         session.
+NOTE: Unable to open SASUSER.PROFILE. WORK.PROFILE will be opened instead.
+NOTE: All profile changes will be lost at the end of the session.
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to UNIVERSITY OF FLORIDA - SFA T&R, Site 70095659.
+NOTE: This session is executing on the Linux 4.4.0-81-generic (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 4.4.0-81-generic #104~14.04.1-Ubuntu SMP Wed Jun 14 12:45:52 UTC 2017 x86_64 Unrecognized Linux Distribution 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.14 seconds
+      cpu time            0.03 seconds
+      
+1          ods listing; ods html close;
+2          
+3          libname event "!MCLAB/event_analysis/sas_data";
+NOTE: Libref EVENT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/sas_data
+4          libname mm10 "!MCLAB/useful_mouse_data/mm10/sas_data";
+NOTE: Libref MM10 was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/useful_mouse_data/mm10/sas_data
+2                                                          The SAS System                             12:28 Wednesday, June 28, 2017
+
+5          libname con "!PATCON/sas_data";
+NOTE: Libref CON was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/concannon/sas_data
+6          
+7          /* Set up quant splicing test:
+8            model will be:
+9              by gene_id
+10             log_apn = cell_type fusion_id cell_type*fusion_id / htype=1;
+11         
+12         (basic model, mostly for testing if model will work
+13         
+14         adding in random _resid_ / group=fusion_id;
+15         
+16         I will take the first 20 genes for testing
+17         */
+18         
+19         data genes4test;
+20            set event.hg19_genes_for_ds_test_all;
+21            if _n_ < 362;
+22            keep gene_id fusion_id;
+23         run;
+
+NOTE: There were 108066 observations read from the data set EVENT.HG19_GENES_FOR_DS_TEST_ALL.
+NOTE: The data set WORK.GENES4TEST has 361 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.17 seconds
+      cpu time            0.02 seconds
+      
+
+24         
+25         data fus_counts;
+26            set con.apn0_q3_norm;
+27            if flag_low_coverage=1 then delete;
+28         /* mhalanobis distance and low coverage*/
+29         if name =  '2009-PC-0221' then delete; *sample 75 cd8;
+30         if name =  '2009-PC-0144' then delete; *sample 48 cd4;
+31         if name =  '2009-PC-0236' then delete; *sample 80;
+32         if name =  '2009-PC-0237' then delete; *sample 80;
+33         if name =  '2009-PC-0235' then delete; *sample 80;
+34          /*mahalnobis distance samples*/
+35           if name = '2009-PC-0101' then delete; *sample 34cd8;
+36         if name = '2009-PC-0104' then delete; *sample35 cd8;
+37         if name =  '2009-PC-0153' then delete; *sample 51 cd4;
+38         if name =  '2009-PC-0200' then delete; *sample 67 cd8;
+39         if name =  '2009-PC-0212' then delete; *sample 72 cd8;
+40         if name = '2009-PC-0215' then delete; *sample 73  cd8;
+41         /*funky heatmap samples*/
+42         
+43         if name =  '2009-PC-0083' then delete;
+44         if name =   '2009-PC-0114' then delete;
+45         if name =   '2009-PC-0224' then delete;
+46         if name =   '2009-PC-0228' then delete;
+47         
+48            keep name fusion_id log_q3_q3_apn_filter;
+49         
+50         run;
+
+3                                                          The SAS System                             12:28 Wednesday, June 28, 2017
+
+NOTE: There were 44080021 observations read from the data set CON.APN0_Q3_NORM.
+NOTE: The data set WORK.FUS_COUNTS has 42159055 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           3:51.80
+      cpu time            26.17 seconds
+      
+
+51         
+52         data covars;
+53            set con.all_covariates;
+54            keep name cell_type subject_id sex p2 pool;
+55         run;
+
+NOTE: There were 241 observations read from the data set CON.ALL_COVARIATES.
+NOTE: The data set WORK.COVARS has 241 observations and 6 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.00 seconds
+      
+
+56         
+57         proc sort data=genes4test;
+58             by fusion_id;
+
+NOTE: There were 361 observations read from the data set WORK.GENES4TEST.
+NOTE: The data set WORK.GENES4TEST has 361 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+59         proc sort data=fus_counts;
+60            by fusion_id;
+61         run;
+
+NOTE: There were 42159055 observations read from the data set WORK.FUS_COUNTS.
+NOTE: The data set WORK.FUS_COUNTS has 42159055 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           36.24 seconds
+      cpu time            38.66 seconds
+      
+
+62         
+63         data test_set;
+64            merge genes4test (in=in1) fus_counts (in=in2);
+65             by fusion_id;
+66            if in1 and in2;
+67         run;
+
+WARNING: Multiple lengths were specified for the BY variable fusion_id by input data sets. This might cause unexpected results.
+NOTE: There were 361 observations read from the data set WORK.GENES4TEST.
+NOTE: There were 42159055 observations read from the data set WORK.FUS_COUNTS.
+NOTE: The data set WORK.TEST_SET has 81651 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           7.98 seconds
+      cpu time            7.99 seconds
+      
+
+4                                                          The SAS System                             12:28 Wednesday, June 28, 2017
+
+68         
+69         proc sort data=covars;
+70            by name;
+
+NOTE: There were 241 observations read from the data set WORK.COVARS.
+NOTE: The data set WORK.COVARS has 241 observations and 6 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+71         proc sort data=test_set;
+72            by name;
+73         run;
+
+NOTE: There were 81651 observations read from the data set WORK.TEST_SET.
+NOTE: The data set WORK.TEST_SET has 81651 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.06 seconds
+      
+
+74         
+75         data test_set_w_covar;
+76           merge test_set (in=in1) covars (in=in2);
+77            by name;
+78           if in1 and in2;
+79         run;
+
+NOTE: There were 81651 observations read from the data set WORK.TEST_SET.
+NOTE: There were 241 observations read from the data set WORK.COVARS.
+NOTE: The data set WORK.TEST_SET_W_COVAR has 81651 observations and 9 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.03 seconds
+      
+
+80         
+81         proc sort data=test_set_w_covar;
+82            by gene_id fusion_id cell_type;
+83         run;
+
+NOTE: There were 81651 observations read from the data set WORK.TEST_SET_W_COVAR.
+NOTE: The data set WORK.TEST_SET_W_COVAR has 81651 observations and 9 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.10 seconds
+      cpu time            0.11 seconds
+      
+
+84         
+85         
+86         ods listing close;
+87         proc glimmix data=test_set_w_covar;
+88            by gene_id;
+89            class cell_Type fusion_id sex pool subject_id;
+90            model log_q3_q3_apn_filter = sex cell_type fusion_id sex*cell_type cell_type*fusion_id pool p2 / ddfm=kr;
+91             random pool;
+92             random resid / subject=subject_id;
+5                                                          The SAS System                             12:28 Wednesday, June 28, 2017
+
+93             random resid / group=fusion_id;
+94            output out=resid resid=resid pred=pred student=stu;
+95         lsmeans cell_type*fusion_id/pdiff;
+96         ods output tests3=anova lsmeans=lsmeans;
+97         run;
+
+
+
+NOTE: Convergence criterion (FCONV=2.220446E-16) satisfied.
+NOTE: At least one element of the gradient is greater than 1e-3.
+NOTE: Some of the active constraints have significant Lagrange Multipliers.
+NOTE: The above message was for the following BY group:
+      gene_id=AAAS
+NOTE: Convergence criterion (GCONV=1E-8) satisfied.
+NOTE: At least one element of the gradient is greater than 1e-3.
+NOTE: Estimated G matrix is not positive definite.
+NOTE: The above message was for the following BY group:
+      gene_id=AACS
+NOTE: Convergence criterion (GCONV=1E-8) satisfied.
+NOTE: At least one element of the gradient is greater than 1e-3.
+NOTE: Estimated G matrix is not positive definite.
+NOTE: The above message was for the following BY group:
+      gene_id=AAGAB
+NOTE: Convergence criterion (GCONV=1E-8) satisfied.
+NOTE: At least one element of the gradient is greater than 1e-3.
+NOTE: Estimated G matrix is not positive definite.
+NOTE: The above message was for the following BY group:
+      gene_id=AAMP
+WARNING: The initial estimates did not yield a valid objective function.
+NOTE: The above message was for the following BY group:
+      gene_id=AARS
+NOTE: Convergence criterion (GCONV=1E-8) satisfied.
+NOTE: At least one element of the gradient is greater than 1e-3.
+NOTE: Estimated G matrix is not positive definite.
+NOTE: The above message was for the following BY group:
+      gene_id=AARS2
+NOTE: Convergence criterion (GCONV=1E-8) satisfied.
+NOTE: At least one element of the gradient is greater than 1e-3.
+NOTE: Estimated G matrix is not positive definite.
+NOTE: The above message was for the following BY group:
+      gene_id=AARSD1
+NOTE: Convergence criterion (GCONV=1E-8) satisfied.
+NOTE: At least one element of the gradient is greater than 1e-3.
+NOTE: Estimated G matrix is not positive definite.
+NOTE: The above message was for the following BY group:
+      gene_id=AASDH
+NOTE: Convergence criterion (GCONV=1E-8) satisfied.
+NOTE: At least one element of the gradient is greater than 1e-3.
+NOTE: Estimated G matrix is not positive definite.
+NOTE: The above message was for the following BY group:
+      gene_id=AASDHPPT
+NOTE: Convergence criterion (GCONV=1E-8) satisfied.
+NOTE: At least one element of the gradient is greater than 1e-3.
+NOTE: Estimated G matrix is not positive definite.
+NOTE: The above message was for the following BY group:
+      gene_id=AATF
+NOTE: Convergence criterion (GCONV=1E-8) satisfied.
+NOTE: At least one element of the gradient is greater than 1e-3.
+6                                                          The SAS System                             12:28 Wednesday, June 28, 2017
+
+NOTE: Estimated G matrix is not positive definite.
+NOTE: The above message was for the following BY group:
+      gene_id=ABAT
+WARNING: The initial estimates did not yield a valid objective function.
+NOTE: The above message was for the following BY group:
+      gene_id=ABCA2
+WARNING: The initial estimates did not yield a valid objective function.
+NOTE: The above message was for the following BY group:
+      gene_id=ABCA5
+WARNING: The initial estimates did not yield a valid objective function.
+NOTE: The above message was for the following BY group:
+      gene_id=ABCA7
+NOTE: Convergence criterion (GCONV=1E-8) satisfied.
+NOTE: At least one element of the gradient is greater than 1e-3.
+NOTE: Estimated G matrix is not positive definite.
+NOTE: The above message was for the following BY group:
+      gene_id=ABCB1
+NOTE: Convergence criterion (GCONV=1E-8) satisfied.
+NOTE: At least one element of the gradient is greater than 1e-3.
+NOTE: Estimated G matrix is not positive definite.
+NOTE: The above message was for the following BY group:
+      gene_id=ABCB10
+ERROR: QUANEW Optimization cannot be completed.
+NOTE: QUANEW needs more than 200 iterations or 2000 function calls.
+NOTE: The above message was for the following BY group:
+      gene_id=ABCB7
+ERROR: QUANEW Optimization cannot be completed.
+NOTE: QUANEW needs more than 200 iterations or 2000 function calls.
+NOTE: Some of the active constraints have significant Lagrange Multipliers.
+NOTE: The above message was for the following BY group:
+      gene_id=ABCB8andACCN3
+WARNING: The initial estimates did not yield a valid objective function.
+NOTE: The above message was for the following BY group:
+      gene_id=ABCC1
+NOTE: Convergence criterion (GCONV=1E-8) satisfied.
+NOTE: At least one element of the gradient is greater than 1e-3.
+NOTE: Estimated G matrix is not positive definite.
+NOTE: The above message was for the following BY group:
+      gene_id=ABCC10
+NOTE: The data set WORK.LSMEANS has 492 observations and 9 variables.
+NOTE: The data set WORK.ANOVA has 91 observations and 6 variables.
+NOTE: The data set WORK.RESID has 81651 observations and 12 variables.
+NOTE: PROCEDURE GLIMMIX used (Total process time):
+      real time           1:00:53.51
+      cpu time            1:00:53.28
+      
+
+98         quit;
+99         
+100        data flag_sig_int;
+101           set anova;
+102           where effect="cell_type*fusion_id";
+103           if ProbF<0.05 and ProbF >0 then flag_p05=1;
+104           else flag_p05=0;
+105        run;
+
+NOTE: There were 13 observations read from the data set WORK.ANOVA.
+      WHERE effect='cell_type*fusion_id';
+7                                                          The SAS System                             12:28 Wednesday, June 28, 2017
+
+NOTE: The data set WORK.FLAG_SIG_INT has 13 observations and 7 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+106        
+107        ods listing;
+108        proc freq data=flag_sig_int;
+109           tables flag_p05;
+110        run;
+
+NOTE: There were 13 observations read from the data set WORK.FLAG_SIG_INT.
+NOTE: The PROCEDURE FREQ printed page 1.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.01 seconds
+      
+
+111        
+112        /*
+113                                               Cumulative    Cumulative
+114          flag_p05    Frequency     Percent     Frequency      Percent
+115          -------------------------------------------------------------
+116                 0        1588       42.14          1588        42.14
+117                 1        2180       57.86          3768       100.00
+118        
+119        */
+120        
+121        proc sort data=flag_sig_int;
+122           by ProbF;
+123        run;
+
+NOTE: There were 13 observations read from the data set WORK.FLAG_SIG_INT.
+NOTE: The data set WORK.FLAG_SIG_INT has 13 observations and 7 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+124        
+125        /* Make these permenant so I can look at them later */
+126        
+127        data event.t1d_quant_splice_anova_all2;
+128           set anova;
+129        run;
+
+NOTE: There were 91 observations read from the data set WORK.ANOVA.
+NOTE: The data set EVENT.T1D_QUANT_SPLICE_ANOVA_ALL2 has 91 observations and 6 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.09 seconds
+      cpu time            0.01 seconds
+      
+
+130        
+131        data event.t1d_quant_splice_resid_all2;
+132           set resid;
+133        run;
+8                                                          The SAS System                             12:28 Wednesday, June 28, 2017
+
+
+NOTE: There were 81651 observations read from the data set WORK.RESID.
+NOTE: The data set EVENT.T1D_QUANT_SPLICE_RESID_ALL2 has 81651 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.35 seconds
+      cpu time            0.02 seconds
+      
+
+134        
+135        data event.t1d_quant_splice_lsmeans_all2;
+136           set lsmeans;
+137        run;
+
+NOTE: There were 492 observations read from the data set WORK.LSMEANS.
+NOTE: The data set EVENT.T1D_QUANT_SPLICE_LSMEANS_ALL2 has 492 observations and 9 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.09 seconds
+      cpu time            0.01 seconds
+      
+
+138        
+139        data event.t1d_quant_splice_flag_p05_all2;
+140           set flag_sig_int;
+141        run;
+
+NOTE: There were 13 observations read from the data set WORK.FLAG_SIG_INT.
+NOTE: The data set EVENT.T1D_QUANT_SPLICE_FLAG_P05_ALL2 has 13 observations and 7 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.00 seconds
+      

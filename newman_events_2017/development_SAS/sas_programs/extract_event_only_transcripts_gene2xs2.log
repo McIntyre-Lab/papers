@@ -1,0 +1,1085 @@
+1                                                          The SAS System                                 15:19 Sunday, July 2, 2017
+
+NOTE: Unable to open SASUSER.REGSTRY. WORK.REGSTRY will be opened instead.
+NOTE: All registry changes will be lost at the end of the session.
+
+WARNING: Unable to copy SASUSER registry to WORK registry. Because of this, you will not see registry customizations during this 
+         session.
+NOTE: Unable to open SASUSER.PROFILE. WORK.PROFILE will be opened instead.
+NOTE: All profile changes will be lost at the end of the session.
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to UNIVERSITY OF FLORIDA - SFA T&R, Site 70095659.
+NOTE: This session is executing on the Linux 4.4.0-81-generic (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 4.4.0-81-generic #104~14.04.1-Ubuntu SMP Wed Jun 14 12:45:52 UTC 2017 x86_64 Unrecognized Linux Distribution 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.16 seconds
+      cpu time            0.06 seconds
+      
+1          
+2          ods listing; ods html close;
+3          
+4          libname event '!MCLAB/event_analysis/sas_data';
+NOTE: Libref EVENT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/sas_data
+5          
+6          /* get APN<0/5 50% and 75% lists */
+7          
+2                                                          The SAS System                                 15:19 Sunday, July 2, 2017
+
+8          data list1 list2;
+9            set event.xscripts_w_unique_by_bin;
+10           if perc_features_dtct >= 0.5 then output list1;
+11           if perc_features_dtct >= 0.75 then output list2;
+12            keep transcript_id;
+13         run;
+
+NOTE: There were 73535 observations read from the data set EVENT.XSCRIPTS_W_UNIQUE_BY_BIN.
+NOTE: The data set WORK.LIST1 has 45883 observations and 1 variables.
+NOTE: The data set WORK.LIST2 has 34622 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.21 seconds
+      cpu time            0.02 seconds
+      
+
+14         
+15         data list3 list4;
+16           set event.bin_xscripts_by_dtct_apn5;
+17           if perc_features_dtct >= 0.5 then output list3;
+18           if perc_features_dtct >= 0.75 then output list4;
+19            keep transcript_id;
+20         run;
+
+NOTE: There were 73535 observations read from the data set EVENT.BIN_XSCRIPTS_BY_DTCT_APN5.
+NOTE: The data set WORK.LIST3 has 20336 observations and 1 variables.
+NOTE: The data set WORK.LIST4 has 13740 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.18 seconds
+      cpu time            0.03 seconds
+      
+
+21         
+22         
+23         
+24         data pb_gene2xs;
+25            set event.pacbio_transcripts;
+26            keep pacbio_gene_id pacbio_id;
+27         run;
+
+NOTE: There were 16104 observations read from the data set EVENT.PACBIO_TRANSCRIPTS.
+NOTE: The data set WORK.PB_GENE2XS has 16104 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.07 seconds
+      cpu time            0.00 seconds
+      
+
+28         
+29              data WORK.SPLICE_MATCH    ;
+30              %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+31              infile '!MCLAB/event_analysis/references/pacbio_isoforms_list_for_import.txt'
+32          delimiter='09'x MISSOVER DSD lrecl=32767 ;
+33                 informat pacbio_id $10. ; informat source $6.;    informat feature_type $10. ;
+34                 informat start best32. ;  informat end best32.;   informat frame best32. ;
+35                 informat strand $1. ;     informat score best32.; informat transcript_id $18. ;
+36                 informat match_type $23.; informat note $28. ;
+37                 format pacbio_id $10. ;   format source $6. ;     format feature_type $10. ;
+38                 format start best12. ;    format end best12. ;    format frame best12. ;
+39                 format strand $1. ;       format score best12. ;  format transcript_id $18. ;
+3                                                          The SAS System                                 15:19 Sunday, July 2, 2017
+
+40                 format match_type $23. ;  format note $28. ;
+41                 input pacbio_id $ source $ feature_type $ start end
+42                       frame strand $ score transcript_id $ match_type $ note $
+43                       ;
+44              if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+45              run;
+
+NOTE: The infile '!MCLAB/event_analysis/references/pacbio_isoforms_list_for_import.txt' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/references/pacbio_isoforms_list_for_import.txt,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Thu Apr 20 17:08:59 2017,
+      File Size (bytes)=710982
+
+NOTE: 9645 records were read from the infile '!MCLAB/event_analysis/references/pacbio_isoforms_list_for_import.txt'.
+      The minimum record length was 67.
+      The maximum record length was 107.
+NOTE: The data set WORK.SPLICE_MATCH has 9645 observations and 11 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.02 seconds
+      
+
+46         
+47         data pb2refseq;
+48            set splice_match;
+49            where transcript_id ^? "ENSMUST";
+50            length splice_match_id $18.;
+51            splice_match_id=scan(transcript_id,1,".");
+52            keep pacbio_id splice_match_id ;
+53            rename splice_match_id=transcript_id;
+54         run;
+
+NOTE: There were 8722 observations read from the data set WORK.SPLICE_MATCH.
+      WHERE transcript_id not contains 'ENSMUST';
+NOTE: The data set WORK.PB2REFSEQ has 8722 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+54       !      *8722;
+55         
+56         
+57         data pb2keep;
+58           set event.pacbio2refseq_id_nomulti;
+59           keep pacbio_id;
+60         run;
+
+NOTE: There were 6926 observations read from the data set EVENT.PACBIO2REFSEQ_ID_NOMULTI.
+NOTE: The data set WORK.PB2KEEP has 6926 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.00 seconds
+      
+
+61         
+62         
+4                                                          The SAS System                                 15:19 Sunday, July 2, 2017
+
+63         proc sort data=pb2keep nodup;
+64           by pacbio_id;
+
+NOTE: There were 6926 observations read from the data set WORK.PB2KEEP.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.PB2KEEP has 6926 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+65         proc sort data=pb2refseq nodup;
+66           by pacbio_id transcript_id;
+67         run;
+
+NOTE: There were 8722 observations read from the data set WORK.PB2REFSEQ.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.PB2REFSEQ has 8722 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+68         
+69         data xs_w_pb;
+70           merge pb2refseq (in=in1) pb2keep (in=in2);
+71           by pacbio_id;
+72           if in1 and in2;
+73         run;
+
+NOTE: There were 8722 observations read from the data set WORK.PB2REFSEQ.
+NOTE: There were 6926 observations read from the data set WORK.PB2KEEP.
+NOTE: The data set WORK.XS_W_PB has 6286 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+74         
+75         
+76         proc sort data=xs_w_pb;
+77            by transcript_id;
+
+NOTE: There were 6286 observations read from the data set WORK.XS_W_PB.
+NOTE: The data set WORK.XS_W_PB has 6286 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+78         proc sort data=list1;
+79            by transcript_id;
+
+NOTE: There were 45883 observations read from the data set WORK.LIST1.
+NOTE: The data set WORK.LIST1 has 45883 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+5                                                          The SAS System                                 15:19 Sunday, July 2, 2017
+
+      
+
+80         proc sort data=xs_w_pb;
+81            by transcript_id;
+
+NOTE: Input data set is already sorted, no sorting done.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+82         proc sort data=list2;
+83            by transcript_id;
+
+NOTE: There were 34622 observations read from the data set WORK.LIST2.
+NOTE: The data set WORK.LIST2 has 34622 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+84         proc sort data=xs_w_pb;
+85            by transcript_id;
+
+NOTE: Input data set is already sorted, no sorting done.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+86         proc sort data=list3;
+87            by transcript_id;
+
+NOTE: There were 20336 observations read from the data set WORK.LIST3.
+NOTE: The data set WORK.LIST3 has 20336 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+88         proc sort data=xs_w_pb;
+89            by transcript_id;
+
+NOTE: Input data set is already sorted, no sorting done.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+90         proc sort data=list4;
+91            by transcript_id;
+92         run;
+
+NOTE: There were 13740 observations read from the data set WORK.LIST4.
+NOTE: The data set WORK.LIST4 has 13740 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+6                                                          The SAS System                                 15:19 Sunday, July 2, 2017
+
+      
+
+93         
+94         
+95         data list1_2;
+96            merge list1 (in=in1) xs_w_pb (in=in2);
+97            by transcript_id;
+98            keep transcript_id pacbio_id;
+99            run;
+
+NOTE: There were 45883 observations read from the data set WORK.LIST1.
+NOTE: There were 6286 observations read from the data set WORK.XS_W_PB.
+NOTE: The data set WORK.LIST1_2 has 46339 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+100        
+101           data list2_2;
+102           merge list2 (in=in1) xs_w_pb (in=in2);
+103           by transcript_id;
+104           keep transcript_id pacbio_id;
+105           run;
+
+NOTE: There were 34622 observations read from the data set WORK.LIST2.
+NOTE: There were 6286 observations read from the data set WORK.XS_W_PB.
+NOTE: The data set WORK.LIST2_2 has 35222 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+106        
+107           data list3_2;
+108           merge list3 (in=in1) xs_w_pb (in=in2);
+109           by transcript_id;
+110          keep transcript_id pacbio_id;
+111           run;
+
+NOTE: There were 20336 observations read from the data set WORK.LIST3.
+NOTE: There were 6286 observations read from the data set WORK.XS_W_PB.
+NOTE: The data set WORK.LIST3_2 has 21549 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+112        
+113           data list4_2;
+114          merge list4 (in=in1) xs_w_pb (in=in2);
+115           by transcript_id;
+116           keep transcript_id pacbio_id ;
+117           run;
+
+NOTE: There were 13740 observations read from the data set WORK.LIST4.
+NOTE: There were 6286 observations read from the data set WORK.XS_W_PB.
+NOTE: The data set WORK.LIST4_2 has 15624 observations and 2 variables.
+7                                                          The SAS System                                 15:19 Sunday, July 2, 2017
+
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+118        
+119        data pb_all;
+120           set event.pacbio_transcripts;
+121           keep pacbio_gene_id pacbio_id;
+122        run;
+
+NOTE: There were 16104 observations read from the data set EVENT.PACBIO_TRANSCRIPTS.
+NOTE: The data set WORK.PB_ALL has 16104 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.01 seconds
+      
+
+123        
+124        proc sort data=list1_2;
+125          by pacbio_id;
+
+NOTE: There were 46339 observations read from the data set WORK.LIST1_2.
+NOTE: The data set WORK.LIST1_2 has 46339 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+      
+
+126          proc sort data=list2_2;
+127          by pacbio_id;
+
+NOTE: There were 35222 observations read from the data set WORK.LIST2_2.
+NOTE: The data set WORK.LIST2_2 has 35222 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+128          proc sort data=list3_2;
+129          by pacbio_id;
+
+NOTE: There were 21549 observations read from the data set WORK.LIST3_2.
+NOTE: The data set WORK.LIST3_2 has 21549 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+130          proc sort data=list4_2;
+131          by pacbio_id;
+
+NOTE: There were 15624 observations read from the data set WORK.LIST4_2.
+NOTE: The data set WORK.LIST4_2 has 15624 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+8                                                          The SAS System                                 15:19 Sunday, July 2, 2017
+
+
+132          proc sort data=pb_all;
+133          by pacbio_id;
+134          run;
+
+NOTE: There were 16104 observations read from the data set WORK.PB_ALL.
+NOTE: The data set WORK.PB_ALL has 16104 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+135        
+136        data list1_3;
+137           merge list1_2 pb_all;
+138           by pacbio_id;
+139        run;
+
+NOTE: There were 46339 observations read from the data set WORK.LIST1_2.
+NOTE: There were 16104 observations read from the data set WORK.PB_ALL.
+NOTE: The data set WORK.LIST1_3 has 56157 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+140        data list2_3;
+141           merge list2_2 pb_all;
+142           by pacbio_id;
+143        run;
+
+NOTE: There were 35222 observations read from the data set WORK.LIST2_2.
+NOTE: There were 16104 observations read from the data set WORK.PB_ALL.
+NOTE: The data set WORK.LIST2_3 has 45040 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+144        data list3_3;
+145           merge list3_2 pb_all;
+146           by pacbio_id;
+147        run;
+
+NOTE: There were 21549 observations read from the data set WORK.LIST3_2.
+NOTE: There were 16104 observations read from the data set WORK.PB_ALL.
+NOTE: The data set WORK.LIST3_3 has 31367 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+148        data list4_3;
+149           merge list4_2 pb_all;
+150           by pacbio_id;
+151        run;
+
+NOTE: There were 15624 observations read from the data set WORK.LIST4_2.
+9                                                          The SAS System                                 15:19 Sunday, July 2, 2017
+
+NOTE: There were 16104 observations read from the data set WORK.PB_ALL.
+NOTE: The data set WORK.LIST4_3 has 25442 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+152        
+153        
+154        
+155        data xs2gene;
+156          set event.feature2xs2gene_exp_only_nomulti;
+157          keep transcript_id gene_id;
+158          run;
+
+NOTE: There were 2341668 observations read from the data set EVENT.FEATURE2XS2GENE_EXP_ONLY_NOMULTI.
+NOTE: The data set WORK.XS2GENE has 2341668 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           18.51 seconds
+      cpu time            2.00 seconds
+      
+
+159        
+160        proc sort data=xs2gene nodup;
+161          by transcript_id gene_id;
+
+NOTE: There were 2341668 observations read from the data set WORK.XS2GENE.
+NOTE: 2268133 duplicate observations were deleted.
+NOTE: The data set WORK.XS2GENE has 73535 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.85 seconds
+      cpu time            1.91 seconds
+      
+
+162        proc sort data=list1_3;
+163          by transcript_id;
+
+NOTE: There were 56157 observations read from the data set WORK.LIST1_3.
+NOTE: The data set WORK.LIST1_3 has 56157 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.05 seconds
+      
+
+164        proc sort data=list2_3;
+165          by transcript_id;
+
+NOTE: There were 45040 observations read from the data set WORK.LIST2_3.
+NOTE: The data set WORK.LIST2_3 has 45040 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+166        proc sort data=list3_3;
+167          by transcript_id;
+
+NOTE: There were 31367 observations read from the data set WORK.LIST3_3.
+10                                                         The SAS System                                 15:19 Sunday, July 2, 2017
+
+NOTE: The data set WORK.LIST3_3 has 31367 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+      
+
+168        proc sort data=list4_3;
+169          by transcript_id;
+170          run;
+
+NOTE: There were 25442 observations read from the data set WORK.LIST4_3.
+NOTE: The data set WORK.LIST4_3 has 25442 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+171        
+172          data list1_w_gene;
+173             merge xs2gene (in=in1) list1_3 (in=in2);
+174             by transcript_id;
+175             if in1 and in2;
+176             run;
+
+NOTE: There were 73535 observations read from the data set WORK.XS2GENE.
+NOTE: There were 56157 observations read from the data set WORK.LIST1_3.
+NOTE: The data set WORK.LIST1_W_GENE has 46339 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.04 seconds
+      
+
+177        
+178          data list2_w_gene;
+179             merge xs2gene (in=in1) list2_3 (in=in2);
+180             by transcript_id;
+181             if in1 and in2;
+182             run;
+
+NOTE: There were 73535 observations read from the data set WORK.XS2GENE.
+NOTE: There were 45040 observations read from the data set WORK.LIST2_3.
+NOTE: The data set WORK.LIST2_W_GENE has 35222 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.03 seconds
+      
+
+183        
+184          data list3_w_gene;
+185             merge xs2gene (in=in1) list3_3 (in=in2);
+186             by transcript_id;
+187             if in1 and in2;
+188             run;
+
+NOTE: There were 73535 observations read from the data set WORK.XS2GENE.
+NOTE: There were 31367 observations read from the data set WORK.LIST3_3.
+NOTE: The data set WORK.LIST3_W_GENE has 21549 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+11                                                         The SAS System                                 15:19 Sunday, July 2, 2017
+
+      real time           0.04 seconds
+      cpu time            0.06 seconds
+      
+
+189        
+190          data list4_w_gene;
+191             merge xs2gene (in=in1) list4_3 (in=in2);
+192             by transcript_id;
+193             if in1 and in2;
+194             run;
+
+NOTE: There were 73535 observations read from the data set WORK.XS2GENE.
+NOTE: There were 25442 observations read from the data set WORK.LIST4_3.
+NOTE: The data set WORK.LIST4_W_GENE has 15624 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.04 seconds
+      
+
+195        
+196        
+197        data pb2gene;
+198           set event.pacbio2refseq_gene_nomulti;
+199           keep gene_id pacbio_gene_id;
+200           rename gene_id=refseq_gene_id;
+201           run;
+
+NOTE: There were 6926 observations read from the data set EVENT.PACBIO2REFSEQ_GENE_NOMULTI.
+NOTE: The data set WORK.PB2GENE has 6926 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.01 seconds
+      
+
+202        
+203        
+204         proc sort data=list1_w_gene;
+205            by pacbio_gene_id;
+
+NOTE: There were 46339 observations read from the data set WORK.LIST1_W_GENE.
+NOTE: The data set WORK.LIST1_W_GENE has 46339 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.03 seconds
+      
+
+206          proc sort data=list2_w_gene;
+207            by pacbio_gene_id;
+
+NOTE: There were 35222 observations read from the data set WORK.LIST2_W_GENE.
+NOTE: The data set WORK.LIST2_W_GENE has 35222 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+      
+
+208          proc sort data=list3_w_gene;
+209            by pacbio_gene_id;
+12                                                         The SAS System                                 15:19 Sunday, July 2, 2017
+
+
+NOTE: There were 21549 observations read from the data set WORK.LIST3_W_GENE.
+NOTE: The data set WORK.LIST3_W_GENE has 21549 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+210         proc sort data=list4_w_gene;
+211           by pacbio_gene_id;
+
+NOTE: There were 15624 observations read from the data set WORK.LIST4_W_GENE.
+NOTE: The data set WORK.LIST4_W_GENE has 15624 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+212         proc sort data=pb2gene nodup;
+213           by pacbio_gene_id;
+214          run;
+
+NOTE: There were 6926 observations read from the data set WORK.PB2GENE.
+NOTE: 1962 duplicate observations were deleted.
+NOTE: The data set WORK.PB2GENE has 4964 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+215        
+216          data pb2gene_1;
+217             merge list1_w_gene (in=in1) pb2gene (in=in2);
+218             by pacbio_gene_id;
+219             if in1 then output;
+220          run;
+
+NOTE: MERGE statement has more than one data set with repeats of BY values.
+NOTE: There were 46339 observations read from the data set WORK.LIST1_W_GENE.
+NOTE: There were 4964 observations read from the data set WORK.PB2GENE.
+NOTE: The data set WORK.PB2GENE_1 has 46341 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+221            data pb2gene_2;
+222             merge list2_w_gene (in=in1) pb2gene (in=in2);
+223             by pacbio_gene_id;
+224             if in1 then output;
+225          run;
+
+NOTE: MERGE statement has more than one data set with repeats of BY values.
+NOTE: There were 35222 observations read from the data set WORK.LIST2_W_GENE.
+NOTE: There were 4964 observations read from the data set WORK.PB2GENE.
+NOTE: The data set WORK.PB2GENE_2 has 35224 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+13                                                         The SAS System                                 15:19 Sunday, July 2, 2017
+
+      cpu time            0.01 seconds
+      
+
+226            data pb2gene_3;
+227             merge list3_w_gene (in=in1) pb2gene (in=in2);
+228             by pacbio_gene_id;
+229             if in1 then output;
+230          run;
+
+NOTE: MERGE statement has more than one data set with repeats of BY values.
+NOTE: There were 21549 observations read from the data set WORK.LIST3_W_GENE.
+NOTE: There were 4964 observations read from the data set WORK.PB2GENE.
+NOTE: The data set WORK.PB2GENE_3 has 21551 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+231            data pb2gene_4;
+232             merge list4_w_gene (in=in1) pb2gene (in=in2);
+233             by pacbio_gene_id;
+234             if in1 then output;
+235          run;
+
+NOTE: MERGE statement has more than one data set with repeats of BY values.
+NOTE: There were 15624 observations read from the data set WORK.LIST4_W_GENE.
+NOTE: There were 4964 observations read from the data set WORK.PB2GENE.
+NOTE: The data set WORK.PB2GENE_4 has 15626 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+236        
+237          data pb2gene_1a;
+238             length gene_id2 $15.;
+239             length transcript_id2 $15.;
+240             set pb2gene_1;
+241             if gene_id ne '' then gene_id2=gene_id;
+242             else if pacbio_gene_id ne '' then gene_id2=pacbio_gene_id;
+243             else gene_id2="NovelGene";
+244        
+245             if pacbio_id ne '' then transcript_id2=pacbio_id;
+246             else transcript_id2=transcript_id;
+247             keep gene_id2 transcript_id2;
+248             run;
+
+NOTE: There were 46341 observations read from the data set WORK.PB2GENE_1.
+NOTE: The data set WORK.PB2GENE_1A has 46341 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+249        
+250               data pb2gene_2a;
+251             length gene_id2 $15.;
+252             length transcript_id2 $15.;
+14                                                         The SAS System                                 15:19 Sunday, July 2, 2017
+
+253             set pb2gene_2;
+254             if gene_id ne '' then gene_id2=gene_id;
+255             else if pacbio_gene_id ne '' then gene_id2=pacbio_gene_id;
+256             else gene_id2="NovelGene";
+257        
+258             if pacbio_id ne '' then transcript_id2=pacbio_id;
+259             else transcript_id2=transcript_id;
+260             keep gene_id2 transcript_id2;
+261             run;
+
+NOTE: There were 35224 observations read from the data set WORK.PB2GENE_2.
+NOTE: The data set WORK.PB2GENE_2A has 35224 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+262        
+263               data pb2gene_3a;
+264             length gene_id2 $15.;
+265             length transcript_id2 $15.;
+266             set pb2gene_3;
+267             if gene_id ne '' then gene_id2=gene_id;
+268             else if pacbio_gene_id ne '' then gene_id2=pacbio_gene_id;
+269             else gene_id2="NovelGene";
+270        
+271             if pacbio_id ne '' then transcript_id2=pacbio_id;
+272             else transcript_id2=transcript_id;
+273             keep gene_id2 transcript_id2;
+274             run;
+
+NOTE: There were 21551 observations read from the data set WORK.PB2GENE_3.
+NOTE: The data set WORK.PB2GENE_3A has 21551 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+275        
+276               data pb2gene_4a;
+277             length gene_id2 $15.;
+278             length transcript_id2 $15.;
+279             set pb2gene_4;
+280             if gene_id ne '' then gene_id2=gene_id;
+281             else if pacbio_gene_id ne '' then gene_id2=pacbio_gene_id;
+282             else gene_id2="NovelGene";
+283        
+284             if pacbio_id ne '' then transcript_id2=pacbio_id;
+285             else transcript_id2=transcript_id;
+286             keep gene_id2 transcript_id2;
+287             run;
+
+NOTE: There were 15626 observations read from the data set WORK.PB2GENE_4.
+NOTE: The data set WORK.PB2GENE_4A has 15626 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+15                                                         The SAS System                                 15:19 Sunday, July 2, 2017
+
+
+288        
+289        
+290        
+291        
+292            proc export data=pb2gene_1a
+293               outfile="!MCLAB/event_analysis/pacbio_plus_apn0_50perc_gene2xs.txt"
+294               dbms=tab replace;
+295               putnames=no;
+296               run;
+
+297         /**********************************************************************
+298         *   PRODUCT:   SAS
+299         *   VERSION:   9.4
+300         *   CREATOR:   External File Interface
+301         *   DATE:      02JUL17
+302         *   DESC:      Generated SAS Datastep Code
+303         *   TEMPLATE SOURCE:  (None Specified.)
+304         ***********************************************************************/
+305            data _null_;
+306            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+307            %let _EFIREC_ = 0;     /* clear export record count macro variable */
+308            file '!MCLAB/event_analysis/pacbio_plus_apn0_50perc_gene2xs.txt' delimiter='09'x DSD DROPOVER lrecl=32767;
+309           set  PB2GENE_1A   end=EFIEOD;
+310               format gene_id2 $15. ;
+311               format transcript_id2 $15. ;
+312             do;
+313               EFIOUT + 1;
+314               put gene_id2 $ @;
+315               put transcript_id2 $ ;
+316               ;
+317             end;
+318            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+319            if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+320            run;
+
+NOTE: The file '!MCLAB/event_analysis/pacbio_plus_apn0_50perc_gene2xs.txt' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/pacbio_plus_apn0_50perc_gene2xs.txt,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Sun Jul  2 15:20:22 2017
+
+NOTE: 46341 records were written to the file '!MCLAB/event_analysis/pacbio_plus_apn0_50perc_gene2xs.txt'.
+      The minimum record length was 12.
+      The maximum record length was 24.
+NOTE: There were 46341 observations read from the data set WORK.PB2GENE_1A.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.02 seconds
+      
+
+46341 records created in !MCLAB/event_analysis/pacbio_plus_apn0_50perc_gene2xs.txt from PB2GENE_1A.
+  
+  
+NOTE: "!MCLAB/event_analysis/pacbio_plus_apn0_50perc_gene2xs.txt" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.12 seconds
+      cpu time            0.07 seconds
+16                                                         The SAS System                                 15:19 Sunday, July 2, 2017
+
+      
+
+321        
+322            proc export data=pb2gene_2a
+323               outfile="!MCLAB/event_analysis/pacbio_plus_apn0_75perc_gene2xs.txt"
+324               dbms=tab replace;
+325               putnames=no;
+326               run;
+
+327         /**********************************************************************
+328         *   PRODUCT:   SAS
+329         *   VERSION:   9.4
+330         *   CREATOR:   External File Interface
+331         *   DATE:      02JUL17
+332         *   DESC:      Generated SAS Datastep Code
+333         *   TEMPLATE SOURCE:  (None Specified.)
+334         ***********************************************************************/
+335            data _null_;
+336            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+337            %let _EFIREC_ = 0;     /* clear export record count macro variable */
+338            file '!MCLAB/event_analysis/pacbio_plus_apn0_75perc_gene2xs.txt' delimiter='09'x DSD DROPOVER lrecl=32767;
+339           set  PB2GENE_2A   end=EFIEOD;
+340               format gene_id2 $15. ;
+341               format transcript_id2 $15. ;
+342             do;
+343               EFIOUT + 1;
+344               put gene_id2 $ @;
+345               put transcript_id2 $ ;
+346               ;
+347             end;
+348            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+349            if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+350            run;
+
+NOTE: The file '!MCLAB/event_analysis/pacbio_plus_apn0_75perc_gene2xs.txt' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/pacbio_plus_apn0_75perc_gene2xs.txt,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Sun Jul  2 15:20:22 2017
+
+NOTE: 35224 records were written to the file '!MCLAB/event_analysis/pacbio_plus_apn0_75perc_gene2xs.txt'.
+      The minimum record length was 12.
+      The maximum record length was 24.
+NOTE: There were 35224 observations read from the data set WORK.PB2GENE_2A.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.02 seconds
+      
+
+35224 records created in !MCLAB/event_analysis/pacbio_plus_apn0_75perc_gene2xs.txt from PB2GENE_2A.
+  
+  
+NOTE: "!MCLAB/event_analysis/pacbio_plus_apn0_75perc_gene2xs.txt" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.11 seconds
+      cpu time            0.05 seconds
+      
+
+17                                                         The SAS System                                 15:19 Sunday, July 2, 2017
+
+351        
+352            proc export data=pb2gene_3a
+353               outfile="!MCLAB/event_analysis/pacbio_plus_apn5_50perc_gene2xs.txt"
+354               dbms=tab replace;
+355               putnames=no;
+356               run;
+
+357         /**********************************************************************
+358         *   PRODUCT:   SAS
+359         *   VERSION:   9.4
+360         *   CREATOR:   External File Interface
+361         *   DATE:      02JUL17
+362         *   DESC:      Generated SAS Datastep Code
+363         *   TEMPLATE SOURCE:  (None Specified.)
+364         ***********************************************************************/
+365            data _null_;
+366            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+367            %let _EFIREC_ = 0;     /* clear export record count macro variable */
+368            file '!MCLAB/event_analysis/pacbio_plus_apn5_50perc_gene2xs.txt' delimiter='09'x DSD DROPOVER lrecl=32767;
+369           set  PB2GENE_3A   end=EFIEOD;
+370               format gene_id2 $15. ;
+371               format transcript_id2 $15. ;
+372             do;
+373               EFIOUT + 1;
+374               put gene_id2 $ @;
+375               put transcript_id2 $ ;
+376               ;
+377             end;
+378            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+379            if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+380            run;
+
+NOTE: The file '!MCLAB/event_analysis/pacbio_plus_apn5_50perc_gene2xs.txt' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/pacbio_plus_apn5_50perc_gene2xs.txt,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Sun Jul  2 15:20:22 2017
+
+NOTE: 21551 records were written to the file '!MCLAB/event_analysis/pacbio_plus_apn5_50perc_gene2xs.txt'.
+      The minimum record length was 12.
+      The maximum record length was 24.
+NOTE: There were 21551 observations read from the data set WORK.PB2GENE_3A.
+NOTE: DATA statement used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.01 seconds
+      
+
+21551 records created in !MCLAB/event_analysis/pacbio_plus_apn5_50perc_gene2xs.txt from PB2GENE_3A.
+  
+  
+NOTE: "!MCLAB/event_analysis/pacbio_plus_apn5_50perc_gene2xs.txt" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.09 seconds
+      cpu time            0.05 seconds
+      
+
+381        
+382            proc export data=pb2gene_4a
+18                                                         The SAS System                                 15:19 Sunday, July 2, 2017
+
+383               outfile="!MCLAB/event_analysis/pacbio_plus_apn5_75perc_gene2xs.txt"
+384               dbms=tab replace;
+385               putnames=no;
+386               run;
+
+387         /**********************************************************************
+388         *   PRODUCT:   SAS
+389         *   VERSION:   9.4
+390         *   CREATOR:   External File Interface
+391         *   DATE:      02JUL17
+392         *   DESC:      Generated SAS Datastep Code
+393         *   TEMPLATE SOURCE:  (None Specified.)
+394         ***********************************************************************/
+395            data _null_;
+396            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+397            %let _EFIREC_ = 0;     /* clear export record count macro variable */
+398            file '!MCLAB/event_analysis/pacbio_plus_apn5_75perc_gene2xs.txt' delimiter='09'x DSD DROPOVER lrecl=32767;
+399           set  PB2GENE_4A   end=EFIEOD;
+400               format gene_id2 $15. ;
+401               format transcript_id2 $15. ;
+402             do;
+403               EFIOUT + 1;
+404               put gene_id2 $ @;
+405               put transcript_id2 $ ;
+406               ;
+407             end;
+408            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+409            if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+410            run;
+
+NOTE: The file '!MCLAB/event_analysis/pacbio_plus_apn5_75perc_gene2xs.txt' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/pacbio_plus_apn5_75perc_gene2xs.txt,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Sun Jul  2 15:20:23 2017
+
+NOTE: 15626 records were written to the file '!MCLAB/event_analysis/pacbio_plus_apn5_75perc_gene2xs.txt'.
+      The minimum record length was 12.
+      The maximum record length was 24.
+NOTE: There were 15626 observations read from the data set WORK.PB2GENE_4A.
+NOTE: DATA statement used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.01 seconds
+      
+
+15626 records created in !MCLAB/event_analysis/pacbio_plus_apn5_75perc_gene2xs.txt from PB2GENE_4A.
+  
+  
+NOTE: "!MCLAB/event_analysis/pacbio_plus_apn5_75perc_gene2xs.txt" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.04 seconds
+      
+
+411        
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+19                                                         The SAS System                                 15:19 Sunday, July 2, 2017
+
+      real time           21.62 seconds
+      cpu time            5.06 seconds
+      

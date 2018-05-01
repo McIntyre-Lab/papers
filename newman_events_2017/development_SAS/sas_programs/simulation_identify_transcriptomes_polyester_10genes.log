@@ -1,0 +1,2445 @@
+1                                                          The SAS System                               14:53 Sunday, March 25, 2018
+
+NOTE: Unable to open SASUSER.REGSTRY. WORK.REGSTRY will be opened instead.
+NOTE: All registry changes will be lost at the end of the session.
+
+WARNING: Unable to copy SASUSER registry to WORK registry. Because of this, you will not see registry customizations during this 
+         session.
+NOTE: Unable to open SASUSER.PROFILE. WORK.PROFILE will be opened instead.
+NOTE: All profile changes will be lost at the end of the session.
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to UNIVERSITY OF FLORIDA - SFA T&R, Site 70095659.
+NOTE: This session is executing on the Linux 4.4.0-116-generic (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 4.4.0-116-generic #140~14.04.1-Ubuntu SMP Fri Feb 16 09:25:20 UTC 2018 x86_64 Unrecognized Linux Distribution 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.12 seconds
+      cpu time            0.03 seconds
+      
+1          /* Libraries */
+2          libname event '!MCLAB/event_analysis/sas_data';
+NOTE: Libref EVENT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/sas_data
+3          libname evspl '!MCLAB/conesa_pacbio/sas_data/splicing';
+NOTE: Libref EVSPL was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data/splicing
+4          libname eventloc '/mnt/store/event_sandbox/sas_data';
+2                                                          The SAS System                               14:53 Sunday, March 25, 2018
+
+NOTE: Libref EVENTLOC was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /mnt/store/event_sandbox/sas_data
+5          libname mm10 '!MCLAB/useful_mouse_data/mm10/sas_data';
+NOTE: Libref MM10 was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/useful_mouse_data/mm10/sas_data
+6          ods listing; ods html close;
+7          
+8          
+9          
+10         /**************** IMPORT COUNTS *******************/
+11         /* Import simulated counts and format */
+12         
+13         /* Import splicing counts  */
+14         
+15         
+16             data WORK.SPLICING_COUNTS    ;
+17             %let _EFIERR_ = 0;
+18             infile '/mnt/store/event_sandbox/polyester_simulated_data/10genes_nic/counts_by_splicing_10genes.csv'
+19               delimiter
+20         = ',' MISSOVER DSD lrecl=32767 firstobs=2 ;
+21                informat sample_id $10. ;
+22                informat event_id $335. ;
+23                informat mapped_reads best32. ;
+24                informat read_length best32. ;
+25                informat region_length best32. ;
+26                informat region_depth best32. ;
+27                informat reads_in_region best32. ;
+28                informat apn best32. ;
+29                informat rpkm best32. ;
+30                informat mean best32. ;
+31                informat std best32. ;
+32                informat cv best32. ;
+33                format sample_id $10. ;
+34                format event_id $335. ;
+35                format mapped_reads best12. ;
+36                format read_length best12. ;
+37                format region_length best12. ;
+38                format region_depth best12. ;
+39                format reads_in_region best12. ;
+40                format apn best12. ;
+41                format rpkm best12. ;
+42                format mean best12. ;
+43                format std best12. ;
+44                format cv best12. ;
+45             input
+46                        sample_id $
+47                        event_id $
+48                        mapped_reads
+49                        read_length
+50                        region_length
+51                        region_depth
+52                        reads_in_region
+53                        apn
+54                        rpkm
+55                        mean
+56                        std
+3                                                          The SAS System                               14:53 Sunday, March 25, 2018
+
+57                        cv
+58            ;
+59            if _ERROR_ then call symputx('_EFIERR_',1);
+60            run;
+
+NOTE: The infile '/mnt/store/event_sandbox/polyester_simulated_data/10genes_nic/counts_by_splicing_10genes.csv' is:
+      Filename=/mnt/store/event_sandbox/polyester_simulated_data/10genes_nic/counts_by_splicing_10genes.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rw-r--r--,
+      Last Modified=Sun Mar 25 14:50:21 2018,
+      File Size (bytes)=984294830
+
+NOTE: 17990724 records were read from the infile 
+      '/mnt/store/event_sandbox/polyester_simulated_data/10genes_nic/counts_by_splicing_10genes.csv'.
+      The minimum record length was 49.
+      The maximum record length was 376.
+NOTE: The data set WORK.SPLICING_COUNTS has 17990724 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           33.21 seconds
+      cpu time            33.11 seconds
+      
+
+61         
+62         /* Fusion counts */
+63         
+64             data WORK.COUNTS_BY_FUSION    ;
+65             %let _EFIERR_ = 0;
+66             infile '/mnt/store/event_sandbox/polyester_simulated_data/10genes_nic/counts_by_fusion_10genes.csv' delimiter
+67         = ',' MISSOVER DSD lrecl=32767 firstobs=2 ;
+68                informat sample_id $10. ;
+69                informat fusion_id $13. ;
+70                informat mapped_reads best32. ;
+71                informat read_length best32. ;
+72                informat region_length best32. ;
+73                informat region_depth best32. ;
+74                informat reads_in_region best32. ;
+75                informat apn best32. ;
+76                informat rpkm best32. ;
+77                informat mean best32. ;
+78                informat std best32. ;
+79                informat cv best32. ;
+80                format sample_id $10. ;
+81                format fusion_id $13. ;
+82                format mapped_reads best12. ;
+83                format read_length best12. ;
+84                format region_length best12. ;
+85                format region_depth best12. ;
+86                format reads_in_region best12. ;
+87                format apn best12. ;
+88                format rpkm best12. ;
+89                format mean best12. ;
+90                format std best12. ;
+91                format cv best12. ;
+92             input
+93                         sample_id $
+94                         fusion_id $
+95                         mapped_reads
+96                         read_length
+4                                                          The SAS System                               14:53 Sunday, March 25, 2018
+
+97                         region_length
+98                         region_depth
+99                         reads_in_region
+100                        apn
+101                        rpkm
+102                        mean
+103                        std
+104                        cv
+105            ;
+106            if _ERROR_ then call symputx('_EFIERR_',1);
+107            run;
+
+NOTE: The infile '/mnt/store/event_sandbox/polyester_simulated_data/10genes_nic/counts_by_fusion_10genes.csv' is:
+      Filename=/mnt/store/event_sandbox/polyester_simulated_data/10genes_nic/counts_by_fusion_10genes.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rw-r--r--,
+      Last Modified=Sun Mar 25 14:50:22 2018,
+      File Size (bytes)=88570528
+
+NOTE: 1651062 records were read from the infile 
+      '/mnt/store/event_sandbox/polyester_simulated_data/10genes_nic/counts_by_fusion_10genes.csv'.
+      The minimum record length was 48.
+      The maximum record length was 134.
+NOTE: The data set WORK.COUNTS_BY_FUSION has 1651062 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.31 seconds
+      cpu time            2.32 seconds
+      
+
+108        
+109        
+110        /* Fragment counts */
+111            data WORK.COUNTS_BY_FRAGMENT    ;
+112            %let _EFIERR_ = 0;
+113            infile '/mnt/store/event_sandbox/polyester_simulated_data/10genes_nic/counts_by_fragment_10genes.csv' delimiter
+114        = ',' MISSOVER DSD lrecl=32767 firstobs=2 ;
+115               informat sample_id $10. ;
+116               informat fusion_id $13. ;
+117               informat mapped_reads best32. ;
+118               informat read_length best32. ;
+119               informat region_length best32. ;
+120               informat region_depth best32. ;
+121               informat reads_in_region best32. ;
+122               informat apn best32. ;
+123               informat rpkm best32. ;
+124               informat mean best32. ;
+125               informat std best32. ;
+126               informat cv best32. ;
+127               format sample_id $10. ;
+128               format fusion_id $13. ;
+129               format mapped_reads best12. ;
+130               format read_length best12. ;
+131               format region_length best12. ;
+132               format region_depth best12. ;
+133               format reads_in_region best12. ;
+134               format apn best12. ;
+135               format rpkm best12. ;
+136               format mean best12. ;
+5                                                          The SAS System                               14:53 Sunday, March 25, 2018
+
+137               format std best12. ;
+138               format cv best12. ;
+139            input
+140                        sample_id $
+141                        fusion_id $
+142                        mapped_reads
+143                        read_length
+144                        region_length
+145                        region_depth
+146                        reads_in_region
+147                        apn
+148                        rpkm
+149                        mean
+150                        std
+151                        cv
+152            ;
+153            if _ERROR_ then call symputx('_EFIERR_',1);
+154            run;
+
+NOTE: The infile '/mnt/store/event_sandbox/polyester_simulated_data/10genes_nic/counts_by_fragment_10genes.csv' is:
+      Filename=/mnt/store/event_sandbox/polyester_simulated_data/10genes_nic/counts_by_fragment_10genes.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rw-r--r--,
+      Last Modified=Sun Mar 25 14:50:21 2018,
+      File Size (bytes)=119908298
+
+NOTE: 2161416 records were read from the infile 
+      '/mnt/store/event_sandbox/polyester_simulated_data/10genes_nic/counts_by_fragment_10genes.csv'.
+      The minimum record length was 49.
+      The maximum record length was 135.
+NOTE: The data set WORK.COUNTS_BY_FRAGMENT has 2161416 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           3.29 seconds
+      cpu time            3.07 seconds
+      
+
+155        
+156        
+157        /* Make permenant */
+158        
+159        data event.mm10_refseq_splicing_counts_10gn;
+160         set SPLICING_COUNTS;
+161         keep sample_id event_id region_depth apn;
+162        run;
+
+NOTE: There were 17990724 observations read from the data set WORK.SPLICING_COUNTS.
+NOTE: The data set EVENT.MM10_REFSEQ_SPLICING_COUNTS_10GN has 17990724 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           20:40.10
+      cpu time            48.08 seconds
+      
+
+163        
+164        data event.mm10_refseq_fusion_counts_10gn;
+165          set counts_by_fusion;
+166          keep sample_id fusion_id apn;
+167        run;
+
+6                                                          The SAS System                               14:53 Sunday, March 25, 2018
+
+NOTE: There were 1651062 observations read from the data set WORK.COUNTS_BY_FUSION.
+NOTE: The data set EVENT.MM10_REFSEQ_FUSION_COUNTS_10GN has 1651062 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           10.55 seconds
+      cpu time            0.61 seconds
+      
+
+168        
+169        data event.mm10_refseq_fragment_counts_10gn;
+170          set counts_by_fragment;
+171          keep sample_id fusion_id apn;
+172          rename fusion_id=fragment_id;
+173        run;
+
+NOTE: There were 2161416 observations read from the data set WORK.COUNTS_BY_FRAGMENT.
+NOTE: The data set EVENT.MM10_REFSEQ_FRAGMENT_COUNTS_10GN has 2161416 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           13.37 seconds
+      cpu time            0.85 seconds
+      
+
+174        
+175        
+176        /*********** MAKE INDEX ***************/
+177        
+178        
+179        
+180        data fus_counts;
+181           set event.mm10_refseq_fusion_counts_10gn;
+182           if apn > 0 then flag_fusion_gt0=1; else flag_fusion_gt0=0;
+183        run;
+
+NOTE: There were 1651062 observations read from the data set EVENT.MM10_REFSEQ_FUSION_COUNTS_10GN.
+NOTE: The data set WORK.FUS_COUNTS has 1651062 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.00 seconds
+      cpu time            0.37 seconds
+      
+
+184        
+185        proc sort data=fus_counts;
+186           by fusion_id;
+
+NOTE: There were 1651062 observations read from the data set WORK.FUS_COUNTS.
+NOTE: The data set WORK.FUS_COUNTS has 1651062 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.96 seconds
+      cpu time            2.31 seconds
+      
+
+187        proc means data=fus_counts noprint;
+188           by fusion_id ;
+189           var flag_fusion_gt0;
+190           output out=perc_trt_on mean=;
+191        run;
+
+NOTE: There were 1651062 observations read from the data set WORK.FUS_COUNTS.
+NOTE: The data set WORK.PERC_TRT_ON has 275177 observations and 4 variables.
+7                                                          The SAS System                               14:53 Sunday, March 25, 2018
+
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.75 seconds
+      cpu time            0.76 seconds
+      
+
+192        
+193        data perc_trt_on2;
+194          set perc_trt_on;
+195          if flag_fusion_gt0 ge 0.5 then flag_fusion_on_apn0=1;
+196          else flag_fusion_on_apn0=0;
+197          keep fusion_id flag_fusion_on_apn0;
+198        run;
+
+NOTE: There were 275177 observations read from the data set WORK.PERC_TRT_ON.
+NOTE: The data set WORK.PERC_TRT_ON2 has 275177 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.05 seconds
+      
+
+199        
+200        data event.flag_fusion_on_apn0_10k;
+201           set perc_trt_on2;
+202        run;
+
+NOTE: There were 275177 observations read from the data set WORK.PERC_TRT_ON2.
+NOTE: The data set EVENT.FLAG_FUSION_ON_APN0_10K has 275177 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.38 seconds
+      cpu time            0.07 seconds
+      
+
+203        
+204        
+205        
+206        /* Now make the event2xs index */
+207        
+208        * Get genes that do not have multigene fusions;
+209        
+210        data genes_w_mult;
+211          set mm10.mm10_refseq_fusion_si_info_v2;
+212          if flag_multigene=1 then output genes_w_mult;
+213          keep primary_gene_id;
+214          rename primary_gene_id=gene_id;
+215        run;
+
+NOTE: There were 355269 observations read from the data set MM10.MM10_REFSEQ_FUSION_SI_INFO_V2.
+NOTE: The data set WORK.GENES_W_MULT has 26722 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.45 seconds
+      cpu time            0.07 seconds
+      
+
+216        
+217        data event2xs2gene;
+218          set event.feature2xs2gene;
+219        run;
+
+8                                                          The SAS System                               14:53 Sunday, March 25, 2018
+
+NOTE: There were 3836515 observations read from the data set EVENT.FEATURE2XS2GENE.
+NOTE: The data set WORK.EVENT2XS2GENE has 3836515 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           34.64 seconds
+      cpu time            5.60 seconds
+      
+
+220        
+221        proc sort data=genes_w_mult nodup;
+222          by gene_id; *10066 genes to remove;
+
+NOTE: There were 26722 observations read from the data set WORK.GENES_W_MULT.
+NOTE: 16656 duplicate observations were deleted.
+NOTE: The data set WORK.GENES_W_MULT has 10066 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+223        proc sort data=event2xs2gene;
+224          by gene_id;
+225        run;
+
+NOTE: There were 3836515 observations read from the data set WORK.EVENT2XS2GENE.
+NOTE: The data set WORK.EVENT2XS2GENE has 3836515 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           38.31 seconds
+      cpu time            14.63 seconds
+      
+
+226        
+227        data event2xs2gene_nomulti;
+228          merge event2xs2gene (in=in1) genes_w_mult (in=in2);
+229          by gene_id;
+230          if in2 then delete;
+231          else output;
+232        run;
+
+NOTE: There were 3836515 observations read from the data set WORK.EVENT2XS2GENE.
+NOTE: There were 10066 observations read from the data set WORK.GENES_W_MULT.
+NOTE: The data set WORK.EVENT2XS2GENE_NOMULTI has 2556657 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.98 seconds
+      cpu time            2.98 seconds
+      
+
+233        
+234        data fus2gene;
+235          set mm10.mm10_refseq_fusion_si_info_v2;
+236          keep primary_gene_id fusion_id;
+237          rename primary_gene_id=gene_id;
+238        run;
+
+NOTE: There were 355269 observations read from the data set MM10.MM10_REFSEQ_FUSION_SI_INFO_V2.
+NOTE: The data set WORK.FUS2GENE has 355269 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.36 seconds
+      cpu time            0.12 seconds
+9                                                          The SAS System                               14:53 Sunday, March 25, 2018
+
+      
+
+239        
+240        proc sort data=fus2gene nodup;
+241          by fusion_id gene_id;
+242        run;
+
+NOTE: There were 355269 observations read from the data set WORK.FUS2GENE.
+NOTE: 69736 duplicate observations were deleted.
+NOTE: The data set WORK.FUS2GENE has 285533 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.09 seconds
+      cpu time            0.27 seconds
+      
+
+243        
+244        
+245        data fus_on;
+246          set event.flag_fusion_on_apn0_10k;
+247          keep fusion_id flag_fusion_on_apn0;
+248        run;
+
+NOTE: There were 275177 observations read from the data set EVENT.FLAG_FUSION_ON_APN0_10K.
+NOTE: The data set WORK.FUS_ON has 275177 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.14 seconds
+      cpu time            0.04 seconds
+      
+
+249        
+250        proc sort data=fus_on;
+251          by fusion_id;
+252        run;
+
+NOTE: There were 275177 observations read from the data set WORK.FUS_ON.
+NOTE: The data set WORK.FUS_ON has 275177 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.15 seconds
+      
+
+253        
+254        data fus2gene_on;
+255          merge fus_on (in=in1) fus2gene (in=in2);
+256          by fusion_id;
+257          if in1 and in2;
+258        run;
+
+NOTE: There were 275177 observations read from the data set WORK.FUS_ON.
+NOTE: There were 285533 observations read from the data set WORK.FUS2GENE.
+NOTE: The data set WORK.FUS2GENE_ON has 285533 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.12 seconds
+      cpu time            0.13 seconds
+      
+
+259        
+260        proc sort data=fus2gene_on;
+10                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+261           by gene_id;
+
+NOTE: There were 285533 observations read from the data set WORK.FUS2GENE_ON.
+NOTE: The data set WORK.FUS2GENE_ON has 285533 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.10 seconds
+      cpu time            0.26 seconds
+      
+
+262        proc means data=fus2gene_on noprint;
+263           by gene_id;
+264           var flag_fusion_on_apn0;
+265           output out=fus_on_per_gene sum=fusions_dtct;
+266        run;
+
+NOTE: There were 285533 observations read from the data set WORK.FUS2GENE_ON.
+NOTE: The data set WORK.FUS_ON_PER_GENE has 38533 observations and 4 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.11 seconds
+      cpu time            0.12 seconds
+      
+
+267        
+268        data genes_exp;
+269           set fus_on_per_gene;
+270           where fusions_dtct > 0;
+271           keep gene_id;
+272        run;
+
+NOTE: There were 64 observations read from the data set WORK.FUS_ON_PER_GENE.
+      WHERE fusions_dtct>0;
+NOTE: The data set WORK.GENES_EXP has 64 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+273        
+274        proc sort data=genes_exp;
+275          by gene_id;
+
+NOTE: There were 64 observations read from the data set WORK.GENES_EXP.
+NOTE: The data set WORK.GENES_EXP has 64 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+276        proc sort data=event2xs2gene_nomulti;
+277          by gene_id;
+278        run;
+
+NOTE: There were 2556657 observations read from the data set WORK.EVENT2XS2GENE_NOMULTI.
+NOTE: The data set WORK.EVENT2XS2GENE_NOMULTI has 2556657 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           22.58 seconds
+      cpu time            10.39 seconds
+      
+11                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+
+279        
+280        data event2xs2gene_exp_only_nomulti;
+281          merge event2xs2gene_nomulti (in=in1) genes_exp (in=in2);
+282          by gene_id;
+283          if in1 and in2;
+284        run;
+
+NOTE: There were 2556657 observations read from the data set WORK.EVENT2XS2GENE_NOMULTI.
+NOTE: There were 64 observations read from the data set WORK.GENES_EXP.
+NOTE: The data set WORK.EVENT2XS2GENE_EXP_ONLY_NOMULTI has 16738 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.94 seconds
+      cpu time            0.94 seconds
+      
+
+285        
+286        /* Make permenant */
+287        data event.feature2xs2gene_exp_nomult_10gn;
+288           set event2xs2gene_exp_only_nomulti;
+289        run;
+
+NOTE: There were 16738 observations read from the data set WORK.EVENT2XS2GENE_EXP_ONLY_NOMULTI.
+NOTE: The data set EVENT.FEATURE2XS2GENE_EXP_NOMULT_10GN has 16738 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.77 seconds
+      cpu time            0.06 seconds
+      
+
+290        
+291        
+292        /************ IDENTIFY TRANSCRIPTOMES ****************/
+293        
+294        
+295        
+296        /* I want to know how the distribution of transcripts by whether they have unique event and by proportion
+297           of events changes when I use a different APN threshold, AND how the distribution of PB transcripts within
+298           these groups also changes.
+299        
+300           To do this, I need to redo my APN detection flags for splicing events and for fragments, then group
+301           transcripts by unique/no unique and into 0-25%,25-50%,50-75%,75-100%,100% bins.
+302        
+303           I should not need to change the event-to-transcript assignment, so I will be using the existing
+304           feature2xs2gene_exp_only_nomulti dataset.
+305        
+306           I am going to do this is a giant macro so that I can automate the entire process to make this quicker
+307        
+308           Will be using APN>0, APN>=5
+309        
+310         */
+311        
+312        
+313        %macro binXS(apn);
+314        /* 1. Re-flag detection of junctions and fragments */
+315        
+316        
+317        * Junctions;
+318        data flag_splicing;
+12                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+319          set event.mm10_refseq_splicing_counts_10gn;
+320        
+321          %if &apn.=0 %then %do;
+322          if apn > &apn. then flag_event_apn_gt0=1;
+323          else flag_event_apn_gt0=0;
+324          %end;
+325        
+326          %else %do;
+327          if apn ge &apn. then flag_event_apn_gt0=1;
+328          else flag_event_apn_gt0=0;
+329          %end;
+330          keep sample_id event_id apn flag_event_apn_gt0;
+331        run;
+332        
+333        
+334        proc sort data=flag_splicing;
+335          by event_id;
+336        proc means data=flag_splicing noprint;
+337          by event_id;
+338          var flag_event_apn_gt0;
+339          output out=mean_on mean=mean_gt0;
+340        run;
+341        
+342        data flag_event_on;
+343          set mean_on;
+344          length feature_type $8.;
+345          if mean_gt0 ge 0.5 then flag_feature_on=1;
+346          else flag_feature_on=0;
+347          feature_type="junction";
+348          keep event_id flag_feature_on feature_type;
+349          rename event_id=feature_id;
+350        run;
+351        
+352        * Fragments;
+353        data flag_fragment;
+354          set event.mm10_refseq_fragment_counts_10gn;
+355        
+356          %if &apn.=0 %then %do;
+357          if apn > &apn. then flag_fragment_apn_gt0=1;
+358          else flag_fragment_apn_gt0=0;
+359          %end;
+360          %else %do;
+361          if apn ge &apn. then flag_fragment_apn_gt0=1;
+362          else flag_fragment_apn_gt0=0;
+363          %end;
+364          keep sample_id fragment_id apn flag_fragment_apn_gt0;
+365        run;
+366        
+367        proc sort data=flag_fragment;
+368          by fragment_id;
+369        proc means data=flag_fragment noprint;
+370          by fragment_id;
+371          var flag_fragment_apn_gt0;
+372          output out=mean_on mean=mean_gt0;
+373        run;
+374        
+375        data flag_fragment_on;
+376          set mean_on;
+13                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+377          length feature_type $8.;
+378          if mean_gt0 ge 0.5 then flag_feature_on=1;
+379          else flag_feature_on=0;
+380          feature_type="fragment";
+381          keep fragment_id flag_feature_on feature_type;
+382          rename fragment_id=feature_id;
+383        run;
+384        
+385        
+386        data flag_feature_on;
+387           set flag_event_on flag_fragment_on;
+388        run;
+389        
+390        /* 2. For the set of expressed genes without multigene components,
+391              calculate the proportion of detected events per transcript */
+392        
+393        * merge detection flags with transcript_id;
+394        data feat2xs;
+395          set event.feature2xs2gene_exp_nomult_10gn;
+396          *set event.feature2xs2gene_nomulti;
+397          keep feature_id transcript_id;
+398        run;
+399        
+400        data feat_to_keep;
+401           set event.flagged_feature_short;
+402           where flag_feature_short=0;
+403           keep feature_id;
+404        run;
+405        
+406        proc sort data=feat2xs nodup;
+407           by feature_id transcript_id;
+408        proc sort data=feat_to_keep nodup;
+409           by feature_id;
+410        proc sort data=flag_feature_on nodup;
+411           by feature_id;
+412        run;
+413        
+414        data feat2xs_flag_on;
+415          merge feat2xs (in=in1) flag_feature_on (in=in2) feat_to_keep (in=in3);
+416          by feature_id;
+417          if in1 and in2 and in3;
+418          flag_feature=1;
+419        run;
+420        
+421        * for each transcript, calculate the proportion of events detected ;
+422        
+423        proc sort data=feat2xs_flag_on;
+424           by transcript_id feature_type;
+425        run;
+426        
+427        proc means data=feat2xs_flag_on noprint;
+428          by transcript_id feature_type;
+429          var flag_feature flag_feature_on;
+430          output out=num_feat_dtct sum(flag_feature)=num_total_features
+431                                   sum(flag_feature_on)=num_features_dtct;
+432        run;
+433        
+434        
+14                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+435        data junc frag;
+436           set num_feat_dtct;
+437           if feature_type="junction" then output junc;
+438           if feature_type="fragment" then output frag;
+439           drop _TYPE_ _FREQ_ feature_type;
+440        run;
+441        
+442        data junc2;
+443          set junc;
+444          rename num_total_features=num_total_junctions num_features_dtct=num_junctions_dtct;
+445        run;
+446        
+447        data frag2;
+448          set frag;
+449          rename num_total_features=num_total_fragments num_features_dtct=num_fragments_dtct;
+450        run;
+451        
+452        proc sort data=junc2;
+453           by transcript_id;
+454        proc sort data=frag2;
+455           by transcript_id;
+456        run;
+457        
+458        data calc_prop_dtct;
+459          merge frag2 (in=in1) junc2 (in=in2);
+460          by transcript_id;
+461          if not in1 then do;
+462                 num_total_fragments=0;
+463                 num_fragments_dtct=0;
+464                 end;
+465          if not in2 then do;
+466                 num_total_junctions=0;
+467                 num_junctions_dtct=0;
+468                 end;
+469          num_total_features=num_total_junctions+num_total_fragments;
+470          num_features_dtct=num_junctions_dtct+num_fragments_dtct;
+471          perc_features_dtct=num_features_dtct/num_total_features;
+472          if num_total_junctions > 0 then do;
+473          perc_junctions_dtct=num_junctions_dtct/num_total_junctions; end;
+474          if num_total_fragments > 0 then do;
+475          perc_fragments_dtct=num_fragments_dtct/num_total_fragments; end;
+476        run;
+477        
+478        
+479        
+480        * flag if transcript has unique event;
+481        
+482        data xs_w_uniq;
+483          set event.flag_xscripts_w_unique;
+484          keep transcript_id flag_xscript_has_unique;
+485        run;
+486        
+487        proc sort data=calc_prop_dtct;
+488          by transcript_id;
+489        proc sort data=xs_w_uniq;
+490          by transcript_id;
+491        run;
+492        
+15                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+493        data xs_prop_dtct_flag_uniq;
+494          merge calc_prop_dtct (in=in1) xs_w_uniq (in=in2);
+495          by transcript_id;
+496          if in1 and in2 then output;
+497          else if in1 then do;
+498            flag_xscript_has_unique=0;
+499            output; end;
+500        run;
+501        
+502        /* 3. Bin transcripts by unique/no unique and by proportion events detected */
+503        
+504        data bin_xs;
+505           set xs_prop_dtct_flag_uniq;
+506           length bin_xscript_perc_dtct $10.;
+507           if perc_features_dtct = 1 then bin_xscript_perc_dtct = "100%";
+508           else if perc_features_dtct >= 0.75 then bin_xscript_perc_dtct = "75-99%";
+509           else if perc_features_dtct >= 0.5 then bin_xscript_perc_dtct = "50-74%";
+510           else if perc_features_dtct >= 0.25 then bin_xscript_perc_dtct = "25-50%";
+511           else if perc_features_dtct > 0 then bin_xscript_perc_dtct = "1-24%";
+512           else bin_xscript_perc_dtct = "0%";
+513        run;
+514        
+515        /* 4. Count transcripts per bin */
+516        
+517        proc freq data=bin_xs ;
+518           tables flag_xscript_has_unique*bin_xscript_perc_dtct;
+519        run;
+520        
+521        /* Make permenant */
+522        
+523        data event.bin_xs_by_dtct_apn&apn._10gn;
+524           set bin_xs;
+525        run;
+526        
+527        %mend;
+528        
+529        
+530        %binXS(0);
+
+NOTE: There were 17990724 observations read from the data set EVENT.MM10_REFSEQ_SPLICING_COUNTS_10GN.
+NOTE: The data set WORK.FLAG_SPLICING has 17990724 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1:58.53
+      cpu time            21.21 seconds
+      
+
+
+NOTE: There were 17990724 observations read from the data set WORK.FLAG_SPLICING.
+NOTE: The data set WORK.FLAG_SPLICING has 17990724 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           2:01.71
+      cpu time            1:08.03
+      
+
+
+NOTE: There were 17990724 observations read from the data set WORK.FLAG_SPLICING.
+NOTE: The data set WORK.MEAN_ON has 2998454 observations and 4 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+16                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+      real time           17.56 seconds
+      cpu time            17.55 seconds
+      
+
+
+NOTE: There were 2998454 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.FLAG_EVENT_ON has 2998454 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.07 seconds
+      cpu time            2.08 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set EVENT.MM10_REFSEQ_FRAGMENT_COUNTS_10GN.
+NOTE: The data set WORK.FLAG_FRAGMENT has 2161416 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.46 seconds
+      cpu time            0.47 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set WORK.FLAG_FRAGMENT.
+NOTE: The data set WORK.FLAG_FRAGMENT has 2161416 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           1.03 seconds
+      cpu time            2.49 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set WORK.FLAG_FRAGMENT.
+NOTE: The data set WORK.MEAN_ON has 360236 observations and 4 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           1.30 seconds
+      cpu time            1.30 seconds
+      
+
+
+NOTE: There were 360236 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.FLAG_FRAGMENT_ON has 360236 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.06 seconds
+      
+
+
+NOTE: There were 2998454 observations read from the data set WORK.FLAG_EVENT_ON.
+NOTE: There were 360236 observations read from the data set WORK.FLAG_FRAGMENT_ON.
+NOTE: The data set WORK.FLAG_FEATURE_ON has 3358690 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.56 seconds
+      cpu time            2.56 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set EVENT.FEATURE2XS2GENE_EXP_NOMULT_10GN.
+NOTE: The data set WORK.FEAT2XS has 16738 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.18 seconds
+17                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+      cpu time            0.04 seconds
+      
+
+
+NOTE: There were 2390628 observations read from the data set EVENT.FLAGGED_FEATURE_SHORT.
+      WHERE flag_feature_short=0;
+NOTE: The data set WORK.FEAT_TO_KEEP has 2390628 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           20.67 seconds
+      cpu time            3.92 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set WORK.FEAT2XS.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FEAT2XS has 16738 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.06 seconds
+      
+
+
+NOTE: There were 2390628 observations read from the data set WORK.FEAT_TO_KEEP.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FEAT_TO_KEEP has 2390628 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           41.35 seconds
+      cpu time            9.75 seconds
+      
+
+
+NOTE: There were 3358690 observations read from the data set WORK.FLAG_FEATURE_ON.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FLAG_FEATURE_ON has 3358690 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           21.81 seconds
+      cpu time            10.92 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set WORK.FEAT2XS.
+NOTE: There were 3358690 observations read from the data set WORK.FLAG_FEATURE_ON.
+NOTE: There were 2390628 observations read from the data set WORK.FEAT_TO_KEEP.
+NOTE: The data set WORK.FEAT2XS_FLAG_ON has 10955 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           4.07 seconds
+      cpu time            4.08 seconds
+      
+
+
+NOTE: There were 10955 observations read from the data set WORK.FEAT2XS_FLAG_ON.
+NOTE: The data set WORK.FEAT2XS_FLAG_ON has 10955 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+      
+
+
+18                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+NOTE: There were 10955 observations read from the data set WORK.FEAT2XS_FLAG_ON.
+NOTE: The data set WORK.NUM_FEAT_DTCT has 938 observations and 6 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 938 observations read from the data set WORK.NUM_FEAT_DTCT.
+NOTE: The data set WORK.JUNC has 468 observations and 3 variables.
+NOTE: The data set WORK.FRAG has 470 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 468 observations read from the data set WORK.JUNC.
+NOTE: The data set WORK.JUNC2 has 468 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG.
+NOTE: The data set WORK.FRAG2 has 470 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 468 observations read from the data set WORK.JUNC2.
+NOTE: The data set WORK.JUNC2 has 468 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG2.
+NOTE: The data set WORK.FRAG2 has 470 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG2.
+NOTE: There were 468 observations read from the data set WORK.JUNC2.
+NOTE: The data set WORK.CALC_PROP_DTCT has 470 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+19                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+NOTE: There were 73535 observations read from the data set EVENT.FLAG_XSCRIPTS_W_UNIQUE.
+NOTE: The data set WORK.XS_W_UNIQ has 73535 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.22 seconds
+      cpu time            0.03 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.CALC_PROP_DTCT.
+NOTE: The data set WORK.CALC_PROP_DTCT has 470 observations and 10 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 73535 observations read from the data set WORK.XS_W_UNIQ.
+NOTE: The data set WORK.XS_W_UNIQ has 73535 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.04 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.CALC_PROP_DTCT.
+NOTE: There were 73535 observations read from the data set WORK.XS_W_UNIQ.
+NOTE: The data set WORK.XS_PROP_DTCT_FLAG_UNIQ has 470 observations and 11 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.XS_PROP_DTCT_FLAG_UNIQ.
+NOTE: The data set WORK.BIN_XS has 470 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.BIN_XS.
+NOTE: The PROCEDURE FREQ printed page 1.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.BIN_XS.
+NOTE: The data set EVENT.BIN_XS_BY_DTCT_APN0_10GN has 470 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.14 seconds
+      cpu time            0.01 seconds
+      
+
+531        %binXS(1);
+
+20                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+NOTE: There were 17990724 observations read from the data set EVENT.MM10_REFSEQ_SPLICING_COUNTS_10GN.
+NOTE: The data set WORK.FLAG_SPLICING has 17990724 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2:07.73
+      cpu time            23.23 seconds
+      
+
+
+NOTE: There were 17990724 observations read from the data set WORK.FLAG_SPLICING.
+NOTE: The data set WORK.FLAG_SPLICING has 17990724 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           1:58.63
+      cpu time            1:07.58
+      
+
+
+NOTE: There were 17990724 observations read from the data set WORK.FLAG_SPLICING.
+NOTE: The data set WORK.MEAN_ON has 2998454 observations and 4 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           24.72 seconds
+      cpu time            18.18 seconds
+      
+
+
+NOTE: There were 2998454 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.FLAG_EVENT_ON has 2998454 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           9.65 seconds
+      cpu time            2.51 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set EVENT.MM10_REFSEQ_FRAGMENT_COUNTS_10GN.
+NOTE: The data set WORK.FLAG_FRAGMENT has 2161416 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.92 seconds
+      cpu time            0.54 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set WORK.FLAG_FRAGMENT.
+NOTE: The data set WORK.FLAG_FRAGMENT has 2161416 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           1.14 seconds
+      cpu time            2.56 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set WORK.FLAG_FRAGMENT.
+NOTE: The data set WORK.MEAN_ON has 360236 observations and 4 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           1.25 seconds
+      cpu time            1.26 seconds
+      
+
+
+NOTE: There were 360236 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.FLAG_FRAGMENT_ON has 360236 observations and 3 variables.
+21                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+NOTE: DATA statement used (Total process time):
+      real time           0.07 seconds
+      cpu time            0.07 seconds
+      
+
+
+NOTE: There were 2998454 observations read from the data set WORK.FLAG_EVENT_ON.
+NOTE: There were 360236 observations read from the data set WORK.FLAG_FRAGMENT_ON.
+NOTE: The data set WORK.FLAG_FEATURE_ON has 3358690 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           10.60 seconds
+      cpu time            2.70 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set EVENT.FEATURE2XS2GENE_EXP_NOMULT_10GN.
+NOTE: The data set WORK.FEAT2XS has 16738 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.19 seconds
+      cpu time            0.04 seconds
+      
+
+
+NOTE: There were 2390628 observations read from the data set EVENT.FLAGGED_FEATURE_SHORT.
+      WHERE flag_feature_short=0;
+NOTE: The data set WORK.FEAT_TO_KEEP has 2390628 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           27.77 seconds
+      cpu time            4.30 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set WORK.FEAT2XS.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FEAT2XS has 16738 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.34 seconds
+      cpu time            0.06 seconds
+      
+
+
+NOTE: There were 2390628 observations read from the data set WORK.FEAT_TO_KEEP.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FEAT_TO_KEEP has 2390628 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           19.99 seconds
+      cpu time            9.57 seconds
+      
+
+
+NOTE: There were 3358690 observations read from the data set WORK.FLAG_FEATURE_ON.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FLAG_FEATURE_ON has 3358690 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           21.43 seconds
+      cpu time            10.52 seconds
+      
+
+22                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+
+NOTE: There were 16738 observations read from the data set WORK.FEAT2XS.
+NOTE: There were 3358690 observations read from the data set WORK.FLAG_FEATURE_ON.
+NOTE: There were 2390628 observations read from the data set WORK.FEAT_TO_KEEP.
+NOTE: The data set WORK.FEAT2XS_FLAG_ON has 10955 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           3.45 seconds
+      cpu time            3.44 seconds
+      
+
+
+NOTE: There were 10955 observations read from the data set WORK.FEAT2XS_FLAG_ON.
+NOTE: The data set WORK.FEAT2XS_FLAG_ON has 10955 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.04 seconds
+      
+
+
+NOTE: There were 10955 observations read from the data set WORK.FEAT2XS_FLAG_ON.
+NOTE: The data set WORK.NUM_FEAT_DTCT has 938 observations and 6 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 938 observations read from the data set WORK.NUM_FEAT_DTCT.
+NOTE: The data set WORK.JUNC has 468 observations and 3 variables.
+NOTE: The data set WORK.FRAG has 470 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 468 observations read from the data set WORK.JUNC.
+NOTE: The data set WORK.JUNC2 has 468 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG.
+NOTE: The data set WORK.FRAG2 has 470 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 468 observations read from the data set WORK.JUNC2.
+NOTE: The data set WORK.JUNC2 has 468 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+23                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG2.
+NOTE: The data set WORK.FRAG2 has 470 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG2.
+NOTE: There were 468 observations read from the data set WORK.JUNC2.
+NOTE: The data set WORK.CALC_PROP_DTCT has 470 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 73535 observations read from the data set EVENT.FLAG_XSCRIPTS_W_UNIQUE.
+NOTE: The data set WORK.XS_W_UNIQ has 73535 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.22 seconds
+      cpu time            0.03 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.CALC_PROP_DTCT.
+NOTE: The data set WORK.CALC_PROP_DTCT has 470 observations and 10 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 73535 observations read from the data set WORK.XS_W_UNIQ.
+NOTE: The data set WORK.XS_W_UNIQ has 73535 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.04 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.CALC_PROP_DTCT.
+NOTE: There were 73535 observations read from the data set WORK.XS_W_UNIQ.
+NOTE: The data set WORK.XS_PROP_DTCT_FLAG_UNIQ has 470 observations and 11 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.XS_PROP_DTCT_FLAG_UNIQ.
+NOTE: The data set WORK.BIN_XS has 470 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+24                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+
+
+NOTE: There were 470 observations read from the data set WORK.BIN_XS.
+NOTE: The PROCEDURE FREQ printed page 2.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.BIN_XS.
+NOTE: The data set EVENT.BIN_XS_BY_DTCT_APN1_10GN has 470 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.17 seconds
+      cpu time            0.01 seconds
+      
+
+532        %binXS(2);
+
+NOTE: There were 17990724 observations read from the data set EVENT.MM10_REFSEQ_SPLICING_COUNTS_10GN.
+NOTE: The data set WORK.FLAG_SPLICING has 17990724 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2:21.95
+      cpu time            23.02 seconds
+      
+
+
+NOTE: There were 17990724 observations read from the data set WORK.FLAG_SPLICING.
+NOTE: The data set WORK.FLAG_SPLICING has 17990724 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           1:59.41
+      cpu time            1:06.83
+      
+
+
+NOTE: There were 17990724 observations read from the data set WORK.FLAG_SPLICING.
+NOTE: The data set WORK.MEAN_ON has 2998454 observations and 4 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           25.35 seconds
+      cpu time            17.83 seconds
+      
+
+
+NOTE: There were 2998454 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.FLAG_EVENT_ON has 2998454 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           9.75 seconds
+      cpu time            2.66 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set EVENT.MM10_REFSEQ_FRAGMENT_COUNTS_10GN.
+NOTE: The data set WORK.FLAG_FRAGMENT has 2161416 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.49 seconds
+      cpu time            0.52 seconds
+      
+
+25                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+
+NOTE: There were 2161416 observations read from the data set WORK.FLAG_FRAGMENT.
+NOTE: The data set WORK.FLAG_FRAGMENT has 2161416 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           1.13 seconds
+      cpu time            2.52 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set WORK.FLAG_FRAGMENT.
+NOTE: The data set WORK.MEAN_ON has 360236 observations and 4 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           1.24 seconds
+      cpu time            1.24 seconds
+      
+
+
+NOTE: There were 360236 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.FLAG_FRAGMENT_ON has 360236 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.07 seconds
+      cpu time            0.07 seconds
+      
+
+
+NOTE: There were 2998454 observations read from the data set WORK.FLAG_EVENT_ON.
+NOTE: There were 360236 observations read from the data set WORK.FLAG_FRAGMENT_ON.
+NOTE: The data set WORK.FLAG_FEATURE_ON has 3358690 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           11.80 seconds
+      cpu time            2.83 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set EVENT.FEATURE2XS2GENE_EXP_NOMULT_10GN.
+NOTE: The data set WORK.FEAT2XS has 16738 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.18 seconds
+      cpu time            0.03 seconds
+      
+
+
+NOTE: There were 2390628 observations read from the data set EVENT.FLAGGED_FEATURE_SHORT.
+      WHERE flag_feature_short=0;
+NOTE: The data set WORK.FEAT_TO_KEEP has 2390628 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           29.33 seconds
+      cpu time            4.27 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set WORK.FEAT2XS.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FEAT2XS has 16738 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.07 seconds
+      
+26                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+
+
+NOTE: There were 2390628 observations read from the data set WORK.FEAT_TO_KEEP.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FEAT_TO_KEEP has 2390628 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           21.88 seconds
+      cpu time            9.47 seconds
+      
+
+
+NOTE: There were 3358690 observations read from the data set WORK.FLAG_FEATURE_ON.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FLAG_FEATURE_ON has 3358690 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           23.78 seconds
+      cpu time            10.40 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set WORK.FEAT2XS.
+NOTE: There were 3358690 observations read from the data set WORK.FLAG_FEATURE_ON.
+NOTE: There were 2390628 observations read from the data set WORK.FEAT_TO_KEEP.
+NOTE: The data set WORK.FEAT2XS_FLAG_ON has 10955 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           3.50 seconds
+      cpu time            3.51 seconds
+      
+
+
+NOTE: There were 10955 observations read from the data set WORK.FEAT2XS_FLAG_ON.
+NOTE: The data set WORK.FEAT2XS_FLAG_ON has 10955 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+
+NOTE: There were 10955 observations read from the data set WORK.FEAT2XS_FLAG_ON.
+NOTE: The data set WORK.NUM_FEAT_DTCT has 938 observations and 6 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 938 observations read from the data set WORK.NUM_FEAT_DTCT.
+NOTE: The data set WORK.JUNC has 468 observations and 3 variables.
+NOTE: The data set WORK.FRAG has 470 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 468 observations read from the data set WORK.JUNC.
+NOTE: The data set WORK.JUNC2 has 468 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+27                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG.
+NOTE: The data set WORK.FRAG2 has 470 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 468 observations read from the data set WORK.JUNC2.
+NOTE: The data set WORK.JUNC2 has 468 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG2.
+NOTE: The data set WORK.FRAG2 has 470 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG2.
+NOTE: There were 468 observations read from the data set WORK.JUNC2.
+NOTE: The data set WORK.CALC_PROP_DTCT has 470 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 73535 observations read from the data set EVENT.FLAG_XSCRIPTS_W_UNIQUE.
+NOTE: The data set WORK.XS_W_UNIQ has 73535 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.22 seconds
+      cpu time            0.03 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.CALC_PROP_DTCT.
+NOTE: The data set WORK.CALC_PROP_DTCT has 470 observations and 10 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 73535 observations read from the data set WORK.XS_W_UNIQ.
+NOTE: The data set WORK.XS_W_UNIQ has 73535 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.04 seconds
+28                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+      cpu time            0.05 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.CALC_PROP_DTCT.
+NOTE: There were 73535 observations read from the data set WORK.XS_W_UNIQ.
+NOTE: The data set WORK.XS_PROP_DTCT_FLAG_UNIQ has 470 observations and 11 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.XS_PROP_DTCT_FLAG_UNIQ.
+NOTE: The data set WORK.BIN_XS has 470 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.BIN_XS.
+NOTE: The PROCEDURE FREQ printed page 3.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.BIN_XS.
+NOTE: The data set EVENT.BIN_XS_BY_DTCT_APN2_10GN has 470 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.15 seconds
+      cpu time            0.01 seconds
+      
+
+533        %binXS(5);
+
+NOTE: There were 17990724 observations read from the data set EVENT.MM10_REFSEQ_SPLICING_COUNTS_10GN.
+NOTE: The data set WORK.FLAG_SPLICING has 17990724 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2:01.56
+      cpu time            23.10 seconds
+      
+
+
+NOTE: There were 17990724 observations read from the data set WORK.FLAG_SPLICING.
+NOTE: The data set WORK.FLAG_SPLICING has 17990724 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           2:19.95
+      cpu time            1:05.61
+      
+
+
+NOTE: There were 17990724 observations read from the data set WORK.FLAG_SPLICING.
+NOTE: The data set WORK.MEAN_ON has 2998454 observations and 4 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           23.13 seconds
+29                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+      cpu time            17.89 seconds
+      
+
+
+NOTE: There were 2998454 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.FLAG_EVENT_ON has 2998454 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           7.81 seconds
+      cpu time            2.51 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set EVENT.MM10_REFSEQ_FRAGMENT_COUNTS_10GN.
+NOTE: The data set WORK.FLAG_FRAGMENT has 2161416 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.42 seconds
+      cpu time            0.53 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set WORK.FLAG_FRAGMENT.
+NOTE: The data set WORK.FLAG_FRAGMENT has 2161416 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           1.09 seconds
+      cpu time            2.45 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set WORK.FLAG_FRAGMENT.
+NOTE: The data set WORK.MEAN_ON has 360236 observations and 4 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           1.23 seconds
+      cpu time            1.25 seconds
+      
+
+
+NOTE: There were 360236 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.FLAG_FRAGMENT_ON has 360236 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.07 seconds
+      cpu time            0.07 seconds
+      
+
+
+NOTE: There were 2998454 observations read from the data set WORK.FLAG_EVENT_ON.
+NOTE: There were 360236 observations read from the data set WORK.FLAG_FRAGMENT_ON.
+NOTE: The data set WORK.FLAG_FEATURE_ON has 3358690 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           8.87 seconds
+      cpu time            2.84 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set EVENT.FEATURE2XS2GENE_EXP_NOMULT_10GN.
+NOTE: The data set WORK.FEAT2XS has 16738 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.24 seconds
+      cpu time            0.02 seconds
+30                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+      
+
+
+NOTE: There were 2390628 observations read from the data set EVENT.FLAGGED_FEATURE_SHORT.
+      WHERE flag_feature_short=0;
+NOTE: The data set WORK.FEAT_TO_KEEP has 2390628 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           24.66 seconds
+      cpu time            4.34 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set WORK.FEAT2XS.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FEAT2XS has 16738 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.07 seconds
+      cpu time            0.05 seconds
+      
+
+
+NOTE: There were 2390628 observations read from the data set WORK.FEAT_TO_KEEP.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FEAT_TO_KEEP has 2390628 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           14.76 seconds
+      cpu time            9.29 seconds
+      
+
+
+NOTE: There were 3358690 observations read from the data set WORK.FLAG_FEATURE_ON.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FLAG_FEATURE_ON has 3358690 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           15.84 seconds
+      cpu time            10.49 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set WORK.FEAT2XS.
+NOTE: There were 3358690 observations read from the data set WORK.FLAG_FEATURE_ON.
+NOTE: There were 2390628 observations read from the data set WORK.FEAT_TO_KEEP.
+NOTE: The data set WORK.FEAT2XS_FLAG_ON has 10955 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           3.44 seconds
+      cpu time            3.44 seconds
+      
+
+
+NOTE: There were 10955 observations read from the data set WORK.FEAT2XS_FLAG_ON.
+NOTE: The data set WORK.FEAT2XS_FLAG_ON has 10955 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 10955 observations read from the data set WORK.FEAT2XS_FLAG_ON.
+31                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+NOTE: The data set WORK.NUM_FEAT_DTCT has 938 observations and 6 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 938 observations read from the data set WORK.NUM_FEAT_DTCT.
+NOTE: The data set WORK.JUNC has 468 observations and 3 variables.
+NOTE: The data set WORK.FRAG has 470 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 468 observations read from the data set WORK.JUNC.
+NOTE: The data set WORK.JUNC2 has 468 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG.
+NOTE: The data set WORK.FRAG2 has 470 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 468 observations read from the data set WORK.JUNC2.
+NOTE: The data set WORK.JUNC2 has 468 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG2.
+NOTE: The data set WORK.FRAG2 has 470 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG2.
+NOTE: There were 468 observations read from the data set WORK.JUNC2.
+NOTE: The data set WORK.CALC_PROP_DTCT has 470 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 73535 observations read from the data set EVENT.FLAG_XSCRIPTS_W_UNIQUE.
+32                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+NOTE: The data set WORK.XS_W_UNIQ has 73535 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.19 seconds
+      cpu time            0.02 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.CALC_PROP_DTCT.
+NOTE: The data set WORK.CALC_PROP_DTCT has 470 observations and 10 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 73535 observations read from the data set WORK.XS_W_UNIQ.
+NOTE: The data set WORK.XS_W_UNIQ has 73535 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.04 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.CALC_PROP_DTCT.
+NOTE: There were 73535 observations read from the data set WORK.XS_W_UNIQ.
+NOTE: The data set WORK.XS_PROP_DTCT_FLAG_UNIQ has 470 observations and 11 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.XS_PROP_DTCT_FLAG_UNIQ.
+NOTE: The data set WORK.BIN_XS has 470 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.BIN_XS.
+NOTE: The PROCEDURE FREQ printed page 4.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.BIN_XS.
+NOTE: The data set EVENT.BIN_XS_BY_DTCT_APN5_10GN has 470 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.15 seconds
+      cpu time            0.00 seconds
+      
+
+534        %binXS(10);
+
+NOTE: There were 17990724 observations read from the data set EVENT.MM10_REFSEQ_SPLICING_COUNTS_10GN.
+33                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+NOTE: The data set WORK.FLAG_SPLICING has 17990724 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2:03.11
+      cpu time            24.07 seconds
+      
+
+
+NOTE: There were 17990724 observations read from the data set WORK.FLAG_SPLICING.
+NOTE: The data set WORK.FLAG_SPLICING has 17990724 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           1:32.05
+      cpu time            1:04.99
+      
+
+
+NOTE: There were 17990724 observations read from the data set WORK.FLAG_SPLICING.
+NOTE: The data set WORK.MEAN_ON has 2998454 observations and 4 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           22.89 seconds
+      cpu time            17.90 seconds
+      
+
+
+NOTE: There were 2998454 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.FLAG_EVENT_ON has 2998454 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           7.33 seconds
+      cpu time            2.57 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set EVENT.MM10_REFSEQ_FRAGMENT_COUNTS_10GN.
+NOTE: The data set WORK.FLAG_FRAGMENT has 2161416 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.27 seconds
+      cpu time            0.47 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set WORK.FLAG_FRAGMENT.
+NOTE: The data set WORK.FLAG_FRAGMENT has 2161416 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           1.10 seconds
+      cpu time            2.45 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set WORK.FLAG_FRAGMENT.
+NOTE: The data set WORK.MEAN_ON has 360236 observations and 4 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           1.21 seconds
+      cpu time            1.21 seconds
+      
+
+
+NOTE: There were 360236 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.FLAG_FRAGMENT_ON has 360236 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+34                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+      real time           0.07 seconds
+      cpu time            0.09 seconds
+      
+
+
+NOTE: There were 2998454 observations read from the data set WORK.FLAG_EVENT_ON.
+NOTE: There were 360236 observations read from the data set WORK.FLAG_FRAGMENT_ON.
+NOTE: The data set WORK.FLAG_FEATURE_ON has 3358690 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           8.02 seconds
+      cpu time            2.66 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set EVENT.FEATURE2XS2GENE_EXP_NOMULT_10GN.
+NOTE: The data set WORK.FEAT2XS has 16738 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.19 seconds
+      cpu time            0.03 seconds
+      
+
+
+NOTE: There were 2390628 observations read from the data set EVENT.FLAGGED_FEATURE_SHORT.
+      WHERE flag_feature_short=0;
+NOTE: The data set WORK.FEAT_TO_KEEP has 2390628 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           25.53 seconds
+      cpu time            4.48 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set WORK.FEAT2XS.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FEAT2XS has 16738 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.06 seconds
+      
+
+
+NOTE: There were 2390628 observations read from the data set WORK.FEAT_TO_KEEP.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FEAT_TO_KEEP has 2390628 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           17.06 seconds
+      cpu time            9.60 seconds
+      
+
+
+NOTE: There were 3358690 observations read from the data set WORK.FLAG_FEATURE_ON.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FLAG_FEATURE_ON has 3358690 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           17.10 seconds
+      cpu time            10.86 seconds
+      
+
+
+35                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+NOTE: There were 16738 observations read from the data set WORK.FEAT2XS.
+NOTE: There were 3358690 observations read from the data set WORK.FLAG_FEATURE_ON.
+NOTE: There were 2390628 observations read from the data set WORK.FEAT_TO_KEEP.
+NOTE: The data set WORK.FEAT2XS_FLAG_ON has 10955 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           3.45 seconds
+      cpu time            3.44 seconds
+      
+
+
+NOTE: There were 10955 observations read from the data set WORK.FEAT2XS_FLAG_ON.
+NOTE: The data set WORK.FEAT2XS_FLAG_ON has 10955 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+      
+
+
+NOTE: There were 10955 observations read from the data set WORK.FEAT2XS_FLAG_ON.
+NOTE: The data set WORK.NUM_FEAT_DTCT has 938 observations and 6 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 938 observations read from the data set WORK.NUM_FEAT_DTCT.
+NOTE: The data set WORK.JUNC has 468 observations and 3 variables.
+NOTE: The data set WORK.FRAG has 470 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 468 observations read from the data set WORK.JUNC.
+NOTE: The data set WORK.JUNC2 has 468 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG.
+NOTE: The data set WORK.FRAG2 has 470 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 468 observations read from the data set WORK.JUNC2.
+NOTE: The data set WORK.JUNC2 has 468 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+36                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG2.
+NOTE: The data set WORK.FRAG2 has 470 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG2.
+NOTE: There were 468 observations read from the data set WORK.JUNC2.
+NOTE: The data set WORK.CALC_PROP_DTCT has 470 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 73535 observations read from the data set EVENT.FLAG_XSCRIPTS_W_UNIQUE.
+NOTE: The data set WORK.XS_W_UNIQ has 73535 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.21 seconds
+      cpu time            0.03 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.CALC_PROP_DTCT.
+NOTE: The data set WORK.CALC_PROP_DTCT has 470 observations and 10 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 73535 observations read from the data set WORK.XS_W_UNIQ.
+NOTE: The data set WORK.XS_W_UNIQ has 73535 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.04 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.CALC_PROP_DTCT.
+NOTE: There were 73535 observations read from the data set WORK.XS_W_UNIQ.
+NOTE: The data set WORK.XS_PROP_DTCT_FLAG_UNIQ has 470 observations and 11 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.04 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.XS_PROP_DTCT_FLAG_UNIQ.
+NOTE: The data set WORK.BIN_XS has 470 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+37                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+
+NOTE: There were 470 observations read from the data set WORK.BIN_XS.
+NOTE: The PROCEDURE FREQ printed page 5.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.BIN_XS.
+NOTE: The data set EVENT.BIN_XS_BY_DTCT_APN10_10GN has 470 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.15 seconds
+      cpu time            0.01 seconds
+      
+
+535        %binXS(25);
+
+NOTE: There were 17990724 observations read from the data set EVENT.MM10_REFSEQ_SPLICING_COUNTS_10GN.
+NOTE: The data set WORK.FLAG_SPLICING has 17990724 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2:01.09
+      cpu time            23.17 seconds
+      
+
+
+NOTE: There were 17990724 observations read from the data set WORK.FLAG_SPLICING.
+NOTE: The data set WORK.FLAG_SPLICING has 17990724 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           1:35.20
+      cpu time            1:03.53
+      
+
+
+NOTE: There were 17990724 observations read from the data set WORK.FLAG_SPLICING.
+NOTE: The data set WORK.MEAN_ON has 2998454 observations and 4 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           23.58 seconds
+      cpu time            18.11 seconds
+      
+
+
+NOTE: There were 2998454 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.FLAG_EVENT_ON has 2998454 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           8.34 seconds
+      cpu time            2.47 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set EVENT.MM10_REFSEQ_FRAGMENT_COUNTS_10GN.
+NOTE: The data set WORK.FLAG_FRAGMENT has 2161416 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.61 seconds
+      cpu time            0.53 seconds
+      
+
+
+38                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+NOTE: There were 2161416 observations read from the data set WORK.FLAG_FRAGMENT.
+NOTE: The data set WORK.FLAG_FRAGMENT has 2161416 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           1.07 seconds
+      cpu time            2.57 seconds
+      
+
+
+NOTE: There were 2161416 observations read from the data set WORK.FLAG_FRAGMENT.
+NOTE: The data set WORK.MEAN_ON has 360236 observations and 4 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           1.24 seconds
+      cpu time            1.24 seconds
+      
+
+
+NOTE: There were 360236 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.FLAG_FRAGMENT_ON has 360236 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.07 seconds
+      
+
+
+NOTE: There were 2998454 observations read from the data set WORK.FLAG_EVENT_ON.
+NOTE: There were 360236 observations read from the data set WORK.FLAG_FRAGMENT_ON.
+NOTE: The data set WORK.FLAG_FEATURE_ON has 3358690 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           8.67 seconds
+      cpu time            2.83 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set EVENT.FEATURE2XS2GENE_EXP_NOMULT_10GN.
+NOTE: The data set WORK.FEAT2XS has 16738 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.20 seconds
+      cpu time            0.03 seconds
+      
+
+
+NOTE: There were 2390628 observations read from the data set EVENT.FLAGGED_FEATURE_SHORT.
+      WHERE flag_feature_short=0;
+NOTE: The data set WORK.FEAT_TO_KEEP has 2390628 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           27.85 seconds
+      cpu time            4.40 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set WORK.FEAT2XS.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FEAT2XS has 16738 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.05 seconds
+      
+
+39                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+
+NOTE: There were 2390628 observations read from the data set WORK.FEAT_TO_KEEP.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FEAT_TO_KEEP has 2390628 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           16.06 seconds
+      cpu time            9.61 seconds
+      
+
+
+NOTE: There were 3358690 observations read from the data set WORK.FLAG_FEATURE_ON.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.FLAG_FEATURE_ON has 3358690 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           17.80 seconds
+      cpu time            10.67 seconds
+      
+
+
+NOTE: There were 16738 observations read from the data set WORK.FEAT2XS.
+NOTE: There were 3358690 observations read from the data set WORK.FLAG_FEATURE_ON.
+NOTE: There were 2390628 observations read from the data set WORK.FEAT_TO_KEEP.
+NOTE: The data set WORK.FEAT2XS_FLAG_ON has 10955 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           3.49 seconds
+      cpu time            3.49 seconds
+      
+
+
+NOTE: There were 10955 observations read from the data set WORK.FEAT2XS_FLAG_ON.
+NOTE: The data set WORK.FEAT2XS_FLAG_ON has 10955 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+
+NOTE: There were 10955 observations read from the data set WORK.FEAT2XS_FLAG_ON.
+NOTE: The data set WORK.NUM_FEAT_DTCT has 938 observations and 6 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 938 observations read from the data set WORK.NUM_FEAT_DTCT.
+NOTE: The data set WORK.JUNC has 468 observations and 3 variables.
+NOTE: The data set WORK.FRAG has 470 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 468 observations read from the data set WORK.JUNC.
+NOTE: The data set WORK.JUNC2 has 468 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+40                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG.
+NOTE: The data set WORK.FRAG2 has 470 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 468 observations read from the data set WORK.JUNC2.
+NOTE: The data set WORK.JUNC2 has 468 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG2.
+NOTE: The data set WORK.FRAG2 has 470 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.FRAG2.
+NOTE: There were 468 observations read from the data set WORK.JUNC2.
+NOTE: The data set WORK.CALC_PROP_DTCT has 470 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 73535 observations read from the data set EVENT.FLAG_XSCRIPTS_W_UNIQUE.
+NOTE: The data set WORK.XS_W_UNIQ has 73535 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.18 seconds
+      cpu time            0.03 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.CALC_PROP_DTCT.
+NOTE: The data set WORK.CALC_PROP_DTCT has 470 observations and 10 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 73535 observations read from the data set WORK.XS_W_UNIQ.
+NOTE: The data set WORK.XS_W_UNIQ has 73535 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.03 seconds
+41                                                         The SAS System                               14:53 Sunday, March 25, 2018
+
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.CALC_PROP_DTCT.
+NOTE: There were 73535 observations read from the data set WORK.XS_W_UNIQ.
+NOTE: The data set WORK.XS_PROP_DTCT_FLAG_UNIQ has 470 observations and 11 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.XS_PROP_DTCT_FLAG_UNIQ.
+NOTE: The data set WORK.BIN_XS has 470 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.BIN_XS.
+NOTE: The PROCEDURE FREQ printed page 6.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 470 observations read from the data set WORK.BIN_XS.
+NOTE: The data set EVENT.BIN_XS_BY_DTCT_APN25_10GN has 470 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.18 seconds
+      cpu time            0.01 seconds
+      
+
+536        
+537        
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           58:59.39
+      cpu time            16:36.35
+      

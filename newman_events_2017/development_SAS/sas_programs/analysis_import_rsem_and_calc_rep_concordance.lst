@@ -1,0 +1,430 @@
+                                                           The SAS System                             19:30 Monday, May 29, 2017   1
+
+                                                         The CORR Procedure
+
+              6  Variables:    tpm_nsc1       tpm_nsc2       fpkm_nsc1      fpkm_nsc2      post_mean_nsc1 post_mean_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                  Variable                 N          Mean       Std Dev           Sum       Minimum       Maximum
+
+                  tpm_nsc1            128631       7.77417     120.14427       1000000             0         11974
+                  tpm_nsc2            128631       7.77417     120.58473       1000000             0         16103
+                  fpkm_nsc1           128631       5.49594      84.93601        706948             0          8465
+                  fpkm_nsc2           128631       5.34408      82.89176        687414             0         11069
+                  post_mean_nsc1      128631     603.89197          7842      77679229             0       1180233
+                  post_mean_nsc2      128631     371.71516          4909      47814092             0        950360
+
+
+                                           Pearson Correlation Coefficients, N = 128631 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                                                 post_         post_
+                                                                                                 mean_         mean_
+                                    tpm_nsc1      tpm_nsc2      fpkm_nsc1      fpkm_nsc2          nsc1          nsc2
+
+                tpm_nsc1             1.00000       0.96893        1.00000        0.96893       0.81545       0.77736
+                                                    <.0001         <.0001         <.0001        <.0001        <.0001
+
+                tpm_nsc2             0.96893       1.00000        0.96893        1.00000       0.81013       0.83515
+                                      <.0001                       <.0001         <.0001        <.0001        <.0001
+
+                fpkm_nsc1            1.00000       0.96893        1.00000        0.96893       0.81545       0.77736
+                                      <.0001        <.0001                        <.0001        <.0001        <.0001
+
+                fpkm_nsc2            0.96893       1.00000        0.96893        1.00000       0.81013       0.83515
+                                      <.0001        <.0001         <.0001                       <.0001        <.0001
+
+                post_mean_nsc1       0.81545       0.81013        0.81545        0.81013       1.00000       0.95822
+                                      <.0001        <.0001         <.0001         <.0001                      <.0001
+
+                post_mean_nsc2       0.77736       0.83515        0.77736        0.83515       0.95822       1.00000
+                                      <.0001        <.0001         <.0001         <.0001        <.0001              
+                                                           The SAS System                             19:30 Monday, May 29, 2017   2
+
+                                                         The CORR Procedure
+
+              6  Variables:    tpm_nsc1       tpm_nsc2       fpkm_nsc1      fpkm_nsc2      post_mean_nsc1 post_mean_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                  Variable                 N          Mean       Std Dev        Median       Minimum       Maximum
+
+                  tpm_nsc1            128631       7.77417     120.14427             0             0         11974
+                  tpm_nsc2            128631       7.77417     120.58473             0             0         16103
+                  fpkm_nsc1           128631       5.49594      84.93601             0             0          8465
+                  fpkm_nsc2           128631       5.34408      82.89176             0             0         11069
+                  post_mean_nsc1      128631     603.89197          7842       3.00000             0       1180233
+                  post_mean_nsc2      128631     371.71516          4909       2.49000             0        950360
+
+
+                                           Spearman Correlation Coefficients, N = 128631 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                                                 post_         post_
+                                                                                                 mean_         mean_
+                                    tpm_nsc1      tpm_nsc2      fpkm_nsc1      fpkm_nsc2          nsc1          nsc2
+
+                tpm_nsc1             1.00000       0.78823        0.99476        0.78947       0.76024       0.69623
+                                                    <.0001         <.0001         <.0001        <.0001        <.0001
+
+                tpm_nsc2             0.78823       1.00000        0.78857        0.99681       0.66582       0.72500
+                                      <.0001                       <.0001         <.0001        <.0001        <.0001
+
+                fpkm_nsc1            0.99476       0.78857        1.00000        0.79009       0.76184       0.69945
+                                      <.0001        <.0001                        <.0001        <.0001        <.0001
+
+                fpkm_nsc2            0.78947       0.99681        0.79009        1.00000       0.66817       0.72626
+                                      <.0001        <.0001         <.0001                       <.0001        <.0001
+
+                post_mean_nsc1       0.76024       0.66582        0.76184        0.66817       1.00000       0.94372
+                                      <.0001        <.0001         <.0001         <.0001                      <.0001
+
+                post_mean_nsc2       0.69623       0.72500        0.69945        0.72626       0.94372       1.00000
+                                      <.0001        <.0001         <.0001         <.0001        <.0001              
+                                                           The SAS System                             19:30 Monday, May 29, 2017   3
+
+                                                         The CORR Procedure
+
+              6  Variables:    tpm_nsc1       tpm_nsc2       fpkm_nsc1      fpkm_nsc2      post_mean_nsc1 post_mean_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                  Variable                 N          Mean       Std Dev           Sum       Minimum       Maximum
+
+                  tpm_nsc1             16104      62.09635     351.99721       1000000             0         16259
+                  tpm_nsc2             16104      62.09633     381.92993        999999             0         22763
+                  fpkm_nsc1            16104      34.74439     196.95087        559524             0          9097
+                  fpkm_nsc2            16104      34.55068     212.50753        556404             0         12666
+                  post_mean_nsc1       16104          4151         18930      66849017             0       1087776
+                  post_mean_nsc2       16104          2583         12646      41600159             0        942417
+
+
+                                            Pearson Correlation Coefficients, N = 16104 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                                                 post_         post_
+                                                                                                 mean_         mean_
+                                    tpm_nsc1      tpm_nsc2      fpkm_nsc1      fpkm_nsc2          nsc1          nsc2
+
+                tpm_nsc1             1.00000       0.94138        1.00000        0.94138       0.93522       0.87924
+                                                    <.0001         <.0001         <.0001        <.0001        <.0001
+
+                tpm_nsc2             0.94138       1.00000        0.94138        1.00000       0.87556       0.92624
+                                      <.0001                       <.0001         <.0001        <.0001        <.0001
+
+                fpkm_nsc1            1.00000       0.94138        1.00000        0.94138       0.93522       0.87924
+                                      <.0001        <.0001                        <.0001        <.0001        <.0001
+
+                fpkm_nsc2            0.94138       1.00000        0.94138        1.00000       0.87556       0.92624
+                                      <.0001        <.0001         <.0001                       <.0001        <.0001
+
+                post_mean_nsc1       0.93522       0.87556        0.93522        0.87556       1.00000       0.94440
+                                      <.0001        <.0001         <.0001         <.0001                      <.0001
+
+                post_mean_nsc2       0.87924       0.92624        0.87924        0.92624       0.94440       1.00000
+                                      <.0001        <.0001         <.0001         <.0001        <.0001              
+                                                           The SAS System                             19:30 Monday, May 29, 2017   4
+
+                                                         The CORR Procedure
+
+              6  Variables:    tpm_nsc1       tpm_nsc2       fpkm_nsc1      fpkm_nsc2      post_mean_nsc1 post_mean_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                  Variable                 N          Mean       Std Dev        Median       Minimum       Maximum
+
+                  tpm_nsc1             16104      62.09635     351.99721      10.21000             0         16259
+                  tpm_nsc2             16104      62.09633     381.92993      10.80000             0         22763
+                  fpkm_nsc1            16104      34.74439     196.95087       5.71000             0          9097
+                  fpkm_nsc2            16104      34.55068     212.50753       6.01000             0         12666
+                  post_mean_nsc1       16104          4151         18930     967.49500             0       1087776
+                  post_mean_nsc2       16104          2583         12646     638.55500             0        942417
+
+
+                                           Spearman Correlation Coefficients, N = 16104 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                                                 post_         post_
+                                                                                                 mean_         mean_
+                                    tpm_nsc1      tpm_nsc2      fpkm_nsc1      fpkm_nsc2          nsc1          nsc2
+
+                tpm_nsc1             1.00000       0.95392        1.00000        0.95392       0.96232       0.91675
+                                                    <.0001         <.0001         <.0001        <.0001        <.0001
+
+                tpm_nsc2             0.95392       1.00000        0.95392        1.00000       0.92461       0.95877
+                                      <.0001                       <.0001         <.0001        <.0001        <.0001
+
+                fpkm_nsc1            1.00000       0.95392        1.00000        0.95393       0.96232       0.91675
+                                      <.0001        <.0001                        <.0001        <.0001        <.0001
+
+                fpkm_nsc2            0.95392       1.00000        0.95393        1.00000       0.92462       0.95878
+                                      <.0001        <.0001         <.0001                       <.0001        <.0001
+
+                post_mean_nsc1       0.96232       0.92461        0.96232        0.92462       1.00000       0.95998
+                                      <.0001        <.0001         <.0001         <.0001                      <.0001
+
+                post_mean_nsc2       0.91675       0.95877        0.91675        0.95878       0.95998       1.00000
+                                      <.0001        <.0001         <.0001         <.0001        <.0001              
+                                                           The SAS System                             19:30 Monday, May 29, 2017   5
+
+                                                         The CORR Procedure
+
+              6  Variables:    tpm_nsc1       tpm_nsc2       fpkm_nsc1      fpkm_nsc2      post_mean_nsc1 post_mean_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                  Variable                 N          Mean       Std Dev           Sum       Minimum       Maximum
+
+                  tpm_nsc1             73535      13.59897     183.53703       1000000             0         15965
+                  tpm_nsc2             73535      13.59896     185.19595        999999             0         20992
+                  fpkm_nsc1            73535      10.24682     138.29524        753500             0         12030
+                  fpkm_nsc2            73535       9.96284     135.67793        732618             0         15379
+                  post_mean_nsc1       73535     815.99844          9896      60004446             0       1296168
+                  post_mean_nsc2       73535     502.31946          6220      36938061             0       1020037
+
+
+                                            Pearson Correlation Coefficients, N = 73535 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                                                 post_         post_
+                                                                                                 mean_         mean_
+                                    tpm_nsc1      tpm_nsc2      fpkm_nsc1      fpkm_nsc2          nsc1          nsc2
+
+                tpm_nsc1             1.00000       0.96680        1.00000        0.96680       0.83861       0.79706
+                                                    <.0001         <.0001         <.0001        <.0001        <.0001
+
+                tpm_nsc2             0.96680       1.00000        0.96680        1.00000       0.82978       0.85363
+                                      <.0001                       <.0001         <.0001        <.0001        <.0001
+
+                fpkm_nsc1            1.00000       0.96680        1.00000        0.96680       0.83861       0.79706
+                                      <.0001        <.0001                        <.0001        <.0001        <.0001
+
+                fpkm_nsc2            0.96680       1.00000        0.96680        1.00000       0.82978       0.85363
+                                      <.0001        <.0001         <.0001                       <.0001        <.0001
+
+                post_mean_nsc1       0.83861       0.82978        0.83861        0.82978       1.00000       0.95850
+                                      <.0001        <.0001         <.0001         <.0001                      <.0001
+
+                post_mean_nsc2       0.79706       0.85363        0.79706        0.85363       0.95850       1.00000
+                                      <.0001        <.0001         <.0001         <.0001        <.0001              
+                                                           The SAS System                             19:30 Monday, May 29, 2017   6
+
+                                                         The CORR Procedure
+
+              6  Variables:    tpm_nsc1       tpm_nsc2       fpkm_nsc1      fpkm_nsc2      post_mean_nsc1 post_mean_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                  Variable                 N          Mean       Std Dev        Median       Minimum       Maximum
+
+                  tpm_nsc1             73535      13.59897     183.53703       0.01000             0         15965
+                  tpm_nsc2             73535      13.59896     185.19595       0.02000             0         20992
+                  fpkm_nsc1            73535      10.24682     138.29524       0.01000             0         12030
+                  fpkm_nsc2            73535       9.96284     135.67793       0.01000             0         15379
+                  post_mean_nsc1       73535     815.99844          9896       7.69000             0       1296168
+                  post_mean_nsc2       73535     502.31946          6220       6.00000             0       1020037
+
+
+                                           Spearman Correlation Coefficients, N = 73535 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                                                 post_         post_
+                                                                                                 mean_         mean_
+                                    tpm_nsc1      tpm_nsc2      fpkm_nsc1      fpkm_nsc2          nsc1          nsc2
+
+                tpm_nsc1             1.00000       0.79510        0.99755        0.79567       0.76653       0.69726
+                                                    <.0001         <.0001         <.0001        <.0001        <.0001
+
+                tpm_nsc2             0.79510       1.00000        0.79548        0.99855       0.66504       0.72248
+                                      <.0001                       <.0001         <.0001        <.0001        <.0001
+
+                fpkm_nsc1            0.99755       0.79548        1.00000        0.79621       0.76858       0.69989
+                                      <.0001        <.0001                        <.0001        <.0001        <.0001
+
+                fpkm_nsc2            0.79567       0.99855        0.79621        1.00000       0.66673       0.72384
+                                      <.0001        <.0001         <.0001                       <.0001        <.0001
+
+                post_mean_nsc1       0.76653       0.66504        0.76858        0.66673       1.00000       0.94567
+                                      <.0001        <.0001         <.0001         <.0001                      <.0001
+
+                post_mean_nsc2       0.69726       0.72248        0.69989        0.72384       0.94567       1.00000
+                                      <.0001        <.0001         <.0001         <.0001        <.0001              
+                                                           The SAS System                             19:30 Monday, May 29, 2017   7
+
+                                                         The CORR Procedure
+
+              6  Variables:    tpm_nsc1       tpm_nsc2       fpkm_nsc1      fpkm_nsc2      post_mean_nsc1 post_mean_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                  Variable                 N          Mean       Std Dev           Sum       Minimum       Maximum
+
+                  tpm_nsc1             14734      67.87022     425.23271       1000000             0         16833
+                  tpm_nsc2             14734      67.87025     429.96965       1000000             0         22198
+                  fpkm_nsc1            14734      52.51871     329.04985        773811             0         13026
+                  fpkm_nsc2            14734      51.31855     325.11189        756127             0         16785
+                  post_mean_nsc1       14734          3770         22067      55552835             0       1299370
+                  post_mean_nsc2       14734          2301         13752      33908768             0       1021990
+
+
+                                            Pearson Correlation Coefficients, N = 14734 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                                                 post_         post_
+                                                                                                 mean_         mean_
+                                    tpm_nsc1      tpm_nsc2      fpkm_nsc1      fpkm_nsc2          nsc1          nsc2
+
+                tpm_nsc1             1.00000       0.96559        1.00000        0.96559       0.83575       0.79620
+                                                    <.0001         <.0001         <.0001        <.0001        <.0001
+
+                tpm_nsc2             0.96559       1.00000        0.96559        1.00000       0.82303       0.85197
+                                      <.0001                       <.0001         <.0001        <.0001        <.0001
+
+                fpkm_nsc1            1.00000       0.96559        1.00000        0.96559       0.83575       0.79620
+                                      <.0001        <.0001                        <.0001        <.0001        <.0001
+
+                fpkm_nsc2            0.96559       1.00000        0.96559        1.00000       0.82303       0.85197
+                                      <.0001        <.0001         <.0001                       <.0001        <.0001
+
+                post_mean_nsc1       0.83575       0.82303        0.83575        0.82303       1.00000       0.95653
+                                      <.0001        <.0001         <.0001         <.0001                      <.0001
+
+                post_mean_nsc2       0.79620       0.85197        0.79620        0.85197       0.95653       1.00000
+                                      <.0001        <.0001         <.0001         <.0001        <.0001              
+                                                           The SAS System                             19:30 Monday, May 29, 2017   8
+
+                                                         The CORR Procedure
+
+              6  Variables:    tpm_nsc1       tpm_nsc2       fpkm_nsc1      fpkm_nsc2      post_mean_nsc1 post_mean_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                  Variable                 N          Mean       Std Dev        Median       Minimum       Maximum
+
+                  tpm_nsc1             14734      67.87022     425.23271       4.07000             0         16833
+                  tpm_nsc2             14734      67.87025     429.96965       4.50000             0         22198
+                  fpkm_nsc1            14734      52.51871     329.04985       3.15000             0         13026
+                  fpkm_nsc2            14734      51.31855     325.11189       3.40000             0         16785
+                  post_mean_nsc1       14734          3770         22067     420.03500             0       1299370
+                  post_mean_nsc2       14734          2301         13752     274.11000             0       1021990
+
+
+                                           Spearman Correlation Coefficients, N = 14734 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                                                 post_         post_
+                                                                                                 mean_         mean_
+                                    tpm_nsc1      tpm_nsc2      fpkm_nsc1      fpkm_nsc2          nsc1          nsc2
+
+                tpm_nsc1             1.00000       0.95207        0.99998        0.95208       0.92628       0.89026
+                                                    <.0001         <.0001         <.0001        <.0001        <.0001
+
+                tpm_nsc2             0.95207       1.00000        0.95206        0.99999       0.89708       0.91604
+                                      <.0001                       <.0001         <.0001        <.0001        <.0001
+
+                fpkm_nsc1            0.99998       0.95206        1.00000        0.95208       0.92627       0.89025
+                                      <.0001        <.0001                        <.0001        <.0001        <.0001
+
+                fpkm_nsc2            0.95208       0.99999        0.95208        1.00000       0.89707       0.91603
+                                      <.0001        <.0001         <.0001                       <.0001        <.0001
+
+                post_mean_nsc1       0.92628       0.89708        0.92627        0.89707       1.00000       0.97442
+                                      <.0001        <.0001         <.0001         <.0001                      <.0001
+
+                post_mean_nsc2       0.89026       0.91604        0.89025        0.91603       0.97442       1.00000
+                                      <.0001        <.0001         <.0001         <.0001        <.0001              
+                                                           The SAS System                             19:30 Monday, May 29, 2017   9
+
+                                                         The CORR Procedure
+
+              6  Variables:    tpm_nsc1       tpm_nsc2       fpkm_nsc1      fpkm_nsc2      post_mean_nsc1 post_mean_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                  Variable                 N          Mean       Std Dev           Sum       Minimum       Maximum
+
+                  tpm_nsc1             34622      28.88337     269.67865       1000000             0         16272
+                  tpm_nsc2             34622      28.88336     272.55061       1000000             0         21395
+                  fpkm_nsc1            34622      21.70629     202.66782        751515             0         12229
+                  fpkm_nsc2            34622      21.11842     199.27857        731162             0         15643
+                  post_mean_nsc1       34622          1709         14367      59158898             0       1299064
+                  post_mean_nsc2       34622          1051          9035      36372254             0       1021705
+
+
+                                            Pearson Correlation Coefficients, N = 34622 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                                                 post_         post_
+                                                                                                 mean_         mean_
+                                    tpm_nsc1      tpm_nsc2      fpkm_nsc1      fpkm_nsc2          nsc1          nsc2
+
+                tpm_nsc1             1.00000       0.96645        1.00000        0.96645       0.83937       0.79771
+                                                    <.0001         <.0001         <.0001        <.0001        <.0001
+
+                tpm_nsc2             0.96645       1.00000        0.96645        1.00000       0.83019       0.85459
+                                      <.0001                       <.0001         <.0001        <.0001        <.0001
+
+                fpkm_nsc1            1.00000       0.96645        1.00000        0.96645       0.83937       0.79771
+                                      <.0001        <.0001                        <.0001        <.0001        <.0001
+
+                fpkm_nsc2            0.96645       1.00000        0.96645        1.00000       0.83019       0.85459
+                                      <.0001        <.0001         <.0001                       <.0001        <.0001
+
+                post_mean_nsc1       0.83937       0.83019        0.83937        0.83019       1.00000       0.95826
+                                      <.0001        <.0001         <.0001         <.0001                      <.0001
+
+                post_mean_nsc2       0.79771       0.85459        0.79771        0.85459       0.95826       1.00000
+                                      <.0001        <.0001         <.0001         <.0001        <.0001              
+                                                           The SAS System                             19:30 Monday, May 29, 2017  10
+
+                                                         The CORR Procedure
+
+              6  Variables:    tpm_nsc1       tpm_nsc2       fpkm_nsc1      fpkm_nsc2      post_mean_nsc1 post_mean_nsc2 
+
+
+                                                         Simple Statistics
+ 
+                  Variable                 N          Mean       Std Dev        Median       Minimum       Maximum
+
+                  tpm_nsc1             34622      28.88337     269.67865       0.46000             0         16272
+                  tpm_nsc2             34622      28.88336     272.55061       0.48000             0         21395
+                  fpkm_nsc1            34622      21.70629     202.66782       0.35000             0         12229
+                  fpkm_nsc2            34622      21.11842     199.27857       0.35000             0         15643
+                  post_mean_nsc1       34622          1709         14367      69.72500             0       1299064
+                  post_mean_nsc2       34622          1051          9035      50.82500             0       1021705
+
+
+                                           Spearman Correlation Coefficients, N = 34622 
+                                                     Prob > |r| under H0: Rho=0
+ 
+                                                                                                 post_         post_
+                                                                                                 mean_         mean_
+                                    tpm_nsc1      tpm_nsc2      fpkm_nsc1      fpkm_nsc2          nsc1          nsc2
+
+                tpm_nsc1             1.00000       0.88494        0.99982        0.88500       0.86032       0.79332
+                                                    <.0001         <.0001         <.0001        <.0001        <.0001
+
+                tpm_nsc2             0.88494       1.00000        0.88489        0.99985       0.80290       0.83064
+                                      <.0001                       <.0001         <.0001        <.0001        <.0001
+
+                fpkm_nsc1            0.99982       0.88489        1.00000        0.88497       0.86039       0.79340
+                                      <.0001        <.0001                        <.0001        <.0001        <.0001
+
+                fpkm_nsc2            0.88500       0.99985        0.88497        1.00000       0.80303       0.83073
+                                      <.0001        <.0001         <.0001                       <.0001        <.0001
+
+                post_mean_nsc1       0.86032       0.80290        0.86039        0.80303       1.00000       0.95531
+                                      <.0001        <.0001         <.0001         <.0001                      <.0001
+
+                post_mean_nsc2       0.79332       0.83064        0.79340        0.83073       0.95531       1.00000
+                                      <.0001        <.0001         <.0001         <.0001        <.0001              

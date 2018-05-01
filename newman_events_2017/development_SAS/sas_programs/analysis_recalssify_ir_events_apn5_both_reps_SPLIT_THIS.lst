@@ -1,0 +1,205 @@
+                                                           The SAS System                             02:48 Sunday, June 4, 2017   1
+
+                                                         The FREQ Procedure
+
+                                        Table of flag_ir_from_5prime by flag_ir_from_3prime
+
+                                                flag_ir_from_5prime
+                                                          flag_ir_from_3prime
+
+                                                Frequency|
+                                                Percent  |
+                                                Row Pct  |
+                                                Col Pct  |       0|       1|  Total
+                                                ---------+--------+--------+
+                                                       0 |      0 |  78486 |  78486
+                                                         |   0.00 |  50.66 |  50.66
+                                                         |   0.00 | 100.00 |
+                                                         |   0.00 | 100.00 |
+                                                ---------+--------+--------+
+                                                       1 |  76448 |      0 |  76448
+                                                         |  49.34 |   0.00 |  49.34
+                                                         | 100.00 |   0.00 |
+                                                         | 100.00 |   0.00 |
+                                                ---------+--------+--------+
+                                                Total       76448    78486   154934
+                                                            49.34    50.66   100.00
+                                                           The SAS System                             02:48 Sunday, June 4, 2017   2
+
+                                                        The MEANS Procedure
+
+                                                Analysis Variable : ir_to_fus_ratio 
+ 
+                                    N            Mean         Std Dev         Minimum         Maximum
+                               ----------------------------------------------------------------------
+                                20197      14.8755716     551.0406224     0.000029672        55801.17
+                               ----------------------------------------------------------------------
+                                                           The SAS System                             02:48 Sunday, June 4, 2017   3
+
+                                                                             ir_to_
+                                                Obs    _TYPE_    _FREQ_    fus_ratio
+
+                                                 1        0       20197     0.021625
+                                                           The SAS System                             02:48 Sunday, June 4, 2017   4
+
+                                                         The FREQ Procedure
+
+                                 flag_ir_event_                             Cumulative    Cumulative
+                                     analyzable    Frequency     Percent     Frequency      Percent
+                               ---------------------------------------------------------------------
+                                              0      136124       99.63        136124        99.63  
+                                              1         505        0.37        136629       100.00  
+                                                           The SAS System                             02:48 Sunday, June 4, 2017   5
+
+                                                         The FREQ Procedure
+
+                                           Table of flag_ir_ratio_ge_median by ir_apn_bin
+
+                                                flag_ir_ratio_ge_median
+                                                          ir_apn_bin
+
+                                                Frequency|
+                                                Percent  |
+                                                Row Pct  |
+                                                Col Pct  |       3|       4|  Total
+                                                ---------+--------+--------+
+                                                       0 |     74 |     68 |    142
+                                                         |  14.65 |  13.47 |  28.12
+                                                         |  52.11 |  47.89 |
+                                                         |  38.14 |  21.86 |
+                                                ---------+--------+--------+
+                                                       1 |    120 |    243 |    363
+                                                         |  23.76 |  48.12 |  71.88
+                                                         |  33.06 |  66.94 |
+                                                         |  61.86 |  78.14 |
+                                                ---------+--------+--------+
+                                                Total         194      311      505
+                                                            38.42    61.58   100.00
+
+
+                                         Table of flag_ir_ratio_ge_median by intron_apn_bin
+
+                                       flag_ir_ratio_ge_median     intron_apn_bin
+
+                                       Frequency|
+                                       Percent  |
+                                       Row Pct  |
+                                       Col Pct  |       1|       2|       3|       4|  Total
+                                       ---------+--------+--------+--------+--------+
+                                              0 |     12 |     22 |     21 |     87 |    142
+                                                |   2.38 |   4.36 |   4.16 |  17.23 |  28.12
+                                                |   8.45 |  15.49 |  14.79 |  61.27 |
+                                                |  14.63 |  29.33 |  35.59 |  30.10 |
+                                       ---------+--------+--------+--------+--------+
+                                              1 |     70 |     53 |     38 |    202 |    363
+                                                |  13.86 |  10.50 |   7.52 |  40.00 |  71.88
+                                                |  19.28 |  14.60 |  10.47 |  55.65 |
+                                                |  85.37 |  70.67 |  64.41 |  69.90 |
+                                       ---------+--------+--------+--------+--------+
+                                       Total          82       75       59      289      505
+                                                   16.24    14.85    11.68    57.23   100.00
+
+
+                                                           The SAS System                             02:48 Sunday, June 4, 2017   6
+
+                                                         The FREQ Procedure
+
+                                               Table of ir_apn_bin by intron_apn_bin
+
+                                       ir_apn_bin     intron_apn_bin
+
+                                       Frequency|
+                                       Percent  |
+                                       Row Pct  |
+                                       Col Pct  |       1|       2|       3|       4|  Total
+                                       ---------+--------+--------+--------+--------+
+                                              3 |     25 |     29 |     38 |    102 |    194
+                                                |   4.95 |   5.74 |   7.52 |  20.20 |  38.42
+                                                |  12.89 |  14.95 |  19.59 |  52.58 |
+                                                |  30.49 |  38.67 |  64.41 |  35.29 |
+                                       ---------+--------+--------+--------+--------+
+                                              4 |     57 |     46 |     21 |    187 |    311
+                                                |  11.29 |   9.11 |   4.16 |  37.03 |  61.58
+                                                |  18.33 |  14.79 |   6.75 |  60.13 |
+                                                |  69.51 |  61.33 |  35.59 |  64.71 |
+                                       ---------+--------+--------+--------+--------+
+                                       Total          82       75       59      289      505
+                                                   16.24    14.85    11.68    57.23   100.00
+                                                           The SAS System                             02:48 Sunday, June 4, 2017   7
+
+                                                         The FREQ Procedure
+
+                                        Table of flag_ir_from_5prime by flag_ir_from_3prime
+
+                                                flag_ir_from_5prime
+                                                          flag_ir_from_3prime
+
+                                                Frequency|
+                                                Percent  |
+                                                Row Pct  |
+                                                Col Pct  |       0|       1|  Total
+                                                ---------+--------+--------+
+                                                       0 |      0 |  78486 |  78486
+                                                         |   0.00 |  50.66 |  50.66
+                                                         |   0.00 | 100.00 |
+                                                         |   0.00 | 100.00 |
+                                                ---------+--------+--------+
+                                                       1 |  76448 |      0 |  76448
+                                                         |  49.34 |   0.00 |  49.34
+                                                         | 100.00 |   0.00 |
+                                                         | 100.00 |   0.00 |
+                                                ---------+--------+--------+
+                                                Total       76448    78486   154934
+                                                            49.34    50.66   100.00
+                                                           The SAS System                             02:48 Sunday, June 4, 2017   8
+
+                                                               flag_
+                              flag_low_    flag_possible_    possible_    flag_possible_
+                       Obs    expressed      novel_donor         ir         unprocessed     COUNT    PERCENT
+
+                        1         0               0              0               1           334     66.1386
+                        2         0               0              1               0           123     24.3564
+                        3         0               1              0               1            37      7.3267
+                        4         0               1              1               0            11      2.1782
+                                                           The SAS System                             02:48 Sunday, June 4, 2017   9
+
+                                                         The FREQ Procedure
+
+                                          Table of flag_splicing_on_ge5 by flag_fusion_on
+
+                                                flag_splicing_on_ge5
+                                                          flag_fusion_on
+
+                                                Frequency|
+                                                Percent  |
+                                                Row Pct  |
+                                                Col Pct  |       0|       1|  Total
+                                                ---------+--------+--------+
+                                                       0 |  93574 |  42176 | 135750
+                                                         |  68.49 |  30.87 |  99.36
+                                                         |  68.93 |  31.07 |
+                                                         |  99.60 |  98.82 |
+                                                ---------+--------+--------+
+                                                       1 |    374 |    505 |    879
+                                                         |   0.27 |   0.37 |   0.64
+                                                         |  42.55 |  57.45 |
+                                                         |   0.40 |   1.18 |
+                                                ---------+--------+--------+
+                                                Total       93948    42681   136629
+                                                            68.76    31.24   100.00
+                                                           The SAS System                             02:48 Sunday, June 4, 2017  10
+
+                                                                           flag_
+                        flag_low_    flag_possible_    flag_possible_    possible_    flag_pb_
+                 Obs    expressed      unprocessed       novel_donor         ir          hit      COUNT    PERCENT
+
+                   1        0               0                 0              1            0        117     23.1683
+                   2        0               0                 0              1            1          6      1.1881
+                   3        0               0                 1              1            0          8      1.5842
+                   4        0               0                 1              1            1          3      0.5941
+                   5        0               1                 0              0            0        325     64.3564
+                   6        0               1                 0              0            1          9      1.7822
+                   7        0               1                 1              0            0         34      6.7327
+                   8        0               1                 1              0            1          3      0.5941
+                   9        1               .                 .              .            0        172       .    
+                  10        1               .                 .              .            1        202       .    

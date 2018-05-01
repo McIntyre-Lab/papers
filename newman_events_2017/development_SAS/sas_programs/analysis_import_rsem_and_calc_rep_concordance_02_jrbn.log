@@ -1,0 +1,1186 @@
+1                                                          The SAS System                             23:27 Wednesday, June 28, 2017
+
+NOTE: Unable to open SASUSER.REGSTRY. WORK.REGSTRY will be opened instead.
+NOTE: All registry changes will be lost at the end of the session.
+
+WARNING: Unable to copy SASUSER registry to WORK registry. Because of this, you will not see registry customizations during this 
+         session.
+NOTE: Unable to open SASUSER.PROFILE. WORK.PROFILE will be opened instead.
+NOTE: All profile changes will be lost at the end of the session.
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to UNIVERSITY OF FLORIDA - SFA T&R, Site 70095659.
+NOTE: This session is executing on the Linux 4.4.0-81-generic (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 4.4.0-81-generic #104~14.04.1-Ubuntu SMP Wed Jun 14 12:45:52 UTC 2017 x86_64 Unrecognized Linux Distribution 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.13 seconds
+      cpu time            0.03 seconds
+      
+1          ods listing; ods html close;
+2          libname event "!MCLAB/event_analysis/sas_data";
+NOTE: Libref EVENT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/sas_data
+3          
+4          /* Macro to import and save RSEM results, and calculate correlation between replicates */
+5          
+6          %macro rsem(datain,outname);
+7          
+2                                                          The SAS System                             23:27 Wednesday, June 28, 2017
+
+8          
+9          /* Import data */
+10         proc import datafile="!MCLAB/event_analysis/analysis_output/rsem_output/&datain._NSC1.isoforms.results" out=rsem_NSC1
+10       ! dbms=tab replace;
+11         guessingrows=128632;
+12         run;
+13         
+14         proc import datafile="!MCLAB/event_analysis/analysis_output/rsem_output/&datain._NSC2.isoforms.results" out=rsem_NSC2
+14       ! dbms=tab replace;
+15         guessingrows=128632;
+16         run;
+17         
+18         
+19         
+20         data rsem_NSC1_2;
+21           set rsem_NSC1;
+22           keep transcript_id tpm fpkm posterior_mean_count;
+23           rename tpm=tpm_nsc1
+24                  fpkm=fpkm_nsc1
+25                  posterior_mean_count=post_mean_nsc1;
+26         run;
+27         
+28         data rsem_NSC2_2;
+29           set rsem_NSC2;
+30           keep transcript_id tpm fpkm posterior_mean_count;
+31           rename tpm=tpm_nsc2
+32                  fpkm=fpkm_nsc2
+33                  posterior_mean_count=post_mean_nsc2;
+34         run;
+35         
+36         proc sort data=rsem_NSC1_2;
+37            by transcript_id;
+38         proc sort data=rsem_NSC2_2;
+39            by transcript_id;
+40         run;
+41         
+42         data rsem_NSC;
+43           merge rsem_NSC1_2 (in=in1) rsem_NSC2_2 (in=in2);
+44           by transcript_id;
+45           if in1 then flag_in_rep1=1;
+46                  else do;
+47                     flag_in_rep1=0;
+48                     tpm_nsc1=0;
+49                     fpkm_nsc1=0;
+50                     post_mean_nsc1=0;
+51                     end;
+52           if in2 then flag_in_rep2=1;
+53           	     else do;
+54                     flag_in_rep2=0;
+55                     tpm_nsc2=0;
+56                     fpkm_nsc2=0;
+57                     post_mean_nsc2=0;
+58                     end;
+59         run;
+60         
+61         data rsem_NSC_2;
+62            set rsem_NSC;
+63            log_tpm_nsc1=log(tpm_nsc1+1);
+3                                                          The SAS System                             23:27 Wednesday, June 28, 2017
+
+64            log_tpm_nsc2=log(tpm_nsc2+1);
+65            log_fpkm_nsc1=log(fpkm_nsc1+1);
+66            log_fpkm_nsc2=log(fpkm_nsc2+1);
+67         run;
+68         
+69         proc corr data=rsem_NSC pearson;
+70           var fpkm_nsc1 fpkm_nsc2 log_fpkm_nsc1 log_fpkm_nsc2;
+71         run;
+72         
+73         proc corr data=rsem_NSC spearman;
+74           var fpkm_nsc1 fpkm_nsc2 log_fpkm_nsc1 log_fpkm_nsc2;
+75         run;
+76         
+77         /* Make permenant */
+78         
+79         data event.rsem_&outname.;
+80             set rsem_NSC;
+81         run;
+82         
+83         data rsem_NSC;
+84         set event.rsem_&outname.;
+85            log_tpm_nsc1=log(tpm_nsc1+1);
+86            log_tpm_nsc2=log(tpm_nsc2+1);
+87            log_fpkm_nsc1=log(fpkm_nsc1+1);
+88            log_fpkm_nsc2=log(fpkm_nsc2+1);
+89            mean_tpm=(tpm_nsc1+tpm_nsc2)/2;
+90         run;
+91         
+92         
+93         proc corr data=rsem_NSC pearson;
+94           var tpm_nsc1 tpm_nsc2 log_tpm_nsc1 log_tpm_nsc2;
+95         run;
+96         
+97         proc corr data=rsem_NSC spearman;
+98           var tpm_nsc1 tpm_nsc2 log_tpm_nsc1 log_tpm_nsc2;
+99         run;
+100        
+101        proc print data=rsem_NSC(keep=transcript_id mean_tpm);
+102        run;
+103        
+104        
+105        
+106        %mend;
+107        
+108        
+109        *%rsem(refseq_mm10,refseq_all);
+110        *%rsem(pacbio_mm10,pacbio_all);
+111        *%rsem(refseq_mm10_exp_transcripts,events_exp_any);
+112        *%rsem(refseq_mm10_exp_transcripts_100perc_dtct,events_exp_100perc);
+113        *%rsem(refseq_mm10_exp_transcripts_75perc_dtct,events_exp_75perc);
+114        *%rsem(refseq_mm10_exp_transcripts_75perc_dtct_apn5,events_exp_75perc_apn5);
+115        *%rsem(refseq_mm10_exp_transcripts_75perc_dtct_apn10,events_exp_75perc_apn10);
+116        *%rsem(refseq_mm10_exp_transcripts_100perc_dtct_apn5,events_exp_100perc_apn5);
+117        *%rsem(refseq_mm10_exp_transcripts_100perc_dtct_apn10,events_exp_100perc_apn10);
+118        *%rsem(refseq_mm10_exp_transcripts_50perc_dtct,events_exp_50perc);
+119        *%rsem(refseq_mm10_exp_transcripts_50perc_dtct_apn5,events_exp_50perc_apn5);
+120        *%rsem(refseq_mm10_exp_transcripts_50perc_dtct_apn10,events_exp_50perc_apn10);
+121        *%rsem(pacbio_mm10_apn0,pacbio_apn0);
+4                                                          The SAS System                             23:27 Wednesday, June 28, 2017
+
+122        *%rsem(pacbio_mm10_apn5,pacbio_apn5);
+123        *%rsem(pacbio_mm10_apn10,pacbio_apn10);
+124        
+125        %rsem(cav1_set1,cav1_set1);
+
+Name posterior_standard_deviation_of_count truncated to posterior_standard_deviation_of_.
+Name TPM_coefficient_of_quartile_variation truncated to TPM_coefficient_of_quartile_vari.
+Name FPKM_coefficient_of_quartile_variation truncated to FPKM_coefficient_of_quartile_var.
+Problems were detected with provided names.  See LOG. 
+126         /**********************************************************************
+127         *   PRODUCT:   SAS
+128         *   VERSION:   9.4
+129         *   CREATOR:   External File Interface
+130         *   DATE:      28JUN17
+131         *   DESC:      Generated SAS Datastep Code
+132         *   TEMPLATE SOURCE:  (None Specified.)
+133         ***********************************************************************/
+134            data WORK.RSEM_NSC1    ;
+135            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+136            infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set1_NSC1.isoforms.results' delimiter='09'x MISSOVER
+136      ! DSD lrecl=32767 firstobs=2 ;
+137               informat transcript_id $12. ;
+138               informat gene_id $4. ;
+139               informat length best32. ;
+140               informat effective_length best32. ;
+141               informat expected_count best32. ;
+142               informat TPM best32. ;
+143               informat FPKM best32. ;
+144               informat IsoPct best32. ;
+145               informat posterior_mean_count best32. ;
+146               informat posterior_standard_deviation_of_ best32. ;
+147               informat pme_TPM best32. ;
+148               informat pme_FPKM best32. ;
+149               informat IsoPct_from_pme_TPM best32. ;
+150               informat TPM_ci_lower_bound best32. ;
+151               informat TPM_ci_upper_bound best32. ;
+152               informat TPM_coefficient_of_quartile_vari best32. ;
+153               informat FPKM_ci_lower_bound best32. ;
+154               informat FPKM_ci_upper_bound best32. ;
+155               informat FPKM_coefficient_of_quartile_var best32. ;
+156               format transcript_id $12. ;
+157               format gene_id $4. ;
+158               format length best12. ;
+159               format effective_length best12. ;
+160               format expected_count best12. ;
+161               format TPM best12. ;
+162               format FPKM best12. ;
+163               format IsoPct best12. ;
+164               format posterior_mean_count best12. ;
+165               format posterior_standard_deviation_of_ best12. ;
+166               format pme_TPM best12. ;
+167               format pme_FPKM best12. ;
+168               format IsoPct_from_pme_TPM best12. ;
+169               format TPM_ci_lower_bound best12. ;
+170               format TPM_ci_upper_bound best12. ;
+171               format TPM_coefficient_of_quartile_vari best12. ;
+172               format FPKM_ci_lower_bound best12. ;
+173               format FPKM_ci_upper_bound best12. ;
+5                                                          The SAS System                             23:27 Wednesday, June 28, 2017
+
+174               format FPKM_coefficient_of_quartile_var best12. ;
+175            input
+176                        transcript_id $
+177                        gene_id $
+178                        length
+179                        effective_length
+180                        expected_count
+181                        TPM
+182                        FPKM
+183                        IsoPct
+184                        posterior_mean_count
+185                        posterior_standard_deviation_of_
+186                        pme_TPM
+187                        pme_FPKM
+188                        IsoPct_from_pme_TPM
+189                        TPM_ci_lower_bound
+190                        TPM_ci_upper_bound
+191                        TPM_coefficient_of_quartile_vari
+192                        FPKM_ci_lower_bound
+193                        FPKM_ci_upper_bound
+194                        FPKM_coefficient_of_quartile_var
+195            ;
+196            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+197            run;
+
+NOTE: The infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set1_NSC1.isoforms.results' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/analysis_output/rsem_output/cav1_set1_NSC1.isoforms.results,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Wed Jun 28 23:21:22 2017,
+      File Size (bytes)=1918
+
+NOTE: 11 records were read from the infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set1_NSC1.isoforms.results'.
+      The minimum record length was 134.
+      The maximum record length was 153.
+NOTE: The data set WORK.RSEM_NSC1 has 11 observations and 19 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.01 seconds
+      
+
+11 rows created in WORK.RSEM_NSC1 from !MCLAB/event_analysis/analysis_output/rsem_output/cav1_set1_NSC1.isoforms.results.
+  
+  
+  
+NOTE: WORK.RSEM_NSC1 data set was successfully created.
+NOTE: The data set WORK.RSEM_NSC1 has 11 observations and 19 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.14 seconds
+      cpu time            0.07 seconds
+      
+
+
+Name posterior_standard_deviation_of_count truncated to posterior_standard_deviation_of_.
+Name TPM_coefficient_of_quartile_variation truncated to TPM_coefficient_of_quartile_vari.
+Name FPKM_coefficient_of_quartile_variation truncated to FPKM_coefficient_of_quartile_var.
+Problems were detected with provided names.  See LOG. 
+198         /**********************************************************************
+6                                                          The SAS System                             23:27 Wednesday, June 28, 2017
+
+199         *   PRODUCT:   SAS
+200         *   VERSION:   9.4
+201         *   CREATOR:   External File Interface
+202         *   DATE:      28JUN17
+203         *   DESC:      Generated SAS Datastep Code
+204         *   TEMPLATE SOURCE:  (None Specified.)
+205         ***********************************************************************/
+206            data WORK.RSEM_NSC2    ;
+207            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+208            infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set1_NSC2.isoforms.results' delimiter='09'x MISSOVER
+208      ! DSD lrecl=32767 firstobs=2 ;
+209               informat transcript_id $12. ;
+210               informat gene_id $4. ;
+211               informat length best32. ;
+212               informat effective_length best32. ;
+213               informat expected_count best32. ;
+214               informat TPM best32. ;
+215               informat FPKM best32. ;
+216               informat IsoPct best32. ;
+217               informat posterior_mean_count best32. ;
+218               informat posterior_standard_deviation_of_ best32. ;
+219               informat pme_TPM best32. ;
+220               informat pme_FPKM best32. ;
+221               informat IsoPct_from_pme_TPM best32. ;
+222               informat TPM_ci_lower_bound best32. ;
+223               informat TPM_ci_upper_bound best32. ;
+224               informat TPM_coefficient_of_quartile_vari best32. ;
+225               informat FPKM_ci_lower_bound best32. ;
+226               informat FPKM_ci_upper_bound best32. ;
+227               informat FPKM_coefficient_of_quartile_var best32. ;
+228               format transcript_id $12. ;
+229               format gene_id $4. ;
+230               format length best12. ;
+231               format effective_length best12. ;
+232               format expected_count best12. ;
+233               format TPM best12. ;
+234               format FPKM best12. ;
+235               format IsoPct best12. ;
+236               format posterior_mean_count best12. ;
+237               format posterior_standard_deviation_of_ best12. ;
+238               format pme_TPM best12. ;
+239               format pme_FPKM best12. ;
+240               format IsoPct_from_pme_TPM best12. ;
+241               format TPM_ci_lower_bound best12. ;
+242               format TPM_ci_upper_bound best12. ;
+243               format TPM_coefficient_of_quartile_vari best12. ;
+244               format FPKM_ci_lower_bound best12. ;
+245               format FPKM_ci_upper_bound best12. ;
+246               format FPKM_coefficient_of_quartile_var best12. ;
+247            input
+248                        transcript_id $
+249                        gene_id $
+250                        length
+251                        effective_length
+252                        expected_count
+253                        TPM
+254                        FPKM
+255                        IsoPct
+7                                                          The SAS System                             23:27 Wednesday, June 28, 2017
+
+256                        posterior_mean_count
+257                        posterior_standard_deviation_of_
+258                        pme_TPM
+259                        pme_FPKM
+260                        IsoPct_from_pme_TPM
+261                        TPM_ci_lower_bound
+262                        TPM_ci_upper_bound
+263                        TPM_coefficient_of_quartile_vari
+264                        FPKM_ci_lower_bound
+265                        FPKM_ci_upper_bound
+266                        FPKM_coefficient_of_quartile_var
+267            ;
+268            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+269            run;
+
+NOTE: The infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set1_NSC2.isoforms.results' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/analysis_output/rsem_output/cav1_set1_NSC2.isoforms.results,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Wed Jun 28 23:21:22 2017,
+      File Size (bytes)=1898
+
+NOTE: 11 records were read from the infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set1_NSC2.isoforms.results'.
+      The minimum record length was 132.
+      The maximum record length was 149.
+NOTE: The data set WORK.RSEM_NSC2 has 11 observations and 19 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+11 rows created in WORK.RSEM_NSC2 from !MCLAB/event_analysis/analysis_output/rsem_output/cav1_set1_NSC2.isoforms.results.
+  
+  
+  
+NOTE: WORK.RSEM_NSC2 data set was successfully created.
+NOTE: The data set WORK.RSEM_NSC2 has 11 observations and 19 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.10 seconds
+      cpu time            0.06 seconds
+      
+
+
+NOTE: There were 11 observations read from the data set WORK.RSEM_NSC1.
+NOTE: The data set WORK.RSEM_NSC1_2 has 11 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 11 observations read from the data set WORK.RSEM_NSC2.
+NOTE: The data set WORK.RSEM_NSC2_2 has 11 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+8                                                          The SAS System                             23:27 Wednesday, June 28, 2017
+
+
+NOTE: There were 11 observations read from the data set WORK.RSEM_NSC1_2.
+NOTE: The data set WORK.RSEM_NSC1_2 has 11 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 11 observations read from the data set WORK.RSEM_NSC2_2.
+NOTE: The data set WORK.RSEM_NSC2_2 has 11 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 11 observations read from the data set WORK.RSEM_NSC1_2.
+NOTE: There were 11 observations read from the data set WORK.RSEM_NSC2_2.
+NOTE: The data set WORK.RSEM_NSC has 11 observations and 9 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 11 observations read from the data set WORK.RSEM_NSC.
+NOTE: The data set WORK.RSEM_NSC_2 has 11 observations and 13 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+ERROR: Variable LOG_FPKM_NSC1 not found.
+ERROR: Variable LOG_FPKM_NSC2 not found.
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+ERROR: Variable LOG_FPKM_NSC1 not found.
+ERROR: Variable LOG_FPKM_NSC2 not found.
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+
+NOTE: There were 11 observations read from the data set WORK.RSEM_NSC.
+NOTE: The data set EVENT.RSEM_CAV1_SET1 has 11 observations and 9 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.14 seconds
+9                                                          The SAS System                             23:27 Wednesday, June 28, 2017
+
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 11 observations read from the data set EVENT.RSEM_CAV1_SET1.
+NOTE: The data set WORK.RSEM_NSC has 11 observations and 14 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: The PROCEDURE CORR printed page 1.
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: The PROCEDURE CORR printed page 2.
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 11 observations read from the data set WORK.RSEM_NSC.
+NOTE: The PROCEDURE PRINT printed page 3.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+270        %rsem(cav1_set2,cav1_set2);
+
+Name posterior_standard_deviation_of_count truncated to posterior_standard_deviation_of_.
+Name TPM_coefficient_of_quartile_variation truncated to TPM_coefficient_of_quartile_vari.
+Name FPKM_coefficient_of_quartile_variation truncated to FPKM_coefficient_of_quartile_var.
+Problems were detected with provided names.  See LOG. 
+271         /**********************************************************************
+272         *   PRODUCT:   SAS
+273         *   VERSION:   9.4
+274         *   CREATOR:   External File Interface
+275         *   DATE:      28JUN17
+276         *   DESC:      Generated SAS Datastep Code
+277         *   TEMPLATE SOURCE:  (None Specified.)
+278         ***********************************************************************/
+279            data WORK.RSEM_NSC1    ;
+280            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+281            infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set2_NSC1.isoforms.results' delimiter='09'x MISSOVER
+281      ! DSD lrecl=32767 firstobs=2 ;
+282               informat transcript_id $12. ;
+283               informat gene_id $4. ;
+284               informat length best32. ;
+285               informat effective_length best32. ;
+286               informat expected_count best32. ;
+287               informat TPM best32. ;
+288               informat FPKM best32. ;
+10                                                         The SAS System                             23:27 Wednesday, June 28, 2017
+
+289               informat IsoPct best32. ;
+290               informat posterior_mean_count best32. ;
+291               informat posterior_standard_deviation_of_ best32. ;
+292               informat pme_TPM best32. ;
+293               informat pme_FPKM best32. ;
+294               informat IsoPct_from_pme_TPM best32. ;
+295               informat TPM_ci_lower_bound best32. ;
+296               informat TPM_ci_upper_bound best32. ;
+297               informat TPM_coefficient_of_quartile_vari best32. ;
+298               informat FPKM_ci_lower_bound best32. ;
+299               informat FPKM_ci_upper_bound best32. ;
+300               informat FPKM_coefficient_of_quartile_var best32. ;
+301               format transcript_id $12. ;
+302               format gene_id $4. ;
+303               format length best12. ;
+304               format effective_length best12. ;
+305               format expected_count best12. ;
+306               format TPM best12. ;
+307               format FPKM best12. ;
+308               format IsoPct best12. ;
+309               format posterior_mean_count best12. ;
+310               format posterior_standard_deviation_of_ best12. ;
+311               format pme_TPM best12. ;
+312               format pme_FPKM best12. ;
+313               format IsoPct_from_pme_TPM best12. ;
+314               format TPM_ci_lower_bound best12. ;
+315               format TPM_ci_upper_bound best12. ;
+316               format TPM_coefficient_of_quartile_vari best12. ;
+317               format FPKM_ci_lower_bound best12. ;
+318               format FPKM_ci_upper_bound best12. ;
+319               format FPKM_coefficient_of_quartile_var best12. ;
+320            input
+321                        transcript_id $
+322                        gene_id $
+323                        length
+324                        effective_length
+325                        expected_count
+326                        TPM
+327                        FPKM
+328                        IsoPct
+329                        posterior_mean_count
+330                        posterior_standard_deviation_of_
+331                        pme_TPM
+332                        pme_FPKM
+333                        IsoPct_from_pme_TPM
+334                        TPM_ci_lower_bound
+335                        TPM_ci_upper_bound
+336                        TPM_coefficient_of_quartile_vari
+337                        FPKM_ci_lower_bound
+338                        FPKM_ci_upper_bound
+339                        FPKM_coefficient_of_quartile_var
+340            ;
+341            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+342            run;
+
+NOTE: The infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set2_NSC1.isoforms.results' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/analysis_output/rsem_output/cav1_set2_NSC1.isoforms.results,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+11                                                         The SAS System                             23:27 Wednesday, June 28, 2017
+
+      Access Permission=-rwx------,
+      Last Modified=Wed Jun 28 23:21:22 2017,
+      File Size (bytes)=1350
+
+NOTE: 7 records were read from the infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set2_NSC1.isoforms.results'.
+      The minimum record length was 137.
+      The maximum record length was 150.
+NOTE: The data set WORK.RSEM_NSC1 has 7 observations and 19 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+7 rows created in WORK.RSEM_NSC1 from !MCLAB/event_analysis/analysis_output/rsem_output/cav1_set2_NSC1.isoforms.results.
+  
+  
+  
+NOTE: WORK.RSEM_NSC1 data set was successfully created.
+NOTE: The data set WORK.RSEM_NSC1 has 7 observations and 19 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.09 seconds
+      cpu time            0.04 seconds
+      
+
+
+Name posterior_standard_deviation_of_count truncated to posterior_standard_deviation_of_.
+Name TPM_coefficient_of_quartile_variation truncated to TPM_coefficient_of_quartile_vari.
+Name FPKM_coefficient_of_quartile_variation truncated to FPKM_coefficient_of_quartile_var.
+Problems were detected with provided names.  See LOG. 
+343         /**********************************************************************
+344         *   PRODUCT:   SAS
+345         *   VERSION:   9.4
+346         *   CREATOR:   External File Interface
+347         *   DATE:      28JUN17
+348         *   DESC:      Generated SAS Datastep Code
+349         *   TEMPLATE SOURCE:  (None Specified.)
+350         ***********************************************************************/
+351            data WORK.RSEM_NSC2    ;
+352            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+353            infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set2_NSC2.isoforms.results' delimiter='09'x MISSOVER
+353      ! DSD lrecl=32767 firstobs=2 ;
+354               informat transcript_id $12. ;
+355               informat gene_id $4. ;
+356               informat length best32. ;
+357               informat effective_length best32. ;
+358               informat expected_count best32. ;
+359               informat TPM best32. ;
+360               informat FPKM best32. ;
+361               informat IsoPct best32. ;
+362               informat posterior_mean_count best32. ;
+363               informat posterior_standard_deviation_of_ best32. ;
+364               informat pme_TPM best32. ;
+365               informat pme_FPKM best32. ;
+366               informat IsoPct_from_pme_TPM best32. ;
+367               informat TPM_ci_lower_bound best32. ;
+368               informat TPM_ci_upper_bound best32. ;
+369               informat TPM_coefficient_of_quartile_vari best32. ;
+370               informat FPKM_ci_lower_bound best32. ;
+12                                                         The SAS System                             23:27 Wednesday, June 28, 2017
+
+371               informat FPKM_ci_upper_bound best32. ;
+372               informat FPKM_coefficient_of_quartile_var best32. ;
+373               format transcript_id $12. ;
+374               format gene_id $4. ;
+375               format length best12. ;
+376               format effective_length best12. ;
+377               format expected_count best12. ;
+378               format TPM best12. ;
+379               format FPKM best12. ;
+380               format IsoPct best12. ;
+381               format posterior_mean_count best12. ;
+382               format posterior_standard_deviation_of_ best12. ;
+383               format pme_TPM best12. ;
+384               format pme_FPKM best12. ;
+385               format IsoPct_from_pme_TPM best12. ;
+386               format TPM_ci_lower_bound best12. ;
+387               format TPM_ci_upper_bound best12. ;
+388               format TPM_coefficient_of_quartile_vari best12. ;
+389               format FPKM_ci_lower_bound best12. ;
+390               format FPKM_ci_upper_bound best12. ;
+391               format FPKM_coefficient_of_quartile_var best12. ;
+392            input
+393                        transcript_id $
+394                        gene_id $
+395                        length
+396                        effective_length
+397                        expected_count
+398                        TPM
+399                        FPKM
+400                        IsoPct
+401                        posterior_mean_count
+402                        posterior_standard_deviation_of_
+403                        pme_TPM
+404                        pme_FPKM
+405                        IsoPct_from_pme_TPM
+406                        TPM_ci_lower_bound
+407                        TPM_ci_upper_bound
+408                        TPM_coefficient_of_quartile_vari
+409                        FPKM_ci_lower_bound
+410                        FPKM_ci_upper_bound
+411                        FPKM_coefficient_of_quartile_var
+412            ;
+413            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+414            run;
+
+NOTE: The infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set2_NSC2.isoforms.results' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/analysis_output/rsem_output/cav1_set2_NSC2.isoforms.results,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Wed Jun 28 23:21:23 2017,
+      File Size (bytes)=1342
+
+NOTE: 7 records were read from the infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set2_NSC2.isoforms.results'.
+      The minimum record length was 136.
+      The maximum record length was 149.
+NOTE: The data set WORK.RSEM_NSC2 has 7 observations and 19 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+13                                                         The SAS System                             23:27 Wednesday, June 28, 2017
+
+      cpu time            0.00 seconds
+      
+
+7 rows created in WORK.RSEM_NSC2 from !MCLAB/event_analysis/analysis_output/rsem_output/cav1_set2_NSC2.isoforms.results.
+  
+  
+  
+NOTE: WORK.RSEM_NSC2 data set was successfully created.
+NOTE: The data set WORK.RSEM_NSC2 has 7 observations and 19 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.09 seconds
+      cpu time            0.06 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC1.
+NOTE: The data set WORK.RSEM_NSC1_2 has 7 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC2.
+NOTE: The data set WORK.RSEM_NSC2_2 has 7 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC1_2.
+NOTE: The data set WORK.RSEM_NSC1_2 has 7 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC2_2.
+NOTE: The data set WORK.RSEM_NSC2_2 has 7 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC1_2.
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC2_2.
+NOTE: The data set WORK.RSEM_NSC has 7 observations and 9 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC.
+NOTE: The data set WORK.RSEM_NSC_2 has 7 observations and 13 variables.
+14                                                         The SAS System                             23:27 Wednesday, June 28, 2017
+
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+ERROR: Variable LOG_FPKM_NSC1 not found.
+ERROR: Variable LOG_FPKM_NSC2 not found.
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+ERROR: Variable LOG_FPKM_NSC1 not found.
+ERROR: Variable LOG_FPKM_NSC2 not found.
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC.
+NOTE: The data set EVENT.RSEM_CAV1_SET2 has 7 observations and 9 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.10 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set EVENT.RSEM_CAV1_SET2.
+NOTE: The data set WORK.RSEM_NSC has 7 observations and 14 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: The PROCEDURE CORR printed page 4.
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: The PROCEDURE CORR printed page 5.
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC.
+NOTE: The PROCEDURE PRINT printed page 6.
+15                                                         The SAS System                             23:27 Wednesday, June 28, 2017
+
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+415        %rsem(cav1_set3,cav1_set3);
+
+Name posterior_standard_deviation_of_count truncated to posterior_standard_deviation_of_.
+Name TPM_coefficient_of_quartile_variation truncated to TPM_coefficient_of_quartile_vari.
+Name FPKM_coefficient_of_quartile_variation truncated to FPKM_coefficient_of_quartile_var.
+Problems were detected with provided names.  See LOG. 
+416         /**********************************************************************
+417         *   PRODUCT:   SAS
+418         *   VERSION:   9.4
+419         *   CREATOR:   External File Interface
+420         *   DATE:      28JUN17
+421         *   DESC:      Generated SAS Datastep Code
+422         *   TEMPLATE SOURCE:  (None Specified.)
+423         ***********************************************************************/
+424            data WORK.RSEM_NSC1    ;
+425            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+426            infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set3_NSC1.isoforms.results' delimiter='09'x MISSOVER
+426      ! DSD lrecl=32767 firstobs=2 ;
+427               informat transcript_id $12. ;
+428               informat gene_id $4. ;
+429               informat length best32. ;
+430               informat effective_length best32. ;
+431               informat expected_count best32. ;
+432               informat TPM best32. ;
+433               informat FPKM best32. ;
+434               informat IsoPct best32. ;
+435               informat posterior_mean_count best32. ;
+436               informat posterior_standard_deviation_of_ best32. ;
+437               informat pme_TPM best32. ;
+438               informat pme_FPKM best32. ;
+439               informat IsoPct_from_pme_TPM best32. ;
+440               informat TPM_ci_lower_bound best32. ;
+441               informat TPM_ci_upper_bound best32. ;
+442               informat TPM_coefficient_of_quartile_vari best32. ;
+443               informat FPKM_ci_lower_bound best32. ;
+444               informat FPKM_ci_upper_bound best32. ;
+445               informat FPKM_coefficient_of_quartile_var best32. ;
+446               format transcript_id $12. ;
+447               format gene_id $4. ;
+448               format length best12. ;
+449               format effective_length best12. ;
+450               format expected_count best12. ;
+451               format TPM best12. ;
+452               format FPKM best12. ;
+453               format IsoPct best12. ;
+454               format posterior_mean_count best12. ;
+455               format posterior_standard_deviation_of_ best12. ;
+456               format pme_TPM best12. ;
+457               format pme_FPKM best12. ;
+458               format IsoPct_from_pme_TPM best12. ;
+459               format TPM_ci_lower_bound best12. ;
+460               format TPM_ci_upper_bound best12. ;
+461               format TPM_coefficient_of_quartile_vari best12. ;
+16                                                         The SAS System                             23:27 Wednesday, June 28, 2017
+
+462               format FPKM_ci_lower_bound best12. ;
+463               format FPKM_ci_upper_bound best12. ;
+464               format FPKM_coefficient_of_quartile_var best12. ;
+465            input
+466                        transcript_id $
+467                        gene_id $
+468                        length
+469                        effective_length
+470                        expected_count
+471                        TPM
+472                        FPKM
+473                        IsoPct
+474                        posterior_mean_count
+475                        posterior_standard_deviation_of_
+476                        pme_TPM
+477                        pme_FPKM
+478                        IsoPct_from_pme_TPM
+479                        TPM_ci_lower_bound
+480                        TPM_ci_upper_bound
+481                        TPM_coefficient_of_quartile_vari
+482                        FPKM_ci_lower_bound
+483                        FPKM_ci_upper_bound
+484                        FPKM_coefficient_of_quartile_var
+485            ;
+486            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+487            run;
+
+NOTE: The infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set3_NSC1.isoforms.results' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/analysis_output/rsem_output/cav1_set3_NSC1.isoforms.results,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Wed Jun 28 23:21:23 2017,
+      File Size (bytes)=1363
+
+NOTE: 7 records were read from the infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set3_NSC1.isoforms.results'.
+      The minimum record length was 141.
+      The maximum record length was 153.
+NOTE: The data set WORK.RSEM_NSC1 has 7 observations and 19 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+7 rows created in WORK.RSEM_NSC1 from !MCLAB/event_analysis/analysis_output/rsem_output/cav1_set3_NSC1.isoforms.results.
+  
+  
+  
+NOTE: WORK.RSEM_NSC1 data set was successfully created.
+NOTE: The data set WORK.RSEM_NSC1 has 7 observations and 19 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.10 seconds
+      cpu time            0.06 seconds
+      
+
+
+Name posterior_standard_deviation_of_count truncated to posterior_standard_deviation_of_.
+Name TPM_coefficient_of_quartile_variation truncated to TPM_coefficient_of_quartile_vari.
+Name FPKM_coefficient_of_quartile_variation truncated to FPKM_coefficient_of_quartile_var.
+17                                                         The SAS System                             23:27 Wednesday, June 28, 2017
+
+Problems were detected with provided names.  See LOG. 
+488         /**********************************************************************
+489         *   PRODUCT:   SAS
+490         *   VERSION:   9.4
+491         *   CREATOR:   External File Interface
+492         *   DATE:      28JUN17
+493         *   DESC:      Generated SAS Datastep Code
+494         *   TEMPLATE SOURCE:  (None Specified.)
+495         ***********************************************************************/
+496            data WORK.RSEM_NSC2    ;
+497            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+498            infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set3_NSC2.isoforms.results' delimiter='09'x MISSOVER
+498      ! DSD lrecl=32767 firstobs=2 ;
+499               informat transcript_id $12. ;
+500               informat gene_id $4. ;
+501               informat length best32. ;
+502               informat effective_length best32. ;
+503               informat expected_count best32. ;
+504               informat TPM best32. ;
+505               informat FPKM best32. ;
+506               informat IsoPct best32. ;
+507               informat posterior_mean_count best32. ;
+508               informat posterior_standard_deviation_of_ best32. ;
+509               informat pme_TPM best32. ;
+510               informat pme_FPKM best32. ;
+511               informat IsoPct_from_pme_TPM best32. ;
+512               informat TPM_ci_lower_bound best32. ;
+513               informat TPM_ci_upper_bound best32. ;
+514               informat TPM_coefficient_of_quartile_vari best32. ;
+515               informat FPKM_ci_lower_bound best32. ;
+516               informat FPKM_ci_upper_bound best32. ;
+517               informat FPKM_coefficient_of_quartile_var best32. ;
+518               format transcript_id $12. ;
+519               format gene_id $4. ;
+520               format length best12. ;
+521               format effective_length best12. ;
+522               format expected_count best12. ;
+523               format TPM best12. ;
+524               format FPKM best12. ;
+525               format IsoPct best12. ;
+526               format posterior_mean_count best12. ;
+527               format posterior_standard_deviation_of_ best12. ;
+528               format pme_TPM best12. ;
+529               format pme_FPKM best12. ;
+530               format IsoPct_from_pme_TPM best12. ;
+531               format TPM_ci_lower_bound best12. ;
+532               format TPM_ci_upper_bound best12. ;
+533               format TPM_coefficient_of_quartile_vari best12. ;
+534               format FPKM_ci_lower_bound best12. ;
+535               format FPKM_ci_upper_bound best12. ;
+536               format FPKM_coefficient_of_quartile_var best12. ;
+537            input
+538                        transcript_id $
+539                        gene_id $
+540                        length
+541                        effective_length
+542                        expected_count
+543                        TPM
+18                                                         The SAS System                             23:27 Wednesday, June 28, 2017
+
+544                        FPKM
+545                        IsoPct
+546                        posterior_mean_count
+547                        posterior_standard_deviation_of_
+548                        pme_TPM
+549                        pme_FPKM
+550                        IsoPct_from_pme_TPM
+551                        TPM_ci_lower_bound
+552                        TPM_ci_upper_bound
+553                        TPM_coefficient_of_quartile_vari
+554                        FPKM_ci_lower_bound
+555                        FPKM_ci_upper_bound
+556                        FPKM_coefficient_of_quartile_var
+557            ;
+558            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+559            run;
+
+NOTE: The infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set3_NSC2.isoforms.results' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/analysis_output/rsem_output/cav1_set3_NSC2.isoforms.results,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Wed Jun 28 23:21:23 2017,
+      File Size (bytes)=1347
+
+NOTE: 7 records were read from the infile '!MCLAB/event_analysis/analysis_output/rsem_output/cav1_set3_NSC2.isoforms.results'.
+      The minimum record length was 140.
+      The maximum record length was 149.
+NOTE: The data set WORK.RSEM_NSC2 has 7 observations and 19 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.00 seconds
+      
+
+7 rows created in WORK.RSEM_NSC2 from !MCLAB/event_analysis/analysis_output/rsem_output/cav1_set3_NSC2.isoforms.results.
+  
+  
+  
+NOTE: WORK.RSEM_NSC2 data set was successfully created.
+NOTE: The data set WORK.RSEM_NSC2 has 7 observations and 19 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.11 seconds
+      cpu time            0.06 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC1.
+NOTE: The data set WORK.RSEM_NSC1_2 has 7 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC2.
+NOTE: The data set WORK.RSEM_NSC2_2 has 7 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+19                                                         The SAS System                             23:27 Wednesday, June 28, 2017
+
+      
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC1_2.
+NOTE: The data set WORK.RSEM_NSC1_2 has 7 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC2_2.
+NOTE: The data set WORK.RSEM_NSC2_2 has 7 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC1_2.
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC2_2.
+NOTE: The data set WORK.RSEM_NSC has 7 observations and 9 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC.
+NOTE: The data set WORK.RSEM_NSC_2 has 7 observations and 13 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+ERROR: Variable LOG_FPKM_NSC1 not found.
+ERROR: Variable LOG_FPKM_NSC2 not found.
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+ERROR: Variable LOG_FPKM_NSC1 not found.
+ERROR: Variable LOG_FPKM_NSC2 not found.
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC.
+NOTE: The data set EVENT.RSEM_CAV1_SET3 has 7 observations and 9 variables.
+20                                                         The SAS System                             23:27 Wednesday, June 28, 2017
+
+NOTE: DATA statement used (Total process time):
+      real time           0.10 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set EVENT.RSEM_CAV1_SET3.
+NOTE: The data set WORK.RSEM_NSC has 7 observations and 14 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: The PROCEDURE CORR printed page 7.
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: The PROCEDURE CORR printed page 8.
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 7 observations read from the data set WORK.RSEM_NSC.
+NOTE: The PROCEDURE PRINT printed page 9.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+560        
+
+ERROR: Errors printed on pages 8,14,19.
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           1.48 seconds
+      cpu time            0.49 seconds
+      

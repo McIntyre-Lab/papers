@@ -1,0 +1,624 @@
+1                                                          The SAS System                                 13:59 Friday, May 26, 2017
+
+NOTE: Unable to open SASUSER.REGSTRY. WORK.REGSTRY will be opened instead.
+NOTE: All registry changes will be lost at the end of the session.
+
+WARNING: Unable to copy SASUSER registry to WORK registry. Because of this, you will not see registry customizations during this 
+         session.
+NOTE: Unable to open SASUSER.PROFILE. WORK.PROFILE will be opened instead.
+NOTE: All profile changes will be lost at the end of the session.
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to UNIVERSITY OF FLORIDA - SFA T&R, Site 70095659.
+NOTE: This session is executing on the Linux 4.4.0-78-generic (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 4.4.0-78-generic #99~14.04.2-Ubuntu SMP Thu Apr 27 18:49:46 UTC 2017 x86_64 Unrecognized Linux Distribution 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.15 seconds
+      cpu time            0.03 seconds
+      
+1          libname conesa '!MCLAB/conesa_pacbio/sas_data';
+NOTE: Libref CONESA was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data
+2          libname evspl '!MCLAB/conesa_pacbio/sas_data/splicing';
+NOTE: Libref EVSPL was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data/splicing
+3          libname event '!MCLAB/event_analysis/sas_data';
+NOTE: Libref EVENT was successfully assigned as follows: 
+2                                                          The SAS System                                 13:59 Friday, May 26, 2017
+
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/sas_data
+4          
+5          
+6          data pb_junc;
+7             set conesa.splicing_annotations_fixed;
+8             where transcript_id ne "";
+9             keep event_id event_size gene_id chr strand feature1_start feature1_stop feature2_start feature2_stop transcript_id;
+10            rename event_id=pb_junction_id;
+11         run;
+
+NOTE: There were 73306 observations read from the data set CONESA.SPLICING_ANNOTATIONS_FIXED.
+      WHERE transcript_id not = ' ';
+NOTE: The data set WORK.PB_JUNC has 73306 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1:24.15
+      cpu time            3.02 seconds
+      
+
+12         
+13         proc import datafile="!MCLAB/conesa_pacbio/created_files/pb_junc_all.tsv" out=pb_seq
+14             dbms=tab replace;
+14       !                       guessingrows=685163;
+15         run;
+
+Number of names found is less than number of variables found. 
+Number of names found is less than number of variables found. 
+16          /**********************************************************************
+17          *   PRODUCT:   SAS
+18          *   VERSION:   9.4
+19          *   CREATOR:   External File Interface
+20          *   DATE:      26MAY17
+21          *   DESC:      Generated SAS Datastep Code
+22          *   TEMPLATE SOURCE:  (None Specified.)
+23          ***********************************************************************/
+24             data WORK.PB_SEQ    ;
+25             %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+26             infile '!MCLAB/conesa_pacbio/created_files/pb_junc_all.tsv' delimiter='09'x MISSOVER DSD lrecl=32767 firstobs=2 ;
+27                informat pb_junction_id $617. ;
+28                informat sequence $81. ;
+29                informat VAR3 $1. ;
+30                format pb_junction_id $617. ;
+31                format sequence $81. ;
+32                format VAR3 $1. ;
+33             input
+34                         pb_junction_id $
+35                         sequence $
+36                         VAR3 $
+37             ;
+38             if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+39             run;
+
+NOTE: The infile '!MCLAB/conesa_pacbio/created_files/pb_junc_all.tsv' is:
+      Filename=/home/jrbnewman/McLab/conesa_pacbio/created_files/pb_junc_all.tsv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Fri May 26 11:13:38 2017,
+      File Size (bytes)=65971836
+3                                                          The SAS System                                 13:59 Friday, May 26, 2017
+
+
+NOTE: 685162 records were read from the infile '!MCLAB/conesa_pacbio/created_files/pb_junc_all.tsv'.
+      The minimum record length was 27.
+      The maximum record length was 699.
+NOTE: The data set WORK.PB_SEQ has 685162 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.26 seconds
+      cpu time            1.13 seconds
+      
+
+685162 rows created in WORK.PB_SEQ from !MCLAB/conesa_pacbio/created_files/pb_junc_all.tsv.
+  
+  
+  
+NOTE: WORK.PB_SEQ data set was successfully created.
+NOTE: The data set WORK.PB_SEQ has 685162 observations and 3 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           3:27.18
+      cpu time            3:24.56
+      
+
+40         
+41         data pb_seq2;
+42           set pb_seq;
+43             sequence=tranwrd(sequence,"a","A");
+44           sequence=tranwrd(sequence,"c","C");
+45           sequence=tranwrd(sequence,"g","G");
+46           sequence=tranwrd(sequence,"t","T");
+47           sequence=tranwrd(sequence,"n","N");
+48         run;
+
+NOTE: There were 685162 observations read from the data set WORK.PB_SEQ.
+NOTE: The data set WORK.PB_SEQ2 has 685162 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.62 seconds
+      cpu time            1.62 seconds
+      
+
+49         
+50         
+51         proc sort data=pb_seq2;
+52           by pb_junction_id;
+
+NOTE: There were 685162 observations read from the data set WORK.PB_SEQ2.
+NOTE: The data set WORK.PB_SEQ2 has 685162 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           3.39 seconds
+      cpu time            2.40 seconds
+      
+
+53         proc sort data=pb_junc;
+54           by pb_junction_id;
+55         run;
+
+NOTE: There were 73306 observations read from the data set WORK.PB_JUNC.
+NOTE: The data set WORK.PB_JUNC has 73306 observations and 10 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           1.66 seconds
+4                                                          The SAS System                                 13:59 Friday, May 26, 2017
+
+      cpu time            0.92 seconds
+      
+
+56         
+57         data pb_junc2seq;
+58            merge pb_junc (in=in1) pb_seq2 (in=in2);
+59            by pb_junction_id;
+60            if in1 and in2;
+61            rename event_size=pb_event_size
+62                   gene_id=pb_gene_id;
+63         run;
+
+NOTE: There were 73306 observations read from the data set WORK.PB_JUNC.
+NOTE: There were 685162 observations read from the data set WORK.PB_SEQ2.
+NOTE: The data set WORK.PB_JUNC2SEQ has 73304 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.45 seconds
+      cpu time            1.46 seconds
+      
+
+64         
+65         /* Get RefSeq junctions and sequences */
+66         
+67         data rs_junc;
+68            set evspl.splicing_events_annot_refseq;
+69            if transcript_id="" then flag_junction_annotated=0; else flag_junction_annotated=1;
+70            keep event_id event_size gene_id chr strand feature1_start feature1_stop feature2_start feature2_stop
+70       ! flag_junction_annotated flag_intron_retention;
+71         run;
+
+NOTE: There were 2998454 observations read from the data set EVSPL.SPLICING_EVENTS_ANNOT_REFSEQ.
+NOTE: The data set WORK.RS_JUNC has 2998454 observations and 11 variables.
+NOTE: DATA statement used (Total process time):
+      real time           8:45.61
+      cpu time            36.08 seconds
+      
+
+72         
+73         data rs_seq;
+74           set evspl.flag_event_redundant_seq;
+75           rename sequence=event_sequence;
+76         run;
+
+NOTE: There were 2998454 observations read from the data set EVSPL.FLAG_EVENT_REDUNDANT_SEQ.
+NOTE: The data set WORK.RS_SEQ has 2998454 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           22.35 seconds
+      cpu time            3.09 seconds
+      
+
+77         
+78         proc sort data=rs_junc;
+79           by event_id;
+
+NOTE: There were 2998454 observations read from the data set WORK.RS_JUNC.
+NOTE: The data set WORK.RS_JUNC has 2998454 observations and 11 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           25.57 seconds
+5                                                          The SAS System                                 13:59 Friday, May 26, 2017
+
+      cpu time            11.30 seconds
+      
+
+80         proc sort data=rs_seq;
+81           by event_id;
+82         run;
+
+NOTE: There were 2998454 observations read from the data set WORK.RS_SEQ.
+NOTE: The data set WORK.RS_SEQ has 2998454 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           16.73 seconds
+      cpu time            10.48 seconds
+      
+
+83         
+84         data rs_junc2seq;
+85             merge rs_junc (in=in1) rs_seq (in=in2);
+86            by event_id;
+87            if in1 and in2;
+88         run;
+
+NOTE: There were 2998454 observations read from the data set WORK.RS_JUNC.
+NOTE: There were 2998454 observations read from the data set WORK.RS_SEQ.
+NOTE: The data set WORK.RS_JUNC2SEQ has 2998454 observations and 13 variables.
+NOTE: DATA statement used (Total process time):
+      real time           6.06 seconds
+      cpu time            5.83 seconds
+      
+
+89         
+90         data gene2keep;
+91           set event.feature2xs2gene_nomulti;
+92           keep gene_id;
+93         run;
+
+NOTE: There were 2550873 observations read from the data set EVENT.FEATURE2XS2GENE_NOMULTI.
+NOTE: The data set WORK.GENE2KEEP has 2550873 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           21.18 seconds
+      cpu time            1.26 seconds
+      
+
+94         
+95         proc sort data=rs_junc2seq;
+96           by gene_id;
+
+NOTE: There were 2998454 observations read from the data set WORK.RS_JUNC2SEQ.
+NOTE: The data set WORK.RS_JUNC2SEQ has 2998454 observations and 13 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           31.60 seconds
+      cpu time            11.33 seconds
+      
+
+97         proc sort data=gene2keep nodup;
+98           by gene_id;
+99         run;
+
+NOTE: There were 2550873 observations read from the data set WORK.GENE2KEEP.
+6                                                          The SAS System                                 13:59 Friday, May 26, 2017
+
+NOTE: 2522407 duplicate observations were deleted.
+NOTE: The data set WORK.GENE2KEEP has 28466 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.48 seconds
+      cpu time            1.27 seconds
+      
+
+100        
+101        data rs_junc2seq_nomult;
+102          merge rs_junc2seq (in=in1) gene2keep (in=in2);
+103          by gene_id;
+104          if in1 and in2;
+105        run;
+
+NOTE: There were 2998454 observations read from the data set WORK.RS_JUNC2SEQ.
+NOTE: There were 28466 observations read from the data set WORK.GENE2KEEP.
+NOTE: The data set WORK.RS_JUNC2SEQ_NOMULT has 1983917 observations and 13 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.75 seconds
+      cpu time            2.76 seconds
+      
+
+106        
+107        proc sort data=rs_junc2seq_nomult;
+108           by chr feature1_start feature1_stop feature2_start feature2_stop strand;
+
+NOTE: There were 1983917 observations read from the data set WORK.RS_JUNC2SEQ_NOMULT.
+NOTE: The data set WORK.RS_JUNC2SEQ_NOMULT has 1983917 observations and 13 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           15.67 seconds
+      cpu time            8.41 seconds
+      
+
+109        proc sort data=pb_junc2seq;
+110           by chr feature1_start feature1_stop feature2_start feature2_stop strand;
+111        run;
+
+NOTE: There were 73304 observations read from the data set WORK.PB_JUNC2SEQ.
+NOTE: The data set WORK.PB_JUNC2SEQ has 73304 observations and 12 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           2.19 seconds
+      cpu time            0.68 seconds
+      
+
+112        
+113        data pb2rs_junc2seq_nomulti nopb;
+114           merge rs_junc2seq_nomult (in=in1) pb_junc2seq (in=in2);
+115           by chr feature1_start feature1_stop feature2_start feature2_stop strand;
+116           if in1 and in2 then do;
+117                  flag_has_pb_match=1;
+118                  output pb2rs_junc2seq_nomulti;
+119                  end;
+120           else if in1 then do;
+121                  flag_has_pb_match=0;
+122                  output pb2rs_junc2seq_nomulti;
+123                  end;
+124           else output nopb;
+125        run;
+7                                                          The SAS System                                 13:59 Friday, May 26, 2017
+
+
+NOTE: There were 1983917 observations read from the data set WORK.RS_JUNC2SEQ_NOMULT.
+NOTE: There were 73304 observations read from the data set WORK.PB_JUNC2SEQ.
+NOTE: The data set WORK.PB2RS_JUNC2SEQ_NOMULTI has 1984666 observations and 20 variables.
+NOTE: The data set WORK.NOPB has 25198 observations and 20 variables.
+NOTE: DATA statement used (Total process time):
+      real time           10.81 seconds
+      cpu time            10.81 seconds
+      
+
+126        
+127        proc freq data=pb2rs_junc2seq_nomulti;
+128           table flag_has_pb_match*flag_junction_annotated;
+129        run;
+
+NOTE: There were 1984666 observations read from the data set WORK.PB2RS_JUNC2SEQ_NOMULTI.
+NOTE: The PROCEDURE FREQ printed page 1.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           2.23 seconds
+      cpu time            2.18 seconds
+      
+
+130        
+131        /*
+132        
+133          flag_has_pb_match
+134                    flag_junction_annotated
+135        
+136          Frequency|
+137          Percent  |
+138          Row Pct  |
+139          Col Pct  |       0|       1|  Total
+140          ---------+--------+--------+
+141                 0 |1788449 | 148111 |1936560
+142                   |  90.11 |   7.46 |  97.58
+143                   |  92.35 |   7.65 |
+144                   |  99.93 |  75.99 |
+145          ---------+--------+--------+
+146                 1 |   1303 |  46803 |  48106
+147                   |   0.07 |   2.36 |   2.42
+148                   |   2.71 |  97.29 |
+149                   |   0.07 |  24.01 |
+150          ---------+--------+--------+
+151          Total     1789752   194914  1984666
+152                      90.18     9.82   100.00
+153        
+154        Okay. I expect ~1K unannotated junctions to therefore match to PB transcripts!
+155        
+156        Now, check if events have the same sequence (they should!)
+157        
+158        */
+159        
+160        data check_seq;
+161           set pb2rs_junc2seq_nomulti;
+162           if flag_has_pb_match=1 then do;
+163           if event_sequence=sequence then flag_seq_ok=1;
+164           else flag_seq_ok=0;
+165           if event_size=pb_event_size then flag_size_ok=1;
+8                                                          The SAS System                                 13:59 Friday, May 26, 2017
+
+166           else flag_size_ok=0; *this should be the same as flag_seq_ok;
+167           end;
+168        run;
+
+NOTE: There were 1984666 observations read from the data set WORK.PB2RS_JUNC2SEQ_NOMULTI.
+NOTE: The data set WORK.CHECK_SEQ has 1984666 observations and 22 variables.
+NOTE: DATA statement used (Total process time):
+      real time           14.77 seconds
+      cpu time            11.81 seconds
+      
+
+169        
+170        proc freq data=check_seq;
+171           tables flag_seq_ok*flag_size_ok;
+172        run;
+
+NOTE: There were 1984666 observations read from the data set WORK.CHECK_SEQ.
+NOTE: The PROCEDURE FREQ printed page 2.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           2.97 seconds
+      cpu time            2.30 seconds
+      
+
+173        
+174        proc freq data=check_seq;
+175           tables flag_seq_ok*flag_junction_annotated;
+176        run;
+
+NOTE: There were 1984666 observations read from the data set WORK.CHECK_SEQ.
+NOTE: The PROCEDURE FREQ printed page 3.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           2.04 seconds
+      cpu time            2.04 seconds
+      
+
+177        
+178        /*
+179             flag_seq_ok
+180                       flag_junction_annotated
+181        
+182             Frequency|
+183             Percent  |
+184             Row Pct  |
+185             Col Pct  |       0|       1|  Total
+186             ---------+--------+--------+
+187                    0 |     93 |   1168 |   1261
+188                      |   0.19 |   2.43 |   2.62
+189                      |   7.38 |  92.62 |
+190                      |   7.14 |   2.50 |
+191             ---------+--------+--------+
+192                    1 |   1210 |  45635 |  46845
+193                      |   2.52 |  94.86 |  97.38
+194                      |   2.58 |  97.42 |
+195                      |  92.86 |  97.50 |
+196             ---------+--------+--------+
+197             Total        1303    46803    48106
+198                          2.71    97.29   100.00
+199        
+9                                                          The SAS System                                 13:59 Friday, May 26, 2017
+
+200        So sequences generally match. Now to check which are actually detected
+201        */
+202        
+203        data event_on;
+204          set event.splicing_on_apn_gt0;
+205          keep event_id flag_splicing_on;
+206        run;
+
+NOTE: There were 2998454 observations read from the data set EVENT.SPLICING_ON_APN_GT0.
+NOTE: The data set WORK.EVENT_ON has 2998454 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           46.53 seconds
+      cpu time            2.73 seconds
+      
+
+207        
+208        proc sort data=event_on;
+209          by event_id;
+
+NOTE: There were 2998454 observations read from the data set WORK.EVENT_ON.
+NOTE: The data set WORK.EVENT_ON has 2998454 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           24.86 seconds
+      cpu time            7.91 seconds
+      
+
+210        proc sort data=check_seq;
+211          by event_id;
+212        run;
+
+NOTE: There were 1984666 observations read from the data set WORK.CHECK_SEQ.
+NOTE: The data set WORK.CHECK_SEQ has 1984666 observations and 22 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           2:00.09
+      cpu time            41.34 seconds
+      
+
+213        
+214        data check_on;
+215          merge check_seq (in=in1) event_on (in=in2);
+216          by event_id;
+217          if in1 and in2;
+218        run;
+
+NOTE: There were 1984666 observations read from the data set WORK.CHECK_SEQ.
+NOTE: There were 2998454 observations read from the data set WORK.EVENT_ON.
+NOTE: The data set WORK.CHECK_ON has 1984666 observations and 23 variables.
+NOTE: DATA statement used (Total process time):
+      real time           15.66 seconds
+      cpu time            15.09 seconds
+      
+
+219        
+220        proc freq data=check_on noprint;
+221          tables flag_junction_annotated*flag_has_pb_match*flag_seq_ok*flag_size_ok*flag_splicing_on*flag_redundant_sequence /
+221      ! out=all_pb2rs_checks;
+222        run;
+
+10                                                         The SAS System                                 13:59 Friday, May 26, 2017
+
+NOTE: There were 1984666 observations read from the data set WORK.CHECK_ON.
+NOTE: The data set WORK.ALL_PB2RS_CHECKS has 12 observations and 8 variables.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           2.43 seconds
+      cpu time            2.44 seconds
+      
+
+223        
+224        proc print data=all_pb2rs_checks;
+225        run;
+
+NOTE: There were 12 observations read from the data set WORK.ALL_PB2RS_CHECKS.
+NOTE: The PROCEDURE PRINT printed page 4.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+226        
+227        
+228        /*
+229        
+230                          flag_                         flag_
+231        flag_junction_   has_pb_    flag_    flag_    splicing_   flag_redundant_
+232           annotated      match    seq_ok   size_ok       on          sequence        COUNT
+233        
+234               0            0         .        .          0              0          1734680
+235               0            0         .        .          0              1            16401
+236               0            0         .        .          1              0            37368
+237               0            1         0        1          0              0               18
+238               0            1         0        1          0              1                3
+239               0            1         0        1          1              0               72
+240               0            1         1        1          0              0              193
+241               0            1         1        1          0              1                4
+242               0            1         1        1          1              0             1013
+243               1            0         .        .          0              0           102778
+244               1            0         .        .          0              1             2322
+245               1            0         .        .          1              0            43011
+246               1            1         0        1          0              0               61
+247               1            1         0        1          0              1               28
+248               1            1         0        1          1              0             1079
+249               1            1         1        1          0              0             1629
+250               1            1         1        1          0              1               91
+251               1            1         1        1          1              0            43915
+252        
+253        
+254        Again, there SHOULD BE ~1000 unannotated junctions that match to PB !
+255        
+256        */
+257        
+258        /* Make permenant -- can use to check later */
+259        
+260        data event.pacbio2refseq_junction_check;
+261           set check_on;
+262           keep event_id pb_junction_id transcript_id pb_gene_id gene_id flag_junction_annotated flag_intron_retention
+262      ! flag_has_pb_match flag_seq_ok flag_size_ok flag_splicing_on flag_redundant_sequence
+263                event_sequence sequence;
+264        run;
+11                                                         The SAS System                                 13:59 Friday, May 26, 2017
+
+
+NOTE: There were 1984666 observations read from the data set WORK.CHECK_ON.
+NOTE: The data set EVENT.PACBIO2REFSEQ_JUNCTION_CHECK has 1984666 observations and 14 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2:54.82
+      cpu time            11.55 seconds
+      
+
+265        
+266        
+267        
+268        
+269        
+270        
+271        
+272        
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           23:07.38
+      cpu time            6:56.72
+      

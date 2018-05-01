@@ -1,0 +1,84 @@
+                                                           The SAS System                          16:19 Wednesday, May 17, 2017   1
+
+                                                         The FREQ Procedure
+
+                                     flag_perc_                             Cumulative    Cumulative
+                                 identity_lt_90    Frequency     Percent     Frequency      Percent
+                               ---------------------------------------------------------------------
+                                              0      149985      100.00        149985       100.00  
+                                                           The SAS System                          16:19 Wednesday, May 17, 2017   2
+
+                                                         The FREQ Procedure
+
+                                   flag_length_                             Cumulative    Cumulative
+                                          lt_50    Frequency     Percent     Frequency      Percent
+                               ---------------------------------------------------------------------
+                                              0      149985      100.00        149985       100.00  
+                                                           The SAS System                          16:19 Wednesday, May 17, 2017   3
+
+                                                         The FREQ Procedure
+
+                                     flag_perc_                             Cumulative    Cumulative
+                                 identity_lt_90    Frequency     Percent     Frequency      Percent
+                               ---------------------------------------------------------------------
+                                              0      741285      100.00        741285       100.00  
+                                                           The SAS System                          16:19 Wednesday, May 17, 2017   4
+
+                                                         The FREQ Procedure
+
+                                   flag_length_                             Cumulative    Cumulative
+                                          lt_50    Frequency     Percent     Frequency      Percent
+                               ---------------------------------------------------------------------
+                                              0      741285      100.00        741285       100.00  
+                                                           The SAS System                          16:19 Wednesday, May 17, 2017   5
+
+                                                         The FREQ Procedure
+
+                                            Table of flag_blast_hit by flag_splicing_on
+
+                                                     flag_blast_hit
+                                                               flag_splicing_on
+
+                                                     Frequency|
+                                                     Percent  |
+                                                     Row Pct  |
+                                                     Col Pct  |       1|  Total
+                                                     ---------+--------+
+                                                            0 | 115933 | 115933
+                                                              |  46.68 |  46.68
+                                                              | 100.00 |
+                                                              |  46.68 |
+                                                     ---------+--------+
+                                                            1 | 132436 | 132436
+                                                              |  53.32 |  53.32
+                                                              | 100.00 |
+                                                              |  53.32 |
+                                                     ---------+--------+
+                                                     Total      248369   248369
+                                                                100.00   100.00
+                                                           The SAS System                          16:19 Wednesday, May 17, 2017   6
+
+                                                         The FREQ Procedure
+
+                                            Table of flag_blast_hit by flag_splicing_on
+
+                                                     flag_blast_hit
+                                                               flag_splicing_on
+
+                                                     Frequency|
+                                                     Percent  |
+                                                     Row Pct  |
+                                                     Col Pct  |       1|  Total
+                                                     ---------+--------+
+                                                            0 |  52387 |  52387
+                                                              |   8.38 |   8.38
+                                                              | 100.00 |
+                                                              |   8.38 |
+                                                     ---------+--------+
+                                                            1 | 572643 | 572643
+                                                              |  91.62 |  91.62
+                                                              | 100.00 |
+                                                              |  91.62 |
+                                                     ---------+--------+
+                                                     Total      625030   625030
+                                                                100.00   100.00

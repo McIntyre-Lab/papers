@@ -1,0 +1,499 @@
+1                                                          The SAS System                              16:19 Wednesday, May 17, 2017
+
+NOTE: Unable to open SASUSER.REGSTRY. WORK.REGSTRY will be opened instead.
+NOTE: All registry changes will be lost at the end of the session.
+
+WARNING: Unable to copy SASUSER registry to WORK registry. Because of this, you will not see registry customizations during this 
+         session.
+NOTE: Unable to open SASUSER.PROFILE. WORK.PROFILE will be opened instead.
+NOTE: All profile changes will be lost at the end of the session.
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to UNIVERSITY OF FLORIDA - SFA T&R, Site 70095659.
+NOTE: This session is executing on the Linux 4.4.0-75-generic (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 4.4.0-75-generic #96~14.04.1-Ubuntu SMP Thu Apr 20 11:06:30 UTC 2017 x86_64 Unrecognized Linux Distribution 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.14 seconds
+      cpu time            0.02 seconds
+      
+1          
+2          ods listing; ods html close;
+3          libname mm10 '!MCLAB/useful_mouse_data/mm10/sas_data';
+NOTE: Libref MM10 was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/useful_mouse_data/mm10/sas_data
+4          libname event '!MCLAB/event_analysis/sas_data';
+NOTE: Libref EVENT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/sas_data
+2                                                          The SAS System                              16:19 Wednesday, May 17, 2017
+
+5          libname evspl '!MCLAB/conesa_pacbio/sas_data/splicing';
+NOTE: Libref EVSPL was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data/splicing
+6          libname conesa '!MCLAB/conesa_pacbio/sas_data';
+NOTE: Libref CONESA was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data
+7          libname refseq '!MCLAB/event_analysis/refseq_fusions/sas_data';
+NOTE: Libref REFSEQ was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/refseq_fusions/sas_data
+8          
+9          /* Checks for BLAST results */
+10         
+11         %macro blastCheck(xscripts);
+12         
+13         data blast_results;
+14            set event.dtct_event_&xscripts._blast_results;
+15         run;
+16         
+17         /* Check : how many alignments have <80% identity? */
+18         
+19         data flag_ident;
+20            set blast_results;
+21            if perc_identity < 90 then flag_perc_identity_lt_90=1;
+22            else flag_perc_identity_lt_90=0;
+23         run;
+24         
+25         proc freq data=flag_ident;
+26            tables flag_perc_identity_lt_90;
+27         run;
+28         
+29         /* Check : how many alignments have a length <50 bp? */
+30         
+31         data flag_length;
+32            set blast_results;
+33            if length < 50 then flag_length_lt_50=1;
+34            else flag_length_lt_50=0;
+35         run;
+36         
+37         proc freq data=flag_length;
+38            tables flag_length_lt_50;
+39         run;
+40         
+41         %mend;
+42         
+43         %blastCheck(pacbio);
+
+NOTE: There were 149985 observations read from the data set EVENT.DTCT_EVENT_PACBIO_BLAST_RESULTS.
+NOTE: The data set WORK.BLAST_RESULTS has 149985 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.91 seconds
+      cpu time            0.15 seconds
+      
+
+
+NOTE: There were 149985 observations read from the data set WORK.BLAST_RESULTS.
+3                                                          The SAS System                              16:19 Wednesday, May 17, 2017
+
+NOTE: The data set WORK.FLAG_IDENT has 149985 observations and 13 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.09 seconds
+      
+
+
+NOTE: There were 149985 observations read from the data set WORK.FLAG_IDENT.
+NOTE: The PROCEDURE FREQ printed page 1.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.03 seconds
+      
+
+
+NOTE: There were 149985 observations read from the data set WORK.BLAST_RESULTS.
+NOTE: The data set WORK.FLAG_LENGTH has 149985 observations and 13 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.09 seconds
+      
+
+
+NOTE: There were 149985 observations read from the data set WORK.FLAG_LENGTH.
+NOTE: The PROCEDURE FREQ printed page 2.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.01 seconds
+      
+
+44         %blastCheck(refseq);
+
+NOTE: There were 741285 observations read from the data set EVENT.DTCT_EVENT_REFSEQ_BLAST_RESULTS.
+NOTE: The data set WORK.BLAST_RESULTS has 741285 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           5.14 seconds
+      cpu time            0.68 seconds
+      
+
+
+NOTE: There were 741285 observations read from the data set WORK.BLAST_RESULTS.
+NOTE: The data set WORK.FLAG_IDENT has 741285 observations and 13 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.92 seconds
+      cpu time            0.44 seconds
+      
+
+
+NOTE: There were 741285 observations read from the data set WORK.FLAG_IDENT.
+NOTE: The PROCEDURE FREQ printed page 3.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.10 seconds
+      cpu time            0.11 seconds
+      
+
+
+NOTE: There were 741285 observations read from the data set WORK.BLAST_RESULTS.
+NOTE: The data set WORK.FLAG_LENGTH has 741285 observations and 13 variables.
+4                                                          The SAS System                              16:19 Wednesday, May 17, 2017
+
+NOTE: DATA statement used (Total process time):
+      real time           1.23 seconds
+      cpu time            0.42 seconds
+      
+
+
+NOTE: There were 741285 observations read from the data set WORK.FLAG_LENGTH.
+NOTE: The PROCEDURE FREQ printed page 4.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.10 seconds
+      cpu time            0.11 seconds
+      
+
+45         
+46         
+47         /* Pacbio BLAST: Split Pacbio ID into transcript_id, known or novel, match type */
+48         
+49         data pb_blast_parse_pb;
+50           length pb_transcript_id $12.;
+51           length pb_status $8.;
+52           length pb_type $30.;
+53           set event.dtct_event_pacbio_blast_results;
+54           pb_transcript_id=scan(pacbio_id,1,"|");
+55           pb_status=scan(pacbio_id,2,"|");
+56           pb_type=scan(pacbio_id,3,"|");
+57           query_length=abs(query_stop-query_start)+1;
+58           ref_length=abs(ref_stop-ref_start)+1;
+59         run;
+
+NOTE: There were 149985 observations read from the data set EVENT.DTCT_EVENT_PACBIO_BLAST_RESULTS.
+NOTE: The data set WORK.PB_BLAST_PARSE_PB has 149985 observations and 17 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.81 seconds
+      cpu time            0.18 seconds
+      
+
+60         
+61         
+62         /* Criteria for "hit":
+63         
+64            1. Percent identity > 95%
+65            2. No mismatches or gaps
+66            3. Length of alignment must be at least 95% the length of the full event sequence
+67         
+68         */
+69         
+70         data event_len;
+71           set evspl.splicing_events_annot_refseq;
+72           keep event_id event_size transcript_id flag_junction_annotated flaG_intron_retention;
+73         run;
+
+NOTE: There were 2998454 observations read from the data set EVSPL.SPLICING_EVENTS_ANNOT_REFSEQ.
+NOTE: The data set WORK.EVENT_LEN has 2998454 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           6:03.40
+      cpu time            47.44 seconds
+      
+
+5                                                          The SAS System                              16:19 Wednesday, May 17, 2017
+
+74         
+75         data events_on;
+76            set event.splicing_on_apn_gt0;
+77            where flag_splicing_on=1;
+78            keep event_id;
+79         run;
+
+NOTE: There were 179653 observations read from the data set EVENT.SPLICING_ON_APN_GT0.
+      WHERE flag_splicing_on=1;
+NOTE: The data set WORK.EVENTS_ON has 179653 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           28.75 seconds
+      cpu time            1.44 seconds
+      
+
+80         
+81         
+82         %macro bestHits(xscripts);
+83         
+84         data blast_results;
+85            %if &xscripts.=pacbio %then %do;
+86            set pb_blast_parse_pb;
+87            %end;
+88             %else %do;
+89            set event.dtct_event_&xscripts._blast_results;
+90            %end;
+91         run;
+92         
+93         proc sort data=blast_results;
+94           by event_id;
+95         proc sort data=event_len;
+96           by event_id;
+97         run;
+98         
+99         data blast_results_w_len;
+100          merge blast_results (in=in1) event_len (in=in2);
+101          by event_id;
+102          if in1 and in2;
+103        run;
+104        
+105        data best_blast_hits;
+106           set blast_results_w_len;
+107           if mismatch > 0 then delete; *remove results with mismatches;
+108           if gapopen > 0 then delete; *remove results with gaps;
+109           if length ge 0.95*event_size then output;
+110        run;
+111        
+112        proc sort data=events_on;
+113           by event_id;
+114        proc sort data=best_blast_hits;
+115           by event_id;
+116        run;
+117        
+118        data blast_hits_2_on;
+119          merge best_blast_hits (in=in1) events_on (in=in2);
+120          by event_id;
+121          if in1 then flag_blast_hit=1; else flag_blast_hit=0;
+122          if in2 then flag_splicing_on=1; else flag_splicing_on=0;
+6                                                          The SAS System                              16:19 Wednesday, May 17, 2017
+
+123        run;
+124        
+125        *and just to check I have only detected events;
+126        proc freq data=blast_hits_2_on;
+127           tables flag_blast_hit*flag_splicing_on;
+128        run;
+129        
+130        /* Make permenant -- I will cat all "best hits" per event together, flagging if they match to transcripts or not
+131           then compare whether this in agreement with their annotation */
+132        
+133        data event.events_best_&xscripts._hit;
+134           set best_blast_hits;
+135        run;
+136        
+137        %mend;
+138        
+139        
+140        %bestHits(pacbio);
+
+NOTE: There were 149985 observations read from the data set WORK.PB_BLAST_PARSE_PB.
+NOTE: The data set WORK.BLAST_RESULTS has 149985 observations and 17 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.24 seconds
+      cpu time            0.18 seconds
+      
+
+
+NOTE: There were 149985 observations read from the data set WORK.BLAST_RESULTS.
+NOTE: The data set WORK.BLAST_RESULTS has 149985 observations and 17 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.27 seconds
+      cpu time            0.27 seconds
+      
+
+
+NOTE: There were 2998454 observations read from the data set WORK.EVENT_LEN.
+NOTE: The data set WORK.EVENT_LEN has 2998454 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           3:24.73
+      cpu time            1:34.90
+      
+
+
+WARNING: Multiple lengths were specified for the BY variable event_id by input data sets. This might cause unexpected results.
+NOTE: There were 149985 observations read from the data set WORK.BLAST_RESULTS.
+NOTE: There were 2998454 observations read from the data set WORK.EVENT_LEN.
+NOTE: The data set WORK.BLAST_RESULTS_W_LEN has 149985 observations and 21 variables.
+NOTE: DATA statement used (Total process time):
+      real time           10.03 seconds
+      cpu time            10.03 seconds
+      
+
+
+NOTE: There were 149985 observations read from the data set WORK.BLAST_RESULTS_W_LEN.
+NOTE: The data set WORK.BEST_BLAST_HITS has 132436 observations and 21 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.16 seconds
+      cpu time            1.16 seconds
+7                                                          The SAS System                              16:19 Wednesday, May 17, 2017
+
+      
+
+
+NOTE: There were 179653 observations read from the data set WORK.EVENTS_ON.
+NOTE: The data set WORK.EVENTS_ON has 179653 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.29 seconds
+      cpu time            0.29 seconds
+      
+
+
+NOTE: There were 132436 observations read from the data set WORK.BEST_BLAST_HITS.
+NOTE: The data set WORK.BEST_BLAST_HITS has 132436 observations and 21 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           4.85 seconds
+      cpu time            2.00 seconds
+      
+
+
+WARNING: Multiple lengths were specified for the BY variable event_id by input data sets. This might cause unexpected results.
+NOTE: There were 132436 observations read from the data set WORK.BEST_BLAST_HITS.
+NOTE: There were 179653 observations read from the data set WORK.EVENTS_ON.
+NOTE: The data set WORK.BLAST_HITS_2_ON has 248369 observations and 23 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.97 seconds
+      cpu time            1.98 seconds
+      
+
+
+NOTE: There were 248369 observations read from the data set WORK.BLAST_HITS_2_ON.
+NOTE: The PROCEDURE FREQ printed page 5.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.41 seconds
+      cpu time            0.41 seconds
+      
+
+
+NOTE: There were 132436 observations read from the data set WORK.BEST_BLAST_HITS.
+NOTE: The data set EVENT.EVENTS_BEST_PACBIO_HIT has 132436 observations and 21 variables.
+NOTE: DATA statement used (Total process time):
+      real time           18.85 seconds
+      cpu time            1.30 seconds
+      
+
+141        %bestHits(refseq);
+
+NOTE: There were 741285 observations read from the data set EVENT.DTCT_EVENT_REFSEQ_BLAST_RESULTS.
+NOTE: The data set WORK.BLAST_RESULTS has 741285 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           5.90 seconds
+      cpu time            0.63 seconds
+      
+
+
+NOTE: There were 741285 observations read from the data set WORK.BLAST_RESULTS.
+NOTE: The data set WORK.BLAST_RESULTS has 741285 observations and 12 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.91 seconds
+8                                                          The SAS System                              16:19 Wednesday, May 17, 2017
+
+      cpu time            1.46 seconds
+      
+
+
+NOTE: Input data set is already sorted, no sorting done.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+WARNING: Multiple lengths were specified for the BY variable event_id by input data sets. This might cause unexpected results.
+NOTE: There were 741285 observations read from the data set WORK.BLAST_RESULTS.
+NOTE: There were 2998454 observations read from the data set WORK.EVENT_LEN.
+NOTE: The data set WORK.BLAST_RESULTS_W_LEN has 741285 observations and 16 variables.
+NOTE: DATA statement used (Total process time):
+      real time           34.15 seconds
+      cpu time            14.27 seconds
+      
+
+
+NOTE: There were 741285 observations read from the data set WORK.BLAST_RESULTS_W_LEN.
+NOTE: The data set WORK.BEST_BLAST_HITS has 572643 observations and 16 variables.
+NOTE: DATA statement used (Total process time):
+      real time           20.74 seconds
+      cpu time            5.83 seconds
+      
+
+
+NOTE: Input data set is already sorted, no sorting done.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: There were 572643 observations read from the data set WORK.BEST_BLAST_HITS.
+NOTE: The data set WORK.BEST_BLAST_HITS has 572643 observations and 16 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           41.14 seconds
+      cpu time            18.04 seconds
+      
+
+
+WARNING: Multiple lengths were specified for the BY variable event_id by input data sets. This might cause unexpected results.
+NOTE: There were 572643 observations read from the data set WORK.BEST_BLAST_HITS.
+NOTE: There were 179653 observations read from the data set WORK.EVENTS_ON.
+NOTE: The data set WORK.BLAST_HITS_2_ON has 625030 observations and 18 variables.
+NOTE: DATA statement used (Total process time):
+      real time           21.80 seconds
+      cpu time            6.09 seconds
+      
+
+
+NOTE: There were 625030 observations read from the data set WORK.BLAST_HITS_2_ON.
+NOTE: The PROCEDURE FREQ printed page 6.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           1.40 seconds
+9                                                          The SAS System                              16:19 Wednesday, May 17, 2017
+
+      cpu time            0.95 seconds
+      
+
+
+NOTE: There were 572643 observations read from the data set WORK.BEST_BLAST_HITS.
+NOTE: The data set EVENT.EVENTS_BEST_REFSEQ_HIT has 572643 observations and 16 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1:19.96
+      cpu time            6.05 seconds
+      
+
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           14:12.33
+      cpu time            3:37.11
+      

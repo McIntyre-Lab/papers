@@ -1,0 +1,262 @@
+1                                                          The SAS System                            00:09 Wednesday, March 14, 2018
+
+NOTE: Unable to open SASUSER.REGSTRY. WORK.REGSTRY will be opened instead.
+NOTE: All registry changes will be lost at the end of the session.
+
+WARNING: Unable to copy SASUSER registry to WORK registry. Because of this, you will not see registry customizations during this 
+         session.
+NOTE: Unable to open SASUSER.PROFILE. WORK.PROFILE will be opened instead.
+NOTE: All profile changes will be lost at the end of the session.
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to UNIVERSITY OF FLORIDA - SFA T&R, Site 70095659.
+NOTE: This session is executing on the Linux 4.4.0-116-generic (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 4.4.0-116-generic #140~14.04.1-Ubuntu SMP Fri Feb 16 09:25:20 UTC 2018 x86_64 Unrecognized Linux Distribution 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.28 seconds
+      cpu time            0.03 seconds
+      
+1          /* Libraries */
+2          libname event '!MCLAB/event_analysis/sas_data';
+NOTE: Libref EVENT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/sas_data
+3          libname evspl '!MCLAB/conesa_pacbio/sas_data/splicing';
+NOTE: Libref EVSPL was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data/splicing
+4          libname eventloc '/mnt/store/event_sandbox/sas_data';
+2                                                          The SAS System                            00:09 Wednesday, March 14, 2018
+
+NOTE: Libref EVENTLOC was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /mnt/store/event_sandbox/sas_data
+5          libname mm10 '!MCLAB/useful_mouse_data/mm10/sas_data';
+NOTE: Libref MM10 was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/useful_mouse_data/mm10/sas_data
+6          ods listing; ods html close;
+7          
+8          /* For the simulation of 10000 transcripts, compare the list of selected transcripts
+9             against the transcript detection bins for APN>0 and APN>5
+10         */
+11         
+12         data xs10000;
+13            set event.polyester_xs_list_10k;
+14         run;
+
+NOTE: There were 10000 observations read from the data set EVENT.POLYESTER_XS_LIST_10K.
+NOTE: The data set WORK.XS10000 has 10000 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.11 seconds
+      cpu time            0.01 seconds
+      
+
+15         
+16         data ea_apn0;
+17            set event.bin_xs_by_dtct_apn0_10k;
+18            keep transcript_id bin_xscript_perc_dtct;
+19            rename bin_xscript_perc_dtct=bin_dtct_apn0;
+20         run;
+
+NOTE: There were 44317 observations read from the data set EVENT.BIN_XS_BY_DTCT_APN0_10K.
+NOTE: The data set WORK.EA_APN0 has 44317 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.18 seconds
+      cpu time            0.01 seconds
+      
+
+21         
+22         data ea_apn5;
+23            set event.bin_xs_by_dtct_apn5_10k;
+24            keep transcript_id bin_xscript_perc_dtct;
+25            rename bin_xscript_perc_dtct=bin_dtct_apn5;
+26         run;
+
+NOTE: There were 44317 observations read from the data set EVENT.BIN_XS_BY_DTCT_APN5_10K.
+NOTE: The data set WORK.EA_APN5 has 44317 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.18 seconds
+      cpu time            0.03 seconds
+      
+
+27         
+28         proc sort data=xs10000;
+29           by transcript_id;
+
+NOTE: There were 10000 observations read from the data set WORK.XS10000.
+NOTE: The data set WORK.XS10000 has 10000 observations and 1 variables.
+3                                                          The SAS System                            00:09 Wednesday, March 14, 2018
+
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+30         proc sort data=ea_apn0;
+31           by transcript_id;
+
+NOTE: There were 44317 observations read from the data set WORK.EA_APN0.
+NOTE: The data set WORK.EA_APN0 has 44317 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+      
+
+32         proc sort data=ea_apn5;
+33           by transcript_id;
+34         run;
+
+NOTE: There were 44317 observations read from the data set WORK.EA_APN5.
+NOTE: The data set WORK.EA_APN5 has 44317 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+35         
+36         data xs10000_v_ea;
+37            merge ea_apn0 (in=in1) ea_apn5 (in=in2) xs10000 (in=in3);
+38            by transcript_id;
+39            if in3 then flag_xscript_simulated=1;
+40            else flag_xscript_simulated=0;
+41            if in1 and in2 then output;
+42         run;
+
+NOTE: There were 44317 observations read from the data set WORK.EA_APN0.
+NOTE: There were 44317 observations read from the data set WORK.EA_APN5.
+NOTE: There were 10000 observations read from the data set WORK.XS10000.
+NOTE: The data set WORK.XS10000_V_EA has 44317 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.03 seconds
+      
+
+43         
+44         proc freq data=xs10000_v_ea ;
+45           tables flag_xscript_simulated* bin_dtct_apn0 ;
+46           tables flag_xscript_simulated* bin_dtct_apn5 ;
+47         run;
+
+NOTE: There were 44317 observations read from the data set WORK.XS10000_V_EA.
+NOTE: The PROCEDURE FREQ printed page 1.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.11 seconds
+      cpu time            0.03 seconds
+      
+
+48         
+4                                                          The SAS System                            00:09 Wednesday, March 14, 2018
+
+49         proc print data=sim_vs_ea_apn0;
+ERROR: File WORK.SIM_VS_EA_APN0.DATA does not exist.
+50         run;
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+51         
+
+
+52         proc print data=sim_vs_ea_apn5;
+ERROR: File WORK.SIM_VS_EA_APN5.DATA does not exist.
+53         run;
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+54         
+55         /*
+56           flag_xscript_simulated     bin_dtct_apn0
+57         
+58           Frequency|
+59           Percent  |
+60           Row Pct  |
+61           Col Pct  |0%      |1-24%   |100%    |25-50%  |50-74%  |75-99%  |  Total
+62           ---------+--------+--------+--------+--------+--------+--------+
+63                  0 |  11967 |   1715 |   8282 |   2004 |   2465 |   7690 |  34123
+64                    |  27.16 |   3.89 |  18.80 |   4.55 |   5.59 |  17.45 |  77.45
+65                    |  35.07 |   5.03 |  24.27 |   5.87 |   7.22 |  22.54 |
+66                    |  74.44 |  80.52 |  77.69 |  79.21 |  76.96 |  81.29 |
+67           ---------+--------+--------+--------+--------+--------+--------+
+68                  1 |   4108 |    415 |   2378 |    526 |    738 |   1770 |   9935
+69                    |   9.32 |   0.94 |   5.40 |   1.19 |   1.68 |   4.02 |  22.55
+70                    |  41.35 |   4.18 |  23.94 |   5.29 |   7.43 |  17.82 |
+71                    |  25.56 |  19.48 |  22.31 |  20.79 |  23.04 |  18.71 |
+72           ---------+--------+--------+--------+--------+--------+--------+
+73           Total       16075     2130    10660     2530     3203     9460    44058
+74                       36.49     4.83    24.20     5.74     7.27    21.47   100.00
+75         
+76          flag_xscript_simulated     bin_dtct_apn5
+77         
+78          Frequency|
+79          Percent  |
+80          Row Pct  |
+81          Col Pct  |0%      |1-24%   |100%    |25-50%  |50-74%  |75-99%  |  Total
+82          ---------+--------+--------+--------+--------+--------+--------+
+83                 0 |  19186 |   1573 |   2243 |   1704 |   2532 |   6885 |  34123
+84                   |  43.55 |   3.57 |   5.09 |   3.87 |   5.75 |  15.63 |  77.45
+85                   |  56.23 |   4.61 |   6.57 |   4.99 |   7.42 |  20.18 |
+86                   |  75.30 |  80.92 |  76.14 |  80.45 |  80.28 |  81.80 |
+87          ---------+--------+--------+--------+--------+--------+--------+
+88                 1 |   6293 |    371 |    703 |    414 |    622 |   1532 |   9935
+89                   |  14.28 |   0.84 |   1.60 |   0.94 |   1.41 |   3.48 |  22.55
+90                   |  63.34 |   3.73 |   7.08 |   4.17 |   6.26 |  15.42 |
+5                                                          The SAS System                            00:09 Wednesday, March 14, 2018
+
+91                   |  24.70 |  19.08 |  23.86 |  19.55 |  19.72 |  18.20 |
+92          ---------+--------+--------+--------+--------+--------+--------+
+93          Total       25479     1944     2946     2118     3154     8417    44058
+94                      57.83     4.41     6.69     4.81     7.16    19.10   100.00
+95         
+96         Even through simulation we miss some. Why?
+97         
+98         Going to resimulate the data at 100X coverage : this should ensure we definely get the transcripts
+99         */
+100        
+101        
+
+
+ERROR: Errors printed on page 4.
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           1.28 seconds
+      cpu time            0.23 seconds
+      

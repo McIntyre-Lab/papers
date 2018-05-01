@@ -1,0 +1,2752 @@
+1                                                          The SAS System                                 02:48 Sunday, June 4, 2017
+
+NOTE: Unable to open SASUSER.REGSTRY. WORK.REGSTRY will be opened instead.
+NOTE: All registry changes will be lost at the end of the session.
+
+WARNING: Unable to copy SASUSER registry to WORK registry. Because of this, you will not see registry customizations during this 
+         session.
+NOTE: Unable to open SASUSER.PROFILE. WORK.PROFILE will be opened instead.
+NOTE: All profile changes will be lost at the end of the session.
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to UNIVERSITY OF FLORIDA - SFA T&R, Site 70095659.
+NOTE: This session is executing on the Linux 4.4.0-78-generic (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 4.4.0-78-generic #99~14.04.2-Ubuntu SMP Thu Apr 27 18:49:46 UTC 2017 x86_64 Unrecognized Linux Distribution 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.14 seconds
+      cpu time            0.02 seconds
+      
+1          ods listing; ods html close;
+2          libname mm10 '!MCLAB/useful_mouse_data/mm10/sas_data';
+NOTE: Libref MM10 was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/useful_mouse_data/mm10/sas_data
+3          libname event '!MCLAB/event_analysis/sas_data';
+NOTE: Libref EVENT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/sas_data
+4          libname evspl '!MCLAB/conesa_pacbio/sas_data/splicing';
+2                                                          The SAS System                                 02:48 Sunday, June 4, 2017
+
+NOTE: Libref EVSPL was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data/splicing
+5          libname conesa '!MCLAB/conesa_pacbio/sas_data';
+NOTE: Libref CONESA was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data
+6          libname refseq '!MCLAB/event_analysis/refseq_fusions/sas_data';
+NOTE: Libref REFSEQ was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/refseq_fusions/sas_data
+7          
+8          /* For each cell type, flag if fragments are detected */
+9          
+10         data set_group;
+11           length cell_type $3.;
+12           set event.mm10_refseq_intron_counts;
+13           if sample_id in ('NSC1','NSC2') then cell_type="NSC";
+14           if sample_id in ('OLD1','OLD2') then cell_type="OLD";
+15           keep sample_id cell_type intron_id apn;
+16         run;
+
+NOTE: There were 911878 observations read from the data set EVENT.MM10_REFSEQ_INTRON_COUNTS.
+NOTE: The data set WORK.SET_GROUP has 911878 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.44 seconds
+      cpu time            0.38 seconds
+      
+
+17         
+18         data flag_intron_apn_gt0;
+19           set set_group;
+20           if apn ge 5 then flag_intron_apn_gt0=1;
+21           else flag_intron_apn_gt0=0;
+22         run;
+
+NOTE: There were 911878 observations read from the data set WORK.SET_GROUP.
+NOTE: The data set WORK.FLAG_INTRON_APN_GT0 has 911878 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.21 seconds
+      cpu time            0.21 seconds
+      
+
+23         
+24         proc sort data=flag_intron_apn_gt0;
+25           by cell_type intron_id;
+
+NOTE: There were 911878 observations read from the data set WORK.FLAG_INTRON_APN_GT0.
+NOTE: The data set WORK.FLAG_INTRON_APN_GT0 has 911878 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.53 seconds
+      cpu time            1.36 seconds
+      
+
+26         proc means data=flag_intron_apn_gt0 noprint;
+27           by cell_type intron_id;
+28           var flag_intron_apn_gt0;
+29           output out=mean_on mean=mean_gt0;
+3                                                          The SAS System                                 02:48 Sunday, June 4, 2017
+
+30         run;
+
+NOTE: There were 911878 observations read from the data set WORK.FLAG_INTRON_APN_GT0.
+NOTE: The data set WORK.MEAN_ON has 455934 observations and 5 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           1.26 seconds
+      cpu time            1.26 seconds
+      
+
+31         
+32         data nsc old;
+33           set mean_on;
+34           if cell_type="NSC" then output nsc;
+35           else output old;
+36         run;
+
+NOTE: There were 455934 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.NSC has 227967 observations and 5 variables.
+NOTE: The data set WORK.OLD has 227967 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.11 seconds
+      cpu time            0.11 seconds
+      
+
+37         
+38         data flag_on_nsc;
+39           set nsc;
+40           if mean_gt0 =1 then flag_intron_nsc_on=1;
+41           else if mean_gt0 =0 then flag_intron_nsc_on=0;
+42           else flag_intron_nsc_on=.;
+43           keep intron_id flag_intron_nsc_on;
+44         run;
+
+NOTE: There were 227967 observations read from the data set WORK.NSC.
+NOTE: The data set WORK.FLAG_ON_NSC has 227967 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.05 seconds
+      
+
+45         
+46         
+47         
+48         data flag_on_old;
+49           set old;
+50           if mean_gt0 =1 then flag_intron_old_on=1;
+51           else if mean_gt0 =0 then flag_intron_old_on=0;
+52           else flag_intron_old_on=.;
+53           keep intron_id flag_intron_old_on;
+54         run;
+
+NOTE: There were 227967 observations read from the data set WORK.OLD.
+NOTE: The data set WORK.FLAG_ON_OLD has 227967 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.05 seconds
+      
+
+4                                                          The SAS System                                 02:48 Sunday, June 4, 2017
+
+55         
+56         proc sort data=flag_on_nsc;
+57            by intron_id;
+
+NOTE: There were 227967 observations read from the data set WORK.FLAG_ON_NSC.
+NOTE: The data set WORK.FLAG_ON_NSC has 227967 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.17 seconds
+      cpu time            0.17 seconds
+      
+
+58         proc sort data=flag_on_old;
+59            by intron_id;
+60         run;
+
+NOTE: There were 227967 observations read from the data set WORK.FLAG_ON_OLD.
+NOTE: The data set WORK.FLAG_ON_OLD has 227967 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.25 seconds
+      cpu time            0.19 seconds
+      
+
+61         
+62         data event.flag_intron_on_apn5;
+63            merge flag_on_nsc (in=in1) flag_on_old (in=in2);
+64            by intron_id;
+65            if in1 and in2;
+66         run;
+
+NOTE: There were 227967 observations read from the data set WORK.FLAG_ON_NSC.
+NOTE: There were 227967 observations read from the data set WORK.FLAG_ON_OLD.
+NOTE: The data set EVENT.FLAG_INTRON_ON_APN5 has 227967 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.65 seconds
+      cpu time            0.15 seconds
+      
+
+67         
+68         
+69         /*********************************************************/
+70         
+71         * frag detection;
+72         
+73         
+74         /* For each cell type, flag if fragments are detected */
+75         
+76         data set_group;
+77           length cell_type $3.;
+78           set event.mm10_refseq_fragment_counts;
+79           if sample_id in ('NSC1','NSC2') then cell_type="NSC";
+80           if sample_id in ('OLD1','OLD2') then cell_type="OLD";
+81           keep sample_id cell_type fragment_id apn;
+82         run;
+
+NOTE: There were 1440944 observations read from the data set EVENT.MM10_REFSEQ_FRAGMENT_COUNTS.
+NOTE: The data set WORK.SET_GROUP has 1440944 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.77 seconds
+5                                                          The SAS System                                 02:48 Sunday, June 4, 2017
+
+      cpu time            0.57 seconds
+      
+
+83         
+84         data flag_frag_apn_gt0;
+85           set set_group;
+86           if apn ge 5 then flag_fragment_apn_gt0=1;
+87           else flag_fragment_apn_gt0=0;
+88         run;
+
+NOTE: There were 1440944 observations read from the data set WORK.SET_GROUP.
+NOTE: The data set WORK.FLAG_FRAG_APN_GT0 has 1440944 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.25 seconds
+      cpu time            0.24 seconds
+      
+
+89         
+90         
+91         proc sort data=flag_frag_apn_gt0;
+92           by cell_type fragment_id;
+
+NOTE: There were 1440944 observations read from the data set WORK.FLAG_FRAG_APN_GT0.
+NOTE: The data set WORK.FLAG_FRAG_APN_GT0 has 1440944 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.67 seconds
+      cpu time            1.65 seconds
+      
+
+93         proc means data=flag_frag_apn_gt0 noprint;
+94           by cell_type fragment_id;
+95           var flag_fragment_apn_gt0;
+96           output out=mean_on mean=mean_gt0;
+97         run;
+
+NOTE: There were 1440944 observations read from the data set WORK.FLAG_FRAG_APN_GT0.
+NOTE: The data set WORK.MEAN_ON has 720472 observations and 5 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           1.43 seconds
+      cpu time            1.43 seconds
+      
+
+98         
+99         data nsc old;
+100          set mean_on;
+101          if cell_type="NSC" then output nsc;
+102          else output old;
+103        run;
+
+NOTE: There were 720472 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.NSC has 360236 observations and 5 variables.
+NOTE: The data set WORK.OLD has 360236 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.22 seconds
+      cpu time            0.15 seconds
+      
+
+104        
+6                                                          The SAS System                                 02:48 Sunday, June 4, 2017
+
+105        data flag_on_nsc;
+106          set nsc;
+107          if mean_gt0 =1 then flag_fragment_nsc_on=1;
+108          else if mean_gt0 =0 then flag_fragment_nsc_on=0;
+109          else flag_fragment_nsc_on=.;
+110          keep fragment_id flag_fragment_nsc_on;
+111        run;
+
+NOTE: There were 360236 observations read from the data set WORK.NSC.
+NOTE: The data set WORK.FLAG_ON_NSC has 360236 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.07 seconds
+      cpu time            0.07 seconds
+      
+
+112        
+113        data flag_on_old;
+114          set old;
+115          if mean_gt0 =1 then flag_fragment_old_on=1;
+116          else if mean_gt0 =0 then flag_fragment_old_on=0;
+117          else flag_fragment_old_on=.;
+118          keep fragment_id flag_fragment_old_on;
+119        run;
+
+NOTE: There were 360236 observations read from the data set WORK.OLD.
+NOTE: The data set WORK.FLAG_ON_OLD has 360236 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.07 seconds
+      cpu time            0.07 seconds
+      
+
+120        
+121        
+122        proc sort data=flag_on_nsc;
+123           by fragment_id;
+
+NOTE: There were 360236 observations read from the data set WORK.FLAG_ON_NSC.
+NOTE: The data set WORK.FLAG_ON_NSC has 360236 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.19 seconds
+      
+
+124        proc sort data=flag_on_old;
+125           by fragment_id;
+126        run;
+
+NOTE: There were 360236 observations read from the data set WORK.FLAG_ON_OLD.
+NOTE: The data set WORK.FLAG_ON_OLD has 360236 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.20 seconds
+      
+
+127        
+128        data event.flag_fragment_on_apn5;
+129           merge flag_on_nsc (in=in1) flag_on_old (in=in2);
+130           by fragment_id;
+7                                                          The SAS System                                 02:48 Sunday, June 4, 2017
+
+131           if in1 and in2;
+132        run;
+
+NOTE: There were 360236 observations read from the data set WORK.FLAG_ON_NSC.
+NOTE: There were 360236 observations read from the data set WORK.FLAG_ON_OLD.
+NOTE: The data set EVENT.FLAG_FRAGMENT_ON_APN5 has 360236 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.56 seconds
+      cpu time            0.18 seconds
+      
+
+133        
+134        
+135        /*********************************************************/
+136        
+137        * fus detection;
+138        
+139        
+140        /* For each cell type, flag if fragments are detected */
+141        
+142        data set_group;
+143          length cell_type $3.;
+144          set event.mm10_refseq_fusion_counts;
+145          if sample_id in ('NSC1','NSC2') then cell_type="NSC";
+146          if sample_id in ('OLD1','OLD2') then cell_type="OLD";
+147          keep sample_id cell_type fusion_id apn;
+148        run;
+
+NOTE: There were 1100708 observations read from the data set EVENT.MM10_REFSEQ_FUSION_COUNTS.
+NOTE: The data set WORK.SET_GROUP has 1100708 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.72 seconds
+      cpu time            0.39 seconds
+      
+
+149        
+150        data flag_fusion_apn_gt0;
+151          set set_group;
+152          if apn ge 5 then flag_fusion_apn_gt0=1;
+153          else flag_fusion_apn_gt0=0;
+154        run;
+
+NOTE: There were 1100708 observations read from the data set WORK.SET_GROUP.
+NOTE: The data set WORK.FLAG_FUSION_APN_GT0 has 1100708 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.19 seconds
+      cpu time            0.20 seconds
+      
+
+155        
+156        
+157        proc sort data=flag_fusion_apn_gt0;
+158          by cell_type fusion_id;
+
+NOTE: There were 1100708 observations read from the data set WORK.FLAG_FUSION_APN_GT0.
+NOTE: The data set WORK.FLAG_FUSION_APN_GT0 has 1100708 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.49 seconds
+8                                                          The SAS System                                 02:48 Sunday, June 4, 2017
+
+      cpu time            1.25 seconds
+      
+
+159        proc means data=flag_fusion_apn_gt0 noprint;
+160          by cell_type fusion_id;
+161          var flag_fusion_apn_gt0;
+162          output out=mean_on mean=mean_gt0;
+163        run;
+
+NOTE: There were 1100708 observations read from the data set WORK.FLAG_FUSION_APN_GT0.
+NOTE: The data set WORK.MEAN_ON has 550354 observations and 5 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           1.18 seconds
+      cpu time            1.09 seconds
+      
+
+164        
+165        data nsc old;
+166          set mean_on;
+167          if cell_type="NSC" then output nsc;
+168          else output old;
+169        run;
+
+NOTE: There were 550354 observations read from the data set WORK.MEAN_ON.
+NOTE: The data set WORK.NSC has 275177 observations and 5 variables.
+NOTE: The data set WORK.OLD has 275177 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.11 seconds
+      cpu time            0.11 seconds
+      
+
+170        
+171        data flag_on_nsc;
+172          set nsc;
+173          if mean_gt0 =1 then flag_fusion_nsc_on=1;
+174          else if mean_gt0 =0 then flag_fusion_nsc_on=0;
+175          else flag_fusion_nsc_on=.;
+176          keep fusion_id flag_fusion_nsc_on;
+177        run;
+
+NOTE: There were 275177 observations read from the data set WORK.NSC.
+NOTE: The data set WORK.FLAG_ON_NSC has 275177 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.06 seconds
+      
+
+178        
+179        data flag_on_old;
+180          set old;
+181          if mean_gt0 =1 then flag_fusion_old_on=1;
+182          else if mean_gt0 =0 then flag_fusion_old_on=0;
+183          else flag_fusion_old_on=.;
+184          keep fusion_id flag_fusion_old_on;
+185        run;
+
+NOTE: There were 275177 observations read from the data set WORK.OLD.
+NOTE: The data set WORK.FLAG_ON_OLD has 275177 observations and 2 variables.
+9                                                          The SAS System                                 02:48 Sunday, June 4, 2017
+
+NOTE: DATA statement used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.03 seconds
+      
+
+186        
+187        
+188        
+189        proc sort data=flag_on_nsc;
+190           by fusion_id;
+
+NOTE: There were 275177 observations read from the data set WORK.FLAG_ON_NSC.
+NOTE: The data set WORK.FLAG_ON_NSC has 275177 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.14 seconds
+      
+
+191        proc sort data=flag_on_old;
+192           by fusion_id;
+193        run;
+
+NOTE: There were 275177 observations read from the data set WORK.FLAG_ON_OLD.
+NOTE: The data set WORK.FLAG_ON_OLD has 275177 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.16 seconds
+      
+
+194        
+195        data event.flag_fusion_on_apn5;
+196           merge flag_on_nsc (in=in1) flag_on_old (in=in2);
+197           by fusion_id;
+198           if in1 and in2;
+199        run;
+
+NOTE: There were 275177 observations read from the data set WORK.FLAG_ON_NSC.
+NOTE: There were 275177 observations read from the data set WORK.FLAG_ON_OLD.
+NOTE: The data set EVENT.FLAG_FUSION_ON_APN5 has 275177 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.45 seconds
+      cpu time            0.13 seconds
+      
+
+200        
+201        
+202        /*********************************************************/
+203        
+204        
+205        
+206        /* Merge on-flags, mean APN, introns, fragments and fusions.
+207           Then calculate the ratio between IR event and nearest fusion and fragment and export for plots
+208        
+209           I want to plot density plots of IR to fusion/fragment ratios and scatter plots of
+210           IR apn to fusion/fragment APN
+211        
+212           If IR event not detected, then we should drop the intron check */
+213        
+10                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+214        /* Get detection flags */
+215        data int_on;
+216            set event.flag_intron_on_apn5;
+217            where flag_intron_nsc_on ne .;
+218            keep intron_id flag_intron_nsc_on;
+219        run;
+
+NOTE: There were 225777 observations read from the data set EVENT.FLAG_INTRON_ON_APN5.
+      WHERE flag_intron_nsc_on not = .;
+NOTE: The data set WORK.INT_ON has 225777 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.33 seconds
+      cpu time            0.09 seconds
+      
+
+220        
+221        
+222        data ir_on;
+223           set event.flag_feature_on_all_reps_ge5;
+224            where flag_feature_on_ge5 ne .;
+225           keep feature_id flag_feature_on_ge5 ;
+226           rename feature_id=event_id flag_feature_on_ge5=flag_splicing_on_ge5;
+227        run;
+
+NOTE: There were 3302204 observations read from the data set EVENT.FLAG_FEATURE_ON_ALL_REPS_GE5.
+      WHERE flag_feature_on_ge5 not = .;
+NOTE: The data set WORK.IR_ON has 3302204 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           23.30 seconds
+      cpu time            4.01 seconds
+      
+
+228        
+229        data fus_on;
+230           set event.flag_fusion_on_apn5;
+231               where flag_fusion_nsc_on ne .;
+232           keep fusion_id flag_fusion_nsc_on;
+233        run;
+
+NOTE: There were 261126 observations read from the data set EVENT.FLAG_FUSION_ON_APN5.
+      WHERE flag_fusion_nsc_on not = .;
+NOTE: The data set WORK.FUS_ON has 261126 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.17 seconds
+      cpu time            0.07 seconds
+      
+
+234        
+235        data frag_on;
+236           set event.flag_fragment_on_apn5;
+237               where flag_fragment_nsc_on ne .;
+238           keep fragment_id flag_fragment_nsc_on;
+239        run;
+
+NOTE: There were 342982 observations read from the data set EVENT.FLAG_FRAGMENT_ON_APN5.
+      WHERE flag_fragment_nsc_on not = .;
+NOTE: The data set WORK.FRAG_ON has 342982 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+11                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+      real time           0.21 seconds
+      cpu time            0.09 seconds
+      
+
+240        
+241        /* Get mean APN */
+242        data mean_int_apn;
+243           set event.mean_apn_intron_nsc;
+244        run;
+
+NOTE: There were 227967 observations read from the data set EVENT.MEAN_APN_INTRON_NSC.
+NOTE: The data set WORK.MEAN_INT_APN has 227967 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.34 seconds
+      cpu time            0.08 seconds
+      
+
+245        
+246        data mean_frag_apn;
+247           set event.mean_apn_fragment_nsc;
+248        run;
+
+NOTE: There were 360236 observations read from the data set EVENT.MEAN_APN_FRAGMENT_NSC.
+NOTE: The data set WORK.MEAN_FRAG_APN has 360236 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.22 seconds
+      cpu time            0.05 seconds
+      
+
+249        
+250        data mean_fus_apn;
+251           set event.mean_apn_fusion_nsc;
+252        run;
+
+NOTE: There were 275177 observations read from the data set EVENT.MEAN_APN_FUSION_NSC.
+NOTE: The data set WORK.MEAN_FUS_APN has 275177 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.19 seconds
+      cpu time            0.05 seconds
+      
+
+253        
+254        data mean_IR_apn;
+255           set event.mean_apn_IR_nsc;
+256        run;
+
+NOTE: There were 247983 observations read from the data set EVENT.MEAN_APN_IR_NSC.
+NOTE: The data set WORK.MEAN_IR_APN has 247983 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.50 seconds
+      cpu time            0.25 seconds
+      
+
+257        
+258        /* Get intron-to-IR and intron-to-fusion/fragment and merge */
+259        data intron_to_event;
+260          set event.ir_events_w_intron;
+261           where flag_no_computed_intron=0; *only keep those with computed introns;
+12                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+262        run;
+
+NOTE: There were 154934 observations read from the data set EVENT.IR_EVENTS_W_INTRON.
+      WHERE flag_no_computed_intron=0;
+NOTE: The data set WORK.INTRON_TO_EVENT has 154934 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           3.24 seconds
+      cpu time            0.37 seconds
+      
+
+263        
+264        data intron_to_fus_frag;
+265           set event.mm10_introns_to_fragment_fusion;
+266           drop chr intron_start intron_stop;
+267        run;
+
+NOTE: There were 154934 observations read from the data set EVENT.MM10_INTRONS_TO_FRAGMENT_FUSION.
+NOTE: The data set WORK.INTRON_TO_FUS_FRAG has 154934 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.62 seconds
+      cpu time            0.10 seconds
+      
+
+268        
+269        
+270        proc sort data=intron_to_event;
+271           by intron_id;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_EVENT.
+NOTE: The data set WORK.INTRON_TO_EVENT has 154934 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.76 seconds
+      cpu time            0.34 seconds
+      
+
+272        proc sort data=intron_to_fus_frag;
+273           by intron_id;
+274        run;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_FUS_FRAG.
+NOTE: The data set WORK.INTRON_TO_FUS_FRAG has 154934 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.20 seconds
+      cpu time            0.20 seconds
+      
+
+275        
+276        data intron_to_ir_fus_frag;
+277          merge intron_to_event (in=in1) intron_to_fus_frag (in=in2);
+278          by intron_id;
+279          if in1 and in2;
+280        run;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_EVENT.
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_FUS_FRAG.
+NOTE: The data set WORK.INTRON_TO_IR_FUS_FRAG has 154934 observations and 8 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.26 seconds
+13                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+      cpu time            0.26 seconds
+      
+
+281        
+282        /* Merge all together */
+283        proc sort data=int_on;
+284          by intron_id;
+
+NOTE: There were 225777 observations read from the data set WORK.INT_ON.
+NOTE: The data set WORK.INT_ON has 225777 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.16 seconds
+      cpu time            0.17 seconds
+      
+
+285        proc sort data=mean_int_apn;
+286          by intron_id;
+287        run;
+
+NOTE: There were 227967 observations read from the data set WORK.MEAN_INT_APN.
+NOTE: The data set WORK.MEAN_INT_APN has 227967 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.16 seconds
+      cpu time            0.16 seconds
+      
+
+288        data mean_int_apn_w_dtct;
+289           merge int_on (in=in1) mean_int_apn (in=in2);
+290           by intron_id;
+291           if in1 and in2;
+292        run;
+
+NOTE: There were 225777 observations read from the data set WORK.INT_ON.
+NOTE: There were 227967 observations read from the data set WORK.MEAN_INT_APN.
+NOTE: The data set WORK.MEAN_INT_APN_W_DTCT has 225777 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.13 seconds
+      cpu time            0.13 seconds
+      
+
+293        
+294        proc sort data=ir_on;
+295          by event_id;
+
+NOTE: There were 3302204 observations read from the data set WORK.IR_ON.
+NOTE: The data set WORK.IR_ON has 3302204 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           17.75 seconds
+      cpu time            9.18 seconds
+      
+
+296        proc sort data=mean_ir_apn;
+297          by event_id;
+298        run;
+
+NOTE: There were 247983 observations read from the data set WORK.MEAN_IR_APN.
+NOTE: The data set WORK.MEAN_IR_APN has 247983 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+14                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+      real time           0.50 seconds
+      cpu time            0.43 seconds
+      
+
+299        data mean_ir_apn_w_dtct;
+300           merge ir_on (in=in1) mean_ir_apn (in=in2);
+301           by event_id;
+302           if in1 and in2;
+303        run;
+
+NOTE: There were 3302204 observations read from the data set WORK.IR_ON.
+NOTE: There were 247983 observations read from the data set WORK.MEAN_IR_APN.
+NOTE: The data set WORK.MEAN_IR_APN_W_DTCT has 246627 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.73 seconds
+      cpu time            1.73 seconds
+      
+
+304        
+305        proc sort data=fus_on;
+306          by fusion_id;
+
+NOTE: There were 261126 observations read from the data set WORK.FUS_ON.
+NOTE: The data set WORK.FUS_ON has 261126 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.11 seconds
+      cpu time            0.12 seconds
+      
+
+307        proc sort data=mean_fus_apn;
+308          by fusion_id;
+309        run;
+
+NOTE: There were 275177 observations read from the data set WORK.MEAN_FUS_APN.
+NOTE: The data set WORK.MEAN_FUS_APN has 275177 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.09 seconds
+      cpu time            0.15 seconds
+      
+
+310        data mean_fus_apn_w_dtct;
+311           merge fus_on (in=in1) mean_fus_apn (in=in2);
+312           by fusion_id;
+313           if in1 and in2;
+314        run;
+
+NOTE: There were 261126 observations read from the data set WORK.FUS_ON.
+NOTE: There were 275177 observations read from the data set WORK.MEAN_FUS_APN.
+NOTE: The data set WORK.MEAN_FUS_APN_W_DTCT has 261126 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.11 seconds
+      cpu time            0.12 seconds
+      
+
+315        
+316        
+317        proc sort data=frag_on;
+318          by fragment_id;
+15                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+
+NOTE: There were 342982 observations read from the data set WORK.FRAG_ON.
+NOTE: The data set WORK.FRAG_ON has 342982 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.07 seconds
+      cpu time            0.20 seconds
+      
+
+319        proc sort data=mean_frag_apn;
+320          by fragment_id;
+321        run;
+
+NOTE: There were 360236 observations read from the data set WORK.MEAN_FRAG_APN.
+NOTE: The data set WORK.MEAN_FRAG_APN has 360236 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.20 seconds
+      
+
+322        data mean_frag_apn_w_dtct;
+323           merge frag_on (in=in1) mean_frag_apn (in=in2);
+324           by fragment_id;
+325           if in1 and in2;
+326        run;
+
+NOTE: There were 342982 observations read from the data set WORK.FRAG_ON.
+NOTE: There were 360236 observations read from the data set WORK.MEAN_FRAG_APN.
+NOTE: The data set WORK.MEAN_FRAG_APN_W_DTCT has 342982 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.14 seconds
+      cpu time            0.15 seconds
+      
+
+327        
+328        data frag_5prime_mean_dtct;
+329           set mean_frag_apn_w_dtct;
+330           rename fragment_id=fragment_id_5prime flag_fragment_nsc_on=flag_fragment_on_5prime
+331                  mean_apn_fragment=mean_apn_fragment_5prime;
+332        run;
+
+NOTE: There were 342982 observations read from the data set WORK.MEAN_FRAG_APN_W_DTCT.
+NOTE: The data set WORK.FRAG_5PRIME_MEAN_DTCT has 342982 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.05 seconds
+      
+
+333        
+334        data frag_3prime_mean_dtct;
+335           set mean_frag_apn_w_dtct;
+336           rename fragment_id=fragment_id_3prime flag_fragment_nsc_on=flag_fragment_on_3prime
+337                  mean_apn_fragment=mean_apn_fragment_3prime;
+338        run;
+
+NOTE: There were 342982 observations read from the data set WORK.MEAN_FRAG_APN_W_DTCT.
+NOTE: The data set WORK.FRAG_3PRIME_MEAN_DTCT has 342982 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.04 seconds
+16                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+      cpu time            0.05 seconds
+      
+
+339        
+340        data fus_5prime_mean_dtct;
+341           set mean_fus_apn_w_dtct;
+342           rename fusion_id=fusion_id_5prime flag_fusion_nsc_on=flag_fusion_on_5prime
+343                  mean_apn_fusion=mean_apn_fusion_5prime;
+344        run;
+
+NOTE: There were 261126 observations read from the data set WORK.MEAN_FUS_APN_W_DTCT.
+NOTE: The data set WORK.FUS_5PRIME_MEAN_DTCT has 261126 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.04 seconds
+      
+
+345        
+346        data fus_3prime_mean_dtct;
+347           set mean_fus_apn_w_dtct;
+348           rename fusion_id=fusion_id_3prime flag_fusion_nsc_on=flag_fusion_on_3prime
+349                  mean_apn_fusion=mean_apn_fusion_3prime;
+350        run;
+
+NOTE: There were 261126 observations read from the data set WORK.MEAN_FUS_APN_W_DTCT.
+NOTE: The data set WORK.FUS_3PRIME_MEAN_DTCT has 261126 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.03 seconds
+      
+
+351        
+352        
+353        proc sort data=frag_5prime_mean_dtct;
+354           by fragment_id_5prime;
+
+NOTE: There were 342982 observations read from the data set WORK.FRAG_5PRIME_MEAN_DTCT.
+NOTE: The data set WORK.FRAG_5PRIME_MEAN_DTCT has 342982 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.07 seconds
+      cpu time            0.21 seconds
+      
+
+355        proc sort data=frag_3prime_mean_dtct;
+356           by fragment_id_3prime;
+
+NOTE: There were 342982 observations read from the data set WORK.FRAG_3PRIME_MEAN_DTCT.
+NOTE: The data set WORK.FRAG_3PRIME_MEAN_DTCT has 342982 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.07 seconds
+      cpu time            0.20 seconds
+      
+
+357        proc sort data=fus_5prime_mean_dtct;
+358           by fusion_id_5prime;
+
+NOTE: There were 261126 observations read from the data set WORK.FUS_5PRIME_MEAN_DTCT.
+NOTE: The data set WORK.FUS_5PRIME_MEAN_DTCT has 261126 observations and 3 variables.
+17                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.11 seconds
+      cpu time            0.12 seconds
+      
+
+359        proc sort data=fus_3prime_mean_dtct;
+360           by fusion_id_3prime;
+
+NOTE: There were 261126 observations read from the data set WORK.FUS_3PRIME_MEAN_DTCT.
+NOTE: The data set WORK.FUS_3PRIME_MEAN_DTCT has 261126 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.11 seconds
+      cpu time            0.12 seconds
+      
+
+361        proc sort data=mean_ir_apn_w_dtct;
+362           by event_id;
+
+NOTE: There were 246627 observations read from the data set WORK.MEAN_IR_APN_W_DTCT.
+NOTE: The data set WORK.MEAN_IR_APN_W_DTCT has 246627 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.76 seconds
+      cpu time            0.42 seconds
+      
+
+363        proc sort data=mean_int_apn_w_dtct;
+364           by intron_id;
+
+NOTE: There were 225777 observations read from the data set WORK.MEAN_INT_APN_W_DTCT.
+NOTE: The data set WORK.MEAN_INT_APN_W_DTCT has 225777 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.16 seconds
+      cpu time            0.16 seconds
+      
+
+365        proc sort data=intron_to_ir_fus_frag;
+366           by intron_id;
+367        run;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_IR_FUS_FRAG.
+NOTE: The data set WORK.INTRON_TO_IR_FUS_FRAG has 154934 observations and 8 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.77 seconds
+      cpu time            0.35 seconds
+      
+
+368        
+369        data intron2ir_p1;
+370          merge intron_to_ir_fus_frag (in=in1) mean_int_apn_w_dtct (in=in2);
+371          by intron_id;
+372          if in1 and in2;
+373        run;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_IR_FUS_FRAG.
+NOTE: There were 225777 observations read from the data set WORK.MEAN_INT_APN_W_DTCT.
+NOTE: The data set WORK.INTRON2IR_P1 has 153357 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.32 seconds
+18                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+      cpu time            0.33 seconds
+      
+
+374        
+375        proc sort data=intron2ir_p1;
+376           by event_id;
+377        run;
+
+NOTE: There were 153357 observations read from the data set WORK.INTRON2IR_P1.
+NOTE: The data set WORK.INTRON2IR_P1 has 153357 observations and 10 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.40 seconds
+      cpu time            0.40 seconds
+      
+
+378        
+379        data intron2ir_p2;
+380           merge intron2ir_p1 (in=in1) mean_ir_apn_w_dtct (in=in2);
+381           by event_id;
+382           if in1 and in2;
+383        run;
+
+NOTE: There were 153357 observations read from the data set WORK.INTRON2IR_P1.
+NOTE: There were 246627 observations read from the data set WORK.MEAN_IR_APN_W_DTCT.
+NOTE: The data set WORK.INTRON2IR_P2 has 152673 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.42 seconds
+      cpu time            0.43 seconds
+      
+
+384        
+385        proc sort data=intron2ir_p2;
+386          by fusion_id_5prime;
+387        run;
+
+NOTE: There were 152673 observations read from the data set WORK.INTRON2IR_P2.
+NOTE: The data set WORK.INTRON2IR_P2 has 152673 observations and 12 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.52 seconds
+      cpu time            0.37 seconds
+      
+
+388        
+389        data intron2ir_p3;
+390          merge intron2ir_p2 (in=in1) fus_5prime_mean_dtct (in=in2);
+391          by fusion_id_5prime;
+392          if in1 and in2;
+393        run;
+
+WARNING: Multiple lengths were specified for the BY variable fusion_id_5prime by input data sets. This might cause unexpected 
+         results.
+NOTE: There were 152673 observations read from the data set WORK.INTRON2IR_P2.
+NOTE: There were 261126 observations read from the data set WORK.FUS_5PRIME_MEAN_DTCT.
+NOTE: The data set WORK.INTRON2IR_P3 has 143775 observations and 14 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.32 seconds
+      cpu time            0.32 seconds
+      
+19                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+
+394        
+395        proc sort data=intron2ir_p3;
+396          by fusion_id_3prime;
+397        run;
+
+NOTE: There were 143775 observations read from the data set WORK.INTRON2IR_P3.
+NOTE: The data set WORK.INTRON2IR_P3 has 143775 observations and 14 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.59 seconds
+      cpu time            0.34 seconds
+      
+
+398        
+399        
+400        data intron2ir_p4;
+401          merge intron2ir_p3 (in=in1) fus_3prime_mean_dtct (in=in2);
+402          by fusion_id_3prime;
+403          if in1 and in2;
+404        run;
+
+NOTE: There were 143775 observations read from the data set WORK.INTRON2IR_P3.
+NOTE: There were 261126 observations read from the data set WORK.FUS_3PRIME_MEAN_DTCT.
+NOTE: The data set WORK.INTRON2IR_P4 has 137448 observations and 16 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.32 seconds
+      cpu time            0.32 seconds
+      
+
+405        
+406        proc sort data=intron2ir_p4;
+407          by fragment_id_5prime;
+408        run;
+
+NOTE: There were 137448 observations read from the data set WORK.INTRON2IR_P4.
+NOTE: The data set WORK.INTRON2IR_P4 has 137448 observations and 16 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.79 seconds
+      cpu time            0.36 seconds
+      
+
+409        
+410        data intron2ir_p5;
+411          merge intron2ir_p4 (in=in1) frag_5prime_mean_dtct (in=in2);
+412          by fragment_id_5prime;
+413          if in1 and in2;
+414        run;
+
+NOTE: There were 137448 observations read from the data set WORK.INTRON2IR_P4.
+NOTE: There were 342982 observations read from the data set WORK.FRAG_5PRIME_MEAN_DTCT.
+NOTE: The data set WORK.INTRON2IR_P5 has 137056 observations and 18 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.38 seconds
+      cpu time            0.38 seconds
+      
+
+415        
+416        proc sort data=intron2ir_p5;
+20                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+417          by fragment_id_3prime;
+418        run;
+
+NOTE: There were 137056 observations read from the data set WORK.INTRON2IR_P5.
+NOTE: The data set WORK.INTRON2IR_P5 has 137056 observations and 18 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.33 seconds
+      cpu time            0.34 seconds
+      
+
+419        
+420        data intron2ir_p6;
+421          merge intron2ir_p5 (in=in1) frag_3prime_mean_dtct (in=in2);
+422          by fragment_id_3prime;
+423          if in1 and in2;
+424        run;
+
+NOTE: There were 137056 observations read from the data set WORK.INTRON2IR_P5.
+NOTE: There were 342982 observations read from the data set WORK.FRAG_3PRIME_MEAN_DTCT.
+NOTE: The data set WORK.INTRON2IR_P6 has 136629 observations and 20 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.38 seconds
+      cpu time            0.38 seconds
+      
+
+425        
+426        /* Calc IR ratios */
+427        data ir_ratios;
+428          set intron2ir_p6;
+429          ir_to_5fus_ratio=mean_apn_ir/mean_apn_fusion_5prime;
+430          ir_to_5frag_ratio=mean_apn_ir/mean_apn_fragment_5prime;
+431          ir_to_3fus_ratio=mean_apn_ir/mean_apn_fusion_3prime;
+432          ir_to_3frag_ratio=mean_apn_ir/mean_apn_fragment_3prime;
+433          mean_apn_fusion_mean=(mean_apn_fusion_5prime+mean_apn_fusion_3prime)/2;
+434          mean_apn_fragment_mean=(mean_apn_fragment_5prime+mean_apn_fragment_3prime)/2;
+435          ir_to_mean_fus_ratio=mean_apn_ir/mean_apn_fusion_mean;
+436          ir_to_mean_frag_ratio=mean_apn_ir/mean_apn_fragment_mean;
+437        run;
+
+NOTE: Division by zero detected at line 429 column 31.
+NOTE: Division by zero detected at line 430 column 32.
+event_id=56277:intron_9 intron_id=56277_S100002_SI_intron_F100003_SI|chr16:56867740-56885811 gene_id=56277 flag_no_computed_intron=0
+fusion_id_5prime=S100002_SI fusion_id_3prime=F100003_SI fragment_id_5prime=S100002_SI:1 fragment_id_3prime=F100003_SI:1
+flag_intron_nsc_on=0 mean_apn_intron=0.0190903054 flag_splicing_on_ge5=0 mean_apn_IR=0 flag_fusion_on_5prime=0
+mean_apn_fusion_5prime=0 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=1.272797527 flag_fragment_on_5prime=0
+mean_apn_fragment_5prime=0 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=2.1377840909 ir_to_5fus_ratio=. ir_to_5frag_ratio=.
+ir_to_3fus_ratio=0 ir_to_3frag_ratio=0 mean_apn_fusion_mean=0.6363987635 mean_apn_fragment_mean=1.0688920455 ir_to_mean_fus_ratio=0
+ir_to_mean_frag_ratio=0 _ERROR_=1 _N_=1
+NOTE: Division by zero detected at line 432 column 32.
+event_id=67581:intron_2 intron_id=67581_S100032_SI_intron_F100039_SI|chr16:57161040-57168856 gene_id=67581 flag_no_computed_intron=0
+fusion_id_5prime=S100032_SI fusion_id_3prime=F100039_SI fragment_id_5prime=S100032_SI:1 fragment_id_3prime=F100039_SI:1
+flag_intron_nsc_on=1 mean_apn_intron=11.472687732 flag_splicing_on_ge5=0 mean_apn_IR=0 flag_fusion_on_5prime=0
+mean_apn_fusion_5prime=1.2692307692 flag_fusion_on_3prime=1 mean_apn_fusion_3prime=19.161616162 flag_fragment_on_5prime=0
+mean_apn_fragment_5prime=1.2692307692 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0 ir_to_5fus_ratio=0 ir_to_5frag_ratio=0
+ir_to_3fus_ratio=0 ir_to_3frag_ratio=. mean_apn_fusion_mean=10.215423465 mean_apn_fragment_mean=0.6346153846 ir_to_mean_fus_ratio=0
+ir_to_mean_frag_ratio=0 _ERROR_=1 _N_=2
+NOTE: Division by zero detected at line 432 column 32.
+event_id=70876:2_intron intron_id=70876_S100081_SI_intron_F100082_SI|chr16:57333990-57338304 gene_id=70876 flag_no_computed_intron=0
+21                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+fusion_id_5prime=S100081_SI fusion_id_3prime=F100082_SI fragment_id_5prime=S100081_SI:1 fragment_id_3prime=F100082_SI:1
+flag_intron_nsc_on=0 mean_apn_intron=0 flag_splicing_on_ge5=0 mean_apn_IR=0.3353658537 flag_fusion_on_5prime=0
+mean_apn_fusion_5prime=0.0629213483 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0.1149296675 flag_fragment_on_5prime=0
+mean_apn_fragment_5prime=0.0629213483 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0 ir_to_5fus_ratio=5.3299216027
+ir_to_5frag_ratio=5.3299216027 ir_to_3fus_ratio=2.9180094304 ir_to_3frag_ratio=. mean_apn_fusion_mean=0.0889255079
+mean_apn_fragment_mean=0.0314606742 ir_to_mean_fus_ratio=3.7713122085 ir_to_mean_frag_ratio=10.659843205 _ERROR_=1 _N_=4
+NOTE: Division by zero detected at line 429 column 31.
+NOTE: Division by zero detected at line 430 column 32.
+event_id=102636400:1_intron intron_id=102636400_S100126_SI_intron_F100128_SI|chr16:58476054-58480842 gene_id=102636400
+flag_no_computed_intron=0 fusion_id_5prime=S100126_SI fusion_id_3prime=F100128_SI fragment_id_5prime=S100126_SI:1
+fragment_id_3prime=F100128_SI:1 flag_intron_nsc_on=0 mean_apn_intron=0 flag_splicing_on_ge5=0 mean_apn_IR=0.3353658537
+flag_fusion_on_5prime=0 mean_apn_fusion_5prime=0 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0.1077419355
+flag_fragment_on_5prime=0 mean_apn_fragment_5prime=0 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0.1987315011
+ir_to_5fus_ratio=. ir_to_5frag_ratio=. ir_to_3fus_ratio=3.1126770848 ir_to_3frag_ratio=1.6875324338
+mean_apn_fusion_mean=0.0538709677 mean_apn_fragment_mean=0.0993657505 ir_to_mean_fus_ratio=6.2253541695
+ir_to_mean_frag_ratio=3.3750648676 _ERROR_=1 _N_=5
+NOTE: Division by zero detected at line 432 column 32.
+event_id=105246124:intron_2 intron_id=105246124_S100149_SI_intron_F100150_SI|chr16:58658049-58660003 gene_id=105246124
+flag_no_computed_intron=0 fusion_id_5prime=S100149_SI fusion_id_3prime=F100150_SI fragment_id_5prime=S100149_SI:1
+fragment_id_3prime=F100150_SI:1 flag_intron_nsc_on=0 mean_apn_intron=0.0140664962 flag_splicing_on_ge5=0 mean_apn_IR=0
+flag_fusion_on_5prime=0 mean_apn_fusion_5prime=0.0488656195 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0.1202882483
+flag_fragment_on_5prime=0 mean_apn_fragment_5prime=0.0488656195 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0
+ir_to_5fus_ratio=0 ir_to_5frag_ratio=0 ir_to_3fus_ratio=0 ir_to_3frag_ratio=. mean_apn_fusion_mean=0.0845769339
+mean_apn_fragment_mean=0.0244328098 ir_to_mean_fus_ratio=0 ir_to_mean_frag_ratio=0 _ERROR_=1 _N_=6
+NOTE: Division by zero detected at line 431 column 31.
+NOTE: Division by zero detected at line 432 column 32.
+event_id=259000:1_intron intron_id=259000_S100187_SI_intron_F100188_SI|chr16:59131728-59148831 gene_id=259000
+flag_no_computed_intron=0 fusion_id_5prime=S100187_SI fusion_id_3prime=F100188_SI fragment_id_5prime=S100187_SI:1
+fragment_id_3prime=F100188_SI:1 flag_intron_nsc_on=0 mean_apn_intron=0.0960009355 flag_splicing_on_ge5=0 mean_apn_IR=0
+flag_fusion_on_5prime=0 mean_apn_fusion_5prime=0.0238095238 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0
+flag_fragment_on_5prime=0 mean_apn_fragment_5prime=0.0238095238 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0
+ir_to_5fus_ratio=0 ir_to_5frag_ratio=0 ir_to_3fus_ratio=. ir_to_3frag_ratio=. mean_apn_fusion_mean=0.0119047619
+mean_apn_fragment_mean=0.0119047619 ir_to_mean_fus_ratio=0 ir_to_mean_frag_ratio=0 _ERROR_=1 _N_=9
+NOTE: Division by zero detected at line 429 column 31.
+NOTE: Division by zero detected at line 430 column 32.
+NOTE: Division by zero detected at line 432 column 32.
+NOTE: Division by zero detected at line 436 column 36.
+event_id=269109:intron_2 intron_id=269109_S10017_SI_intron_F10018_SI|chr1:123319855-123332136 gene_id=269109
+flag_no_computed_intron=0 fusion_id_5prime=S10017_SI fusion_id_3prime=F10018_SI fragment_id_5prime=S10017_SI:1
+fragment_id_3prime=F10018_SI:1 flag_intron_nsc_on=0 mean_apn_intron=0.0059029474 flag_splicing_on_ge5=0 mean_apn_IR=0.25
+flag_fusion_on_5prime=0 mean_apn_fusion_5prime=0 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0.2200712061
+flag_fragment_on_5prime=0 mean_apn_fragment_5prime=0 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0 ir_to_5fus_ratio=.
+ir_to_5frag_ratio=. ir_to_3fus_ratio=1.1359959555 ir_to_3frag_ratio=. mean_apn_fusion_mean=0.110035603 mean_apn_fragment_mean=0
+ir_to_mean_fus_ratio=2.271991911 ir_to_mean_frag_ratio=. _ERROR_=1 _N_=10
+NOTE: Division by zero detected at line 429 column 31.
+NOTE: Division by zero detected at line 430 column 32.
+NOTE: Division by zero detected at line 431 column 31.
+NOTE: Division by zero detected at line 432 column 32.
+NOTE: Division by zero detected at line 435 column 35.
+NOTE: Division by zero detected at line 436 column 36.
+event_id=328699:9_intron intron_id=328699_S100212_SI_intron_F100213_SI|chr16:59448120-59461377 gene_id=328699
+flag_no_computed_intron=0 fusion_id_5prime=S100212_SI fusion_id_3prime=F100213_SI fragment_id_5prime=S100212_SI:1
+fragment_id_3prime=F100213_SI:1 flag_intron_nsc_on=0 mean_apn_intron=0.4002111932 flag_splicing_on_ge5=0 mean_apn_IR=0
+flag_fusion_on_5prime=0 mean_apn_fusion_5prime=0 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0 flag_fragment_on_5prime=0
+mean_apn_fragment_5prime=0 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0 ir_to_5fus_ratio=. ir_to_5frag_ratio=.
+ir_to_3fus_ratio=. ir_to_3frag_ratio=. mean_apn_fusion_mean=0 mean_apn_fragment_mean=0 ir_to_mean_fus_ratio=.
+ir_to_mean_frag_ratio=. _ERROR_=1 _N_=12
+NOTE: Division by zero detected at line 429 column 31.
+22                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+NOTE: Division by zero detected at line 430 column 32.
+NOTE: Division by zero detected at line 431 column 31.
+NOTE: Division by zero detected at line 432 column 32.
+NOTE: Division by zero detected at line 435 column 35.
+NOTE: Division by zero detected at line 436 column 36.
+event_id=13840:intron_22 intron_id=13840_S100279_SI_intron_F100280_SI|chr16:60526513-60604862 gene_id=13840
+flag_no_computed_intron=0 fusion_id_5prime=S100279_SI fusion_id_3prime=F100280_SI fragment_id_5prime=S100279_SI:1
+fragment_id_3prime=F100280_SI:1 flag_intron_nsc_on=0 mean_apn_intron=0.0069240587 flag_splicing_on_ge5=0 mean_apn_IR=0
+flag_fusion_on_5prime=0 mean_apn_fusion_5prime=0 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0 flag_fragment_on_5prime=0
+mean_apn_fragment_5prime=0 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0 ir_to_5fus_ratio=. ir_to_5frag_ratio=.
+ir_to_3fus_ratio=. ir_to_3frag_ratio=. mean_apn_fusion_mean=0 mean_apn_fragment_mean=0 ir_to_mean_fus_ratio=.
+ir_to_mean_frag_ratio=. _ERROR_=1 _N_=14
+NOTE: Division by zero detected at line 429 column 31.
+NOTE: Division by zero detected at line 430 column 32.
+event_id=18736:2_intron intron_id=18736_F100378_SI_intron_F100379_SI|chr16:65520770-65523483 gene_id=18736 flag_no_computed_intron=0
+fusion_id_5prime=F100378_SI fusion_id_3prime=F100379_SI fragment_id_5prime=F100378_SI:2 fragment_id_3prime=F100379_SI:1
+flag_intron_nsc_on=0 mean_apn_intron=0.0103168755 flag_splicing_on_ge5=0 mean_apn_IR=0 flag_fusion_on_5prime=0
+mean_apn_fusion_5prime=0 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0.1754966887 flag_fragment_on_5prime=0
+mean_apn_fragment_5prime=0 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0.2278481013 ir_to_5fus_ratio=. ir_to_5frag_ratio=.
+ir_to_3fus_ratio=0 ir_to_3frag_ratio=0 mean_apn_fusion_mean=0.0877483444 mean_apn_fragment_mean=0.1139240506 ir_to_mean_fus_ratio=0
+ir_to_mean_frag_ratio=0 _ERROR_=1 _N_=21
+NOTE: Division by zero detected at line 429 column 31.
+NOTE: Division by zero detected at line 430 column 32.
+NOTE: Division by zero detected at line 431 column 31.
+NOTE: Division by zero detected at line 432 column 32.
+NOTE: Division by zero detected at line 435 column 35.
+NOTE: Division by zero detected at line 436 column 36.
+event_id=18736:7_intron intron_id=18736_S100382_SI_intron_F100383_SI|chr16:65532954-65533769 gene_id=18736 flag_no_computed_intron=0
+fusion_id_5prime=S100382_SI fusion_id_3prime=F100383_SI fragment_id_5prime=S100382_SI:1 fragment_id_3prime=F100383_SI:1
+flag_intron_nsc_on=0 mean_apn_intron=0 flag_splicing_on_ge5=0 mean_apn_IR=0 flag_fusion_on_5prime=0 mean_apn_fusion_5prime=0
+flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0 flag_fragment_on_5prime=0 mean_apn_fragment_5prime=0 flag_fragment_on_3prime=0
+mean_apn_fragment_3prime=0 ir_to_5fus_ratio=. ir_to_5frag_ratio=. ir_to_3fus_ratio=. ir_to_3frag_ratio=. mean_apn_fusion_mean=0
+mean_apn_fragment_mean=0 ir_to_mean_fus_ratio=. ir_to_mean_frag_ratio=. _ERROR_=1 _N_=22
+NOTE: Division by zero detected at line 429 column 31.
+NOTE: Division by zero detected at line 430 column 32.
+NOTE: Division by zero detected at line 431 column 31.
+NOTE: Division by zero detected at line 432 column 32.
+NOTE: Division by zero detected at line 435 column 35.
+NOTE: Division by zero detected at line 436 column 36.
+event_id=73569:4_intron intron_id=73569_S100400_SI_intron_F100401_SI|chr16:65816074-65827889 gene_id=73569 flag_no_computed_intron=0
+fusion_id_5prime=S100400_SI fusion_id_3prime=F100401_SI fragment_id_5prime=S100400_SI:1 fragment_id_3prime=F100401_SI:1
+flag_intron_nsc_on=0 mean_apn_intron=0.0112559242 flag_splicing_on_ge5=0 mean_apn_IR=0 flag_fusion_on_5prime=0
+mean_apn_fusion_5prime=0 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0 flag_fragment_on_5prime=0 mean_apn_fragment_5prime=0
+flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0 ir_to_5fus_ratio=. ir_to_5frag_ratio=. ir_to_3fus_ratio=. ir_to_3frag_ratio=.
+mean_apn_fusion_mean=0 mean_apn_fragment_mean=0 ir_to_mean_fus_ratio=. ir_to_mean_frag_ratio=. _ERROR_=1 _N_=23
+NOTE: Division by zero detected at line 431 column 31.
+NOTE: Division by zero detected at line 432 column 32.
+event_id=78110:intron_2 intron_id=78110_S100417_SI_intron_F100418_SI|chr16:69796610-69800310 gene_id=78110 flag_no_computed_intron=0
+fusion_id_5prime=S100417_SI fusion_id_3prime=F100418_SI fragment_id_5prime=S100417_SI:1 fragment_id_3prime=F100418_SI:1
+flag_intron_nsc_on=0 mean_apn_intron=0.0044582545 flag_splicing_on_ge5=0 mean_apn_IR=0 flag_fusion_on_5prime=0
+mean_apn_fusion_5prime=0.1740041929 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0 flag_fragment_on_5prime=0
+mean_apn_fragment_5prime=0.1740041929 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0 ir_to_5fus_ratio=0 ir_to_5frag_ratio=0
+ir_to_3fus_ratio=. ir_to_3frag_ratio=. mean_apn_fusion_mean=0.0870020964 mean_apn_fragment_mean=0.0870020964 ir_to_mean_fus_ratio=0
+ir_to_mean_frag_ratio=0 _ERROR_=1 _N_=25
+NOTE: Division by zero detected at line 429 column 31.
+NOTE: Division by zero detected at line 430 column 32.
+NOTE: Division by zero detected at line 431 column 31.
+NOTE: Division by zero detected at line 432 column 32.
+23                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+NOTE: Division by zero detected at line 435 column 35.
+NOTE: Division by zero detected at line 436 column 36.
+event_id=224318:intron_6 intron_id=224318_S100423_SI_intron_F100424_SI|chr16:69861749-69863585 gene_id=224318
+flag_no_computed_intron=0 fusion_id_5prime=S100423_SI fusion_id_3prime=F100424_SI fragment_id_5prime=S100423_SI:1
+fragment_id_3prime=F100424_SI:1 flag_intron_nsc_on=0 mean_apn_intron=0.0247686445 flag_splicing_on_ge5=0 mean_apn_IR=0
+flag_fusion_on_5prime=0 mean_apn_fusion_5prime=0 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0 flag_fragment_on_5prime=0
+mean_apn_fragment_5prime=0 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0 ir_to_5fus_ratio=. ir_to_5frag_ratio=.
+ir_to_3fus_ratio=. ir_to_3frag_ratio=. mean_apn_fusion_mean=0 mean_apn_fragment_mean=0 ir_to_mean_fus_ratio=.
+ir_to_mean_frag_ratio=. _ERROR_=1 _N_=26
+NOTE: Division by zero detected at line 431 column 31.
+NOTE: Division by zero detected at line 432 column 32.
+event_id=102640782:3_intron intron_id=102640782_S100429_SI_intron_F100430_SI|chr16:70226012-70233367 gene_id=102640782
+flag_no_computed_intron=0 fusion_id_5prime=S100429_SI fusion_id_3prime=F100430_SI fragment_id_5prime=S100429_SI:1
+fragment_id_3prime=F100430_SI:1 flag_intron_nsc_on=0 mean_apn_intron=0.0139342034 flag_splicing_on_ge5=0 mean_apn_IR=0
+flag_fusion_on_5prime=0 mean_apn_fusion_5prime=0.1 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0 flag_fragment_on_5prime=0
+mean_apn_fragment_5prime=0.1 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0 ir_to_5fus_ratio=0 ir_to_5frag_ratio=0
+ir_to_3fus_ratio=. ir_to_3frag_ratio=. mean_apn_fusion_mean=0.05 mean_apn_fragment_mean=0.05 ir_to_mean_fus_ratio=0
+ir_to_mean_frag_ratio=0 _ERROR_=1 _N_=27
+NOTE: Division by zero detected at line 429 column 31.
+NOTE: Division by zero detected at line 430 column 32.
+NOTE: Division by zero detected at line 431 column 31.
+NOTE: Division by zero detected at line 432 column 32.
+NOTE: Division by zero detected at line 435 column 35.
+NOTE: Division by zero detected at line 436 column 36.
+event_id=102640782:5_intron intron_id=102640782_F100430_SI_intron_F100431_SI|chr16:70233611-70233788 gene_id=102640782
+flag_no_computed_intron=0 fusion_id_5prime=F100430_SI fusion_id_3prime=F100431_SI fragment_id_5prime=F100430_SI:2
+fragment_id_3prime=F100431_SI:1 flag_intron_nsc_on=0 mean_apn_intron=0 flag_splicing_on_ge5=0 mean_apn_IR=0 flag_fusion_on_5prime=0
+mean_apn_fusion_5prime=0 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0 flag_fragment_on_5prime=0 mean_apn_fragment_5prime=0
+flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0 ir_to_5fus_ratio=. ir_to_5frag_ratio=. ir_to_3fus_ratio=. ir_to_3frag_ratio=.
+mean_apn_fusion_mean=0 mean_apn_fragment_mean=0 ir_to_mean_fus_ratio=. ir_to_mean_frag_ratio=. _ERROR_=1 _N_=28
+NOTE: Division by zero detected at line 429 column 31.
+NOTE: Division by zero detected at line 430 column 32.
+NOTE: Division by zero detected at line 432 column 32.
+NOTE: Division by zero detected at line 436 column 36.
+event_id=74991:6_intron intron_id=74991_S100508_SI_intron_F100509_SI|chr16:73095918-73098905 gene_id=74991 flag_no_computed_intron=0
+fusion_id_5prime=S100508_SI fusion_id_3prime=F100509_SI fragment_id_5prime=S100508_SI:1 fragment_id_3prime=F100509_SI:1
+flag_intron_nsc_on=0 mean_apn_intron=0.0281124498 flag_splicing_on_ge5=0 mean_apn_IR=0 flag_fusion_on_5prime=0
+mean_apn_fusion_5prime=0 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0.0360538827 flag_fragment_on_5prime=0
+mean_apn_fragment_5prime=0 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0 ir_to_5fus_ratio=. ir_to_5frag_ratio=.
+ir_to_3fus_ratio=0 ir_to_3frag_ratio=. mean_apn_fusion_mean=0.0180269414 mean_apn_fragment_mean=0 ir_to_mean_fus_ratio=0
+ir_to_mean_frag_ratio=. _ERROR_=1 _N_=29
+NOTE: Division by zero detected at line 431 column 31.
+NOTE: Division by zero detected at line 432 column 32.
+event_id=268902:intron_34 intron_id=268902_F100547_SI_intron_F100554_SI|chr16:74412285-75092287 gene_id=268902
+flag_no_computed_intron=0 fusion_id_5prime=F100547_SI fusion_id_3prime=F100554_SI fragment_id_5prime=F100547_SI:2
+fragment_id_3prime=F100554_SI:1 flag_intron_nsc_on=0 mean_apn_intron=0.0074021732 flag_splicing_on_ge5=0 mean_apn_IR=0
+flag_fusion_on_5prime=0 mean_apn_fusion_5prime=1.3358885017 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0
+flag_fragment_on_5prime=0 mean_apn_fragment_5prime=1.3340611354 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0
+ir_to_5fus_ratio=0 ir_to_5frag_ratio=0 ir_to_3fus_ratio=. ir_to_3frag_ratio=. mean_apn_fusion_mean=0.6679442509
+mean_apn_fragment_mean=0.6670305677 ir_to_mean_fus_ratio=0 ir_to_mean_frag_ratio=0 _ERROR_=1 _N_=31
+NOTE: Division by zero detected at line 432 column 32.
+event_id=110920:intron_2 intron_id=110920_S100585_SI_intron_F100586_SI|chr16:75758448-75758629 gene_id=110920
+flag_no_computed_intron=0 fusion_id_5prime=S100585_SI fusion_id_3prime=F100586_SI fragment_id_5prime=S100585_SI:1
+fragment_id_3prime=F100586_SI:1 flag_intron_nsc_on=0 mean_apn_intron=0.1483516484 flag_splicing_on_ge5=0 mean_apn_IR=0
+flag_fusion_on_5prime=1 mean_apn_fusion_5prime=44.574386503 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=1.9948979592
+flag_fragment_on_5prime=1 mean_apn_fragment_5prime=44.574386503 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0
+ir_to_5fus_ratio=0 ir_to_5frag_ratio=0 ir_to_3fus_ratio=0 ir_to_3frag_ratio=. mean_apn_fusion_mean=23.284642231
+mean_apn_fragment_mean=22.287193252 ir_to_mean_fus_ratio=0 ir_to_mean_frag_ratio=0 _ERROR_=1 _N_=33
+24                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+NOTE: Division by zero detected at line 431 column 31.
+NOTE: Division by zero detected at line 432 column 32.
+WARNING: Limit set by ERRORS= option reached.  Further errors of this type will not be printed.
+event_id=268903:intron_7 intron_id=268903_F100618_SI_intron_F100619_SI|chr16:76352549-76372870 gene_id=268903
+flag_no_computed_intron=0 fusion_id_5prime=F100618_SI fusion_id_3prime=F100619_SI fragment_id_5prime=F100618_SI:2
+fragment_id_3prime=F100619_SI:1 flag_intron_nsc_on=0 mean_apn_intron=0.0661844307 flag_splicing_on_ge5=0 mean_apn_IR=0
+flag_fusion_on_5prime=0 mean_apn_fusion_5prime=3.4620253165 flag_fusion_on_3prime=0 mean_apn_fusion_3prime=0
+flag_fragment_on_5prime=0 mean_apn_fragment_5prime=0.75 flag_fragment_on_3prime=0 mean_apn_fragment_3prime=0 ir_to_5fus_ratio=0
+ir_to_5frag_ratio=0 ir_to_3fus_ratio=. ir_to_3frag_ratio=. mean_apn_fusion_mean=1.7310126582 mean_apn_fragment_mean=0.375
+ir_to_mean_fus_ratio=0 ir_to_mean_frag_ratio=0 _ERROR_=1 _N_=36
+NOTE: Mathematical operations could not be performed at the following places. The results of the operations have been set to 
+      missing values.
+      Each place is given by: (Number of times) at (Line):(Column).
+      42504 at 429:31   44720 at 430:32   42534 at 431:31   44853 at 432:32   28184 at 435:35   30470 at 436:36   
+NOTE: There were 136629 observations read from the data set WORK.INTRON2IR_P6.
+NOTE: The data set WORK.IR_RATIOS has 136629 observations and 28 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.96 seconds
+      cpu time            0.97 seconds
+      
+
+438        
+439        /* Make permenant */
+440        
+441        data event.intron2ir_frag_fus_all_info_apn5;
+442           set ir_ratios;
+443        run;
+
+NOTE: There were 136629 observations read from the data set WORK.IR_RATIOS.
+NOTE: The data set EVENT.INTRON2IR_FRAG_FUS_ALL_INFO_APN5 has 136629 observations and 28 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.81 seconds
+      cpu time            0.27 seconds
+      
+
+444        
+445        
+446        
+447        /* Flag if in expressed gene and export */
+448        
+449        data exp_gene;
+450          set event.flag_gene_expressed;
+451          keep gene_id flag_gene_expressed;
+452        run;
+
+NOTE: There were 28466 observations read from the data set EVENT.FLAG_GENE_EXPRESSED.
+NOTE: The data set WORK.EXP_GENE has 28466 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.02 seconds
+      
+
+453        
+454        proc sort data=exp_gene;
+455          by gene_id;
+
+NOTE: There were 28466 observations read from the data set WORK.EXP_GENE.
+NOTE: The data set WORK.EXP_GENE has 28466 observations and 2 variables.
+25                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+456        proc sort data=ir_ratios;
+457          by gene_id;
+458        run;
+
+NOTE: There were 136629 observations read from the data set WORK.IR_RATIOS.
+NOTE: The data set WORK.IR_RATIOS has 136629 observations and 28 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.38 seconds
+      cpu time            0.36 seconds
+      
+
+459        
+460        data ir_ratios_w_gene;
+461          merge ir_ratios (in=in1) exp_gene (in=in2);
+462          by gene_id;
+463          if in1 and in2;
+464        run;
+
+NOTE: There were 136629 observations read from the data set WORK.IR_RATIOS.
+NOTE: There were 28466 observations read from the data set WORK.EXP_GENE.
+NOTE: The data set WORK.IR_RATIOS_W_GENE has 136629 observations and 29 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.22 seconds
+      cpu time            0.22 seconds
+      
+
+465        
+466        proc export data=ir_ratios_w_gene outfile="!MCLAB/event_analysis/analysis_output/event_analysis_intron_ir_analysis2.csv"
+467           dbms=csv replace;
+468        run;
+
+469         /**********************************************************************
+470         *   PRODUCT:   SAS
+471         *   VERSION:   9.4
+472         *   CREATOR:   External File Interface
+473         *   DATE:      04JUN17
+474         *   DESC:      Generated SAS Datastep Code
+475         *   TEMPLATE SOURCE:  (None Specified.)
+476         ***********************************************************************/
+477            data _null_;
+478            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+479            %let _EFIREC_ = 0;     /* clear export record count macro variable */
+480            file '!MCLAB/event_analysis/analysis_output/event_analysis_intron_ir_analysis2.csv' delimiter=',' DSD DROPOVER
+480      ! lrecl=32767;
+481            if _n_ = 1 then        /* write column names or labels */
+482             do;
+483               put
+484                  "event_id"
+485               ','
+486                  "intron_id"
+487               ','
+488                  "gene_id"
+489               ','
+26                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+490                  "flag_no_computed_intron"
+491               ','
+492                  "fusion_id_5prime"
+493               ','
+494                  "fusion_id_3prime"
+495               ','
+496                  "fragment_id_5prime"
+497               ','
+498                  "fragment_id_3prime"
+499               ','
+500                  "flag_intron_nsc_on"
+501               ','
+502                  "mean_apn_intron"
+503               ','
+504                  "flag_splicing_on_ge5"
+505               ','
+506                  "mean_apn_IR"
+507               ','
+508                  "flag_fusion_on_5prime"
+509               ','
+510                  "mean_apn_fusion_5prime"
+511               ','
+512                  "flag_fusion_on_3prime"
+513               ','
+514                  "mean_apn_fusion_3prime"
+515               ','
+516                  "flag_fragment_on_5prime"
+517               ','
+518                  "mean_apn_fragment_5prime"
+519               ','
+520                  "flag_fragment_on_3prime"
+521               ','
+522                  "mean_apn_fragment_3prime"
+523               ','
+524                  "ir_to_5fus_ratio"
+525               ','
+526                  "ir_to_5frag_ratio"
+527               ','
+528                  "ir_to_3fus_ratio"
+529               ','
+530                  "ir_to_3frag_ratio"
+531               ','
+532                  "mean_apn_fusion_mean"
+533               ','
+534                  "mean_apn_fragment_mean"
+535               ','
+536                  "ir_to_mean_fus_ratio"
+537               ','
+538                  "ir_to_mean_frag_ratio"
+539               ','
+540                  "flag_gene_expressed"
+541               ;
+542             end;
+543           set  IR_RATIOS_W_GENE   end=EFIEOD;
+544               format event_id $335. ;
+545               format intron_id $63. ;
+546               format gene_id $11. ;
+547               format flag_no_computed_intron best12. ;
+27                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+548               format fusion_id_5prime $10. ;
+549               format fusion_id_3prime $10. ;
+550               format fragment_id_5prime $13. ;
+551               format fragment_id_3prime $13. ;
+552               format flag_intron_nsc_on best12. ;
+553               format mean_apn_intron best12. ;
+554               format flag_splicing_on_ge5 best12. ;
+555               format mean_apn_IR best12. ;
+556               format flag_fusion_on_5prime best12. ;
+557               format mean_apn_fusion_5prime best12. ;
+558               format flag_fusion_on_3prime best12. ;
+559               format mean_apn_fusion_3prime best12. ;
+560               format flag_fragment_on_5prime best12. ;
+561               format mean_apn_fragment_5prime best12. ;
+562               format flag_fragment_on_3prime best12. ;
+563               format mean_apn_fragment_3prime best12. ;
+564               format ir_to_5fus_ratio best12. ;
+565               format ir_to_5frag_ratio best12. ;
+566               format ir_to_3fus_ratio best12. ;
+567               format ir_to_3frag_ratio best12. ;
+568               format mean_apn_fusion_mean best12. ;
+569               format mean_apn_fragment_mean best12. ;
+570               format ir_to_mean_fus_ratio best12. ;
+571               format ir_to_mean_frag_ratio best12. ;
+572               format flag_gene_expressed best12. ;
+573             do;
+574               EFIOUT + 1;
+575               put event_id $ @;
+576               put intron_id $ @;
+577               put gene_id $ @;
+578               put flag_no_computed_intron @;
+579               put fusion_id_5prime $ @;
+580               put fusion_id_3prime $ @;
+581               put fragment_id_5prime $ @;
+582               put fragment_id_3prime $ @;
+583               put flag_intron_nsc_on @;
+584               put mean_apn_intron @;
+585               put flag_splicing_on_ge5 @;
+586               put mean_apn_IR @;
+587               put flag_fusion_on_5prime @;
+588               put mean_apn_fusion_5prime @;
+589               put flag_fusion_on_3prime @;
+590               put mean_apn_fusion_3prime @;
+591               put flag_fragment_on_5prime @;
+592               put mean_apn_fragment_5prime @;
+593               put flag_fragment_on_3prime @;
+594               put mean_apn_fragment_3prime @;
+595               put ir_to_5fus_ratio @;
+596               put ir_to_5frag_ratio @;
+597               put ir_to_3fus_ratio @;
+598               put ir_to_3frag_ratio @;
+599               put mean_apn_fusion_mean @;
+600               put mean_apn_fragment_mean @;
+601               put ir_to_mean_fus_ratio @;
+602               put ir_to_mean_frag_ratio @;
+603               put flag_gene_expressed ;
+604               ;
+605             end;
+28                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+606            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+607            if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+608            run;
+
+NOTE: The file '!MCLAB/event_analysis/analysis_output/event_analysis_intron_ir_analysis2.csv' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/analysis_output/event_analysis_intron_ir_analysis2.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Sun Jun  4 02:50:39 2017
+
+NOTE: 136630 records were written to the file '!MCLAB/event_analysis/analysis_output/event_analysis_intron_ir_analysis2.csv'.
+      The minimum record length was 142.
+      The maximum record length was 555.
+NOTE: There were 136629 observations read from the data set WORK.IR_RATIOS_W_GENE.
+NOTE: DATA statement used (Total process time):
+      real time           1.95 seconds
+      cpu time            1.13 seconds
+      
+
+136629 records created in !MCLAB/event_analysis/analysis_output/event_analysis_intron_ir_analysis2.csv from IR_RATIOS_W_GENE.
+  
+  
+NOTE: "!MCLAB/event_analysis/analysis_output/event_analysis_intron_ir_analysis2.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           2.03 seconds
+      cpu time            1.20 seconds
+      
+
+609        
+610        
+611        
+612        /*********************************************************/
+613        
+614        /* Setting a bunch of flags so I can explore the IR/intron data
+615        
+616           (1) If the donor exonic region of an IR event is not detected, then flag IR as not analyzable
+617               Else, IR is analyzable
+618           (2) Drop IR events that are not detected
+619           (3) Bin IR events into APN <1, APN <5, APN<10 and APN>10, and also log(IR-apn/exon-apn) <-5 and >-5
+620               and check cross-tabulation. This should give me an idea as to where to set a coverage threshold
+621               for determining if an IR event represents unprocessed transcript or not
+622           (4) Flag if intron APN > 1, >5, >10. I want to use this as evidence of intron retention
+623               vs evidence of possible novel donor.
+624        
+625        */
+626        
+627        /* Get intron-to-IR and intron-to-fusion/fragment and merge */
+628        data intron_to_event;
+629          set event.ir_events_w_intron;
+630           where flag_no_computed_intron=0; *only keep those with computed introns;
+631        run;
+
+NOTE: There were 154934 observations read from the data set EVENT.IR_EVENTS_W_INTRON.
+      WHERE flag_no_computed_intron=0;
+NOTE: The data set WORK.INTRON_TO_EVENT has 154934 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.64 seconds
+      cpu time            0.41 seconds
+29                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+      
+
+632        
+633        data intron_to_fus_frag;
+634           set event.mm10_introns_to_fragment_fusion;
+635        run;
+
+NOTE: There were 154934 observations read from the data set EVENT.MM10_INTRONS_TO_FRAGMENT_FUSION.
+NOTE: The data set WORK.INTRON_TO_FUS_FRAG has 154934 observations and 8 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.53 seconds
+      cpu time            0.12 seconds
+      
+
+636        
+637        data ir_coord;
+638           set evspl.splicing_events_annot_refseq;
+639           where flag_intron_retention=1;
+640           keep event_id chr feature1_start feature1_stop
+641                feature2_start feature2_stop;
+642        run;
+
+NOTE: There were 247983 observations read from the data set EVSPL.SPLICING_EVENTS_ANNOT_REFSEQ.
+      WHERE flag_intron_retention=1;
+NOTE: The data set WORK.IR_COORD has 247983 observations and 6 variables.
+NOTE: DATA statement used (Total process time):
+      real time           5:23.22
+      cpu time            22.88 seconds
+      
+
+643        
+644        proc sort data=intron_to_event;
+645           by intron_id;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_EVENT.
+NOTE: The data set WORK.INTRON_TO_EVENT has 154934 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.73 seconds
+      cpu time            0.34 seconds
+      
+
+646        proc sort data=intron_to_fus_frag;
+647           by intron_id;
+648        run;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_FUS_FRAG.
+NOTE: The data set WORK.INTRON_TO_FUS_FRAG has 154934 observations and 8 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.19 seconds
+      cpu time            0.19 seconds
+      
+
+649        
+650        
+651        
+652        data intron_to_ir_fus_frag;
+653          merge intron_to_event (in=in1) intron_to_fus_frag (in=in2);
+654          by intron_id;
+30                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+655          if in1 and in2;
+656        run;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_EVENT.
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_FUS_FRAG.
+NOTE: The data set WORK.INTRON_TO_IR_FUS_FRAG has 154934 observations and 11 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.76 seconds
+      cpu time            0.31 seconds
+      
+
+657        
+658        proc sort data=intron_to_ir_fus_frag;
+659          by event_id;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_IR_FUS_FRAG.
+NOTE: The data set WORK.INTRON_TO_IR_FUS_FRAG has 154934 observations and 11 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.39 seconds
+      cpu time            0.40 seconds
+      
+
+660        proc sort data=ir_coord;
+661          by event_id;
+662        run;
+
+NOTE: There were 247983 observations read from the data set WORK.IR_COORD.
+NOTE: The data set WORK.IR_COORD has 247983 observations and 6 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.59 seconds
+      cpu time            0.54 seconds
+      
+
+663        
+664        data intron_to_ir_W_coord;
+665          merge intron_to_ir_fus_frag (in=in1) ir_coord (in=in2);
+666          by event_id;
+667          if in1 and in2;
+668          if intron_start = feature2_start-1 then flag_ir_from_3prime=1; else flag_ir_from_3prime=0;
+669          if intron_stop = feature1_stop-1 then flag_ir_from_5prime=1; else flag_ir_from_5prime=0;
+670          keep event_id flag_ir_from_3prime flag_ir_from_5prime;
+671        run;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_IR_FUS_FRAG.
+NOTE: There were 247983 observations read from the data set WORK.IR_COORD.
+NOTE: The data set WORK.INTRON_TO_IR_W_COORD has 154934 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.34 seconds
+      cpu time            0.34 seconds
+      
+
+672        
+673        proc freq data=intron_to_ir_w_coord;
+674           tables flag_ir_from_5prime*flag_ir_from_3prime;
+675        run;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_IR_W_COORD.
+NOTE: The PROCEDURE FREQ printed page 1.
+31                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.07 seconds
+      
+
+676        
+677        /* First, I want keep only the corresponding donor fusion/fragment for each IR event */
+678        
+679        data intron2ir_info;
+680           set event.intron2ir_frag_fus_all_info_apn5;
+681        run;
+
+NOTE: There were 136629 observations read from the data set EVENT.INTRON2IR_FRAG_FUS_ALL_INFO_APN5.
+NOTE: The data set WORK.INTRON2IR_INFO has 136629 observations and 28 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.08 seconds
+      cpu time            0.31 seconds
+      
+
+682        
+683        proc sort data=intron2ir_info;
+684          by event_id;
+
+NOTE: There were 136629 observations read from the data set WORK.INTRON2IR_INFO.
+NOTE: The data set WORK.INTRON2IR_INFO has 136629 observations and 28 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.45 seconds
+      cpu time            0.45 seconds
+      
+
+685        proc sort data=intron_to_ir_w_coord;
+686          by event_id;
+687        run;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_IR_W_COORD.
+NOTE: The data set WORK.INTRON_TO_IR_W_COORD has 154934 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.62 seconds
+      cpu time            0.33 seconds
+      
+
+688        
+689        data intron2ir_info2;
+690          merge intron2ir_info (in=in1) intron_to_ir_w_coord (in=in2);
+691          by event_id;
+692          if in1 and in2;
+693        run;
+
+NOTE: There were 136629 observations read from the data set WORK.INTRON2IR_INFO.
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_IR_W_COORD.
+NOTE: The data set WORK.INTRON2IR_INFO2 has 136629 observations and 30 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.33 seconds
+      cpu time            0.33 seconds
+      
+
+694        
+695        
+32                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+696        data intron2ir_min_info;
+697           set intron2ir_info2;
+698           length fusion_id $10.;
+699           length fragment_id $20.;
+700           if flag_ir_from_5prime=1 then do;
+701             fusion_id=fusion_id_5prime;
+702             fragment_id=fragment_id_5prime;
+703             flag_fusion_on=flag_fusion_on_5prime;
+704             mean_apn_fusion=mean_apn_fusion_5prime;
+705             flag_fragment_on=flag_fragment_on_5prime;
+706             mean_apn_fragment=mean_apn_fragment_5prime;
+707             ir_to_fus_ratio=ir_to_5fus_ratio;
+708             ir_to_frag_ratio=ir_to_5frag_ratio; end;
+709           else do;
+710             fusion_id=fusion_id_3prime;
+711             fragment_id=fragment_id_3prime;
+712             flag_fusion_on=flag_fusion_on_3prime;
+713             mean_apn_fusion=mean_apn_fusion_3prime;
+714             flag_fragment_on=flag_fragment_on_3prime;
+715             mean_apn_fragment=mean_apn_fragment_3prime;
+716             ir_to_fus_ratio=ir_to_3fus_ratio;
+717             ir_to_frag_ratio=ir_to_3frag_ratio; end;
+718           keep event_id intron_id gene_id flag_no_computed_intron fusion_id fragment_id flag_intron_nsc_on
+719                mean_apn_intron flag_splicing_on_ge5 mean_apn_ir flag_fusion_on mean_apn_fusion flag_fragment_on
+720                mean_apn_fragment ir_to_fus_ratio ir_to_frag_ratio;
+721        run;
+
+NOTE: There were 136629 observations read from the data set WORK.INTRON2IR_INFO2.
+NOTE: The data set WORK.INTRON2IR_MIN_INFO has 136629 observations and 16 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.18 seconds
+      cpu time            0.18 seconds
+      
+
+722        
+723        /* Set flags:
+724        I am going to try the following criteria:
+725        (1) If IR >~ donor exon (90%), then novel donor
+726        (2) Else if IR > ~10 donor then IR
+727        (3) Else unprocessed
+728        
+729        Do for IR and for intron and check the concordance
+730        */
+731        
+732        
+733        /* calc median apn ratio */
+734        
+735        proc means data=intron2ir_min_info;
+736           where ir_to_fus_ratio > 0;
+737           var ir_to_fus_ratio;
+738           output out=ir_median_ratio median=;
+739        run;
+
+NOTE: There were 20197 observations read from the data set WORK.INTRON2IR_MIN_INFO.
+      WHERE ir_to_fus_ratio>0;
+NOTE: The data set WORK.IR_MEDIAN_RATIO has 1 observations and 3 variables.
+NOTE: The PROCEDURE MEANS printed page 2.
+NOTE: PROCEDURE MEANS used (Total process time):
+33                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+      real time           0.05 seconds
+      cpu time            0.05 seconds
+      
+
+740        
+741        proc print data=ir_median_ratio;
+742        run;
+
+NOTE: There were 1 observations read from the data set WORK.IR_MEDIAN_RATIO.
+NOTE: The PROCEDURE PRINT printed page 3.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+742      !      *median ratio = 0.028751;
+743        
+744        
+745        data set_ir_flags;
+746           set intron2ir_min_info;
+747           /* IF fusion and IR event are detected, then event is analyzable */
+748           if flag_fusion_on=1 and flag_splicing_on_ge5=1 then flag_ir_event_analyzable=1;
+749           else flag_ir_event_analyzable=0;
+750        
+751           /* Set IR APN bins */
+752           if mean_apn_ir < 1 then ir_apn_bin=1;
+753           else if mean_apn_ir < 5 then ir_apn_bin=2;
+754           else if mean_apn_ir < 10 then ir_apn_bin=3;
+755           else if mean_apn_ir ge 10 then ir_apn_bin=4;
+756        
+757           /* Set IR-to-exon ration flag */
+758           if ir_to_fus_ratio ge 0.029521 then flag_ir_ratio_ge_median=1;
+759           else flag_ir_ratio_ge_median=0;
+760        
+761           /* Set intron APN bins */
+762           if mean_apn_intron < 1 then intron_apn_bin=1;
+763           else if mean_apn_intron < 5 then intron_apn_bin=2;
+764           else if mean_apn_intron < 10 then intron_apn_bin=3;
+765           else if mean_apn_intron ge 10 then intron_apn_bin=4;
+766        run;
+
+NOTE: There were 136629 observations read from the data set WORK.INTRON2IR_MIN_INFO.
+NOTE: The data set WORK.SET_IR_FLAGS has 136629 observations and 20 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.16 seconds
+      cpu time            0.17 seconds
+      
+
+767        
+768        /* CHeck freqs */
+769        
+770        proc freq data=set_ir_flags;
+771          tables flag_ir_event_analyzable;
+772        run;
+
+NOTE: There were 136629 observations read from the data set WORK.SET_IR_FLAGS.
+NOTE: The PROCEDURE FREQ printed page 4.
+NOTE: PROCEDURE FREQ used (Total process time):
+34                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+      real time           0.04 seconds
+      cpu time            0.04 seconds
+      
+
+773        
+774        * 25352 of 154934 events analyzable;
+775        
+776        
+777        proc freq data=set_ir_flags;
+778          where flag_ir_event_analyzable=1;
+779          tables flag_ir_ratio_ge_median*ir_apn_bin
+780                 flag_ir_ratio_ge_median*intron_apn_bin
+781                 ir_apn_bin*intron_apn_bin;
+782        run;
+
+NOTE: There were 505 observations read from the data set WORK.SET_IR_FLAGS.
+      WHERE flag_ir_event_analyzable=1;
+NOTE: The PROCEDURE FREQ printed pages 5-6.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.04 seconds
+      
+
+783        
+784        /*          Table of flag_ir_ratio_ge_median by ir_apn_bin
+785        
+786         flag_ir_ratio_ge_median     ir_apn_bin
+787        
+788         Frequency|
+789         Percent  |
+790         Row Pct  |
+791         Col Pct  |       1|       2|       3|       4|  Total
+792         ---------+--------+--------+--------+--------+
+793                0 |  10064 |   2477 |    190 |     83 |  12814
+794                  |  39.70 |   9.77 |   0.75 |   0.33 |  50.54
+795                  |  78.54 |  19.33 |   1.48 |   0.65 |
+796                  |  53.53 |  46.02 |  31.05 |  14.95 |
+797         ---------+--------+--------+--------+--------+
+798                1 |   8738 |   2906 |    422 |    472 |  12538
+799                  |  34.47 |  11.46 |   1.66 |   1.86 |  49.46
+800                  |  69.69 |  23.18 |   3.37 |   3.76 |
+801                  |  46.47 |  53.98 |  68.95 |  85.05 |
+802         ---------+--------+--------+--------+--------+
+803         Total       18802     5383      612      555    25352
+804                     74.16    21.23     2.41     2.19   100.00
+805        
+806        flag_ir_ratio_ge_median     intron_apn_bin
+807        
+808        Frequency|
+809        Percent  |
+810        Row Pct  |
+811        Col Pct  |       1|       2|       3|       4|  Total
+812        ---------+--------+--------+--------+--------+
+813               0 |   7382 |   4315 |    682 |    435 |  12814
+814                 |  29.12 |  17.02 |   2.69 |   1.72 |  50.54
+815                 |  57.61 |  33.67 |   5.32 |   3.39 |
+816                 |  46.16 |  59.64 |  55.36 |  48.71 |
+817        ---------+--------+--------+--------+--------+
+35                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+818               1 |   8610 |   2920 |    550 |    458 |  12538
+819                 |  33.96 |  11.52 |   2.17 |   1.81 |  49.46
+820                 |  68.67 |  23.29 |   4.39 |   3.65 |
+821                 |  53.84 |  40.36 |  44.64 |  51.29 |
+822        ---------+--------+--------+--------+--------+
+823        Total       15992     7235     1232      893    25352
+824                    63.08    28.54     4.86     3.52   100.00
+825        
+826                Table of ir_apn_bin by intron_apn_bin
+827        
+828        
+829        ir_apn_bin     intron_apn_bin
+830        
+831        Frequency|
+832        Percent  |
+833        Row Pct  |
+834        Col Pct  |       1|       2|       3|       4|  Total
+835        ---------+--------+--------+--------+--------+
+836               1 |  13942 |   4442 |    276 |    142 |  18802
+837                 |  54.99 |  17.52 |   1.09 |   0.56 |  74.16
+838                 |  74.15 |  23.63 |   1.47 |   0.76 |
+839                 |  87.18 |  61.40 |  22.40 |  15.90 |
+840        ---------+--------+--------+--------+--------+
+841               2 |   1697 |   2580 |    790 |    316 |   5383
+842                 |   6.69 |  10.18 |   3.12 |   1.25 |  21.23
+843                 |  31.53 |  47.93 |  14.68 |   5.87 |
+844                 |  10.61 |  35.66 |  64.12 |  35.39 |
+845        ---------+--------+--------+--------+--------+
+846               3 |    131 |    125 |    129 |    227 |    612
+847                 |   0.52 |   0.49 |   0.51 |   0.90 |   2.41
+848                 |  21.41 |  20.42 |  21.08 |  37.09 |
+849                 |   0.82 |   1.73 |  10.47 |  25.42 |
+850        ---------+--------+--------+--------+--------+
+851               4 |    222 |     88 |     37 |    208 |    555
+852                 |   0.88 |   0.35 |   0.15 |   0.82 |   2.19
+853                 |  40.00 |  15.86 |   6.67 |  37.48 |
+854                 |   1.39 |   1.22 |   3.00 |  23.29 |
+855        ---------+--------+--------+--------+--------+
+856        Total       15992     7235     1232      893    25352
+857                    63.08    28.54     4.86     3.52   100.00
+858        
+859        Proposed IR re-classification:
+860        
+861        (a) If IR_APN > 1 and IR_APN_ratio > median then event is either IR, or is novel exon
+862        (b) If IR_APN < 1 and IR_APN_ratio > median then unresolvable (ie, expression is too low to tell)
+863        (c) If IR_APN > 1 and IR_APN_ratio < median then unprocessed transcript
+864        (d) If IR_APN < 1 and IR_APN_ratio < median then unresolvable (ie, expression is too low to tell)
+865        
+866        Then for (a), if intron APN > 1 then likely IR
+867        Else likely novel donor
+868        
+869        */
+870        
+871        /*********************************************************/
+872        
+873        
+874        /* Reclassifying IR events.
+875        
+36                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+876        I am going to try the following criteria:
+877        (1) If IR >~ donor exon (90%), then novel donor
+878        (2) Else if IR > ~10 donor then IR
+879        (3) Else unprocessed
+880        
+881        Do for IR and for intron and check the concordance */
+882        
+883        /* Get intron-to-IR and intron-to-fusion/fragment and merge */
+884        data intron_to_event;
+885          set event.ir_events_w_intron;
+886           where flag_no_computed_intron=0; *only keep those with computed introns;
+887        run;
+
+NOTE: There were 154934 observations read from the data set EVENT.IR_EVENTS_W_INTRON.
+      WHERE flag_no_computed_intron=0;
+NOTE: The data set WORK.INTRON_TO_EVENT has 154934 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.56 seconds
+      cpu time            0.41 seconds
+      
+
+888        
+889        data intron_to_fus_frag;
+890           set event.mm10_introns_to_fragment_fusion;
+891        run;
+
+NOTE: There were 154934 observations read from the data set EVENT.MM10_INTRONS_TO_FRAGMENT_FUSION.
+NOTE: The data set WORK.INTRON_TO_FUS_FRAG has 154934 observations and 8 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.56 seconds
+      cpu time            0.12 seconds
+      
+
+892        
+893        data ir_coord;
+894           set evspl.splicing_events_annot_refseq;
+895           where flag_intron_retention=1;
+896           keep event_id chr feature1_start feature1_stop
+897                feature2_start feature2_stop;
+898        run;
+
+NOTE: There were 247983 observations read from the data set EVSPL.SPLICING_EVENTS_ANNOT_REFSEQ.
+      WHERE flag_intron_retention=1;
+NOTE: The data set WORK.IR_COORD has 247983 observations and 6 variables.
+NOTE: DATA statement used (Total process time):
+      real time           5:27.29
+      cpu time            22.78 seconds
+      
+
+899        
+900        proc sort data=intron_to_event;
+901           by intron_id;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_EVENT.
+NOTE: The data set WORK.INTRON_TO_EVENT has 154934 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.67 seconds
+      cpu time            0.33 seconds
+37                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+      
+
+902        proc sort data=intron_to_fus_frag;
+903           by intron_id;
+904        run;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_FUS_FRAG.
+NOTE: The data set WORK.INTRON_TO_FUS_FRAG has 154934 observations and 8 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.19 seconds
+      cpu time            0.20 seconds
+      
+
+905        
+906        data intron_to_ir_fus_frag;
+907          merge intron_to_event (in=in1) intron_to_fus_frag (in=in2);
+908          by intron_id;
+909          if in1 and in2;
+910        run;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_EVENT.
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_FUS_FRAG.
+NOTE: The data set WORK.INTRON_TO_IR_FUS_FRAG has 154934 observations and 11 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.70 seconds
+      cpu time            0.32 seconds
+      
+
+911        
+912        
+913        proc sort data=intron_to_ir_fus_frag;
+914          by event_id;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_IR_FUS_FRAG.
+NOTE: The data set WORK.INTRON_TO_IR_FUS_FRAG has 154934 observations and 11 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.39 seconds
+      cpu time            0.39 seconds
+      
+
+915        proc sort data=ir_coord;
+916          by event_id;
+917        run;
+
+NOTE: There were 247983 observations read from the data set WORK.IR_COORD.
+NOTE: The data set WORK.IR_COORD has 247983 observations and 6 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.60 seconds
+      cpu time            0.53 seconds
+      
+
+918        
+919        data intron_to_ir_W_coord;
+920          merge intron_to_ir_fus_frag (in=in1) ir_coord (in=in2);
+921          by event_id;
+922          if in1 and in2;
+923          if intron_start = feature2_start-1 then flag_ir_from_3prime=1; else flag_ir_from_3prime=0;
+924          if intron_stop = feature1_stop-1 then flag_ir_from_5prime=1; else flag_ir_from_5prime=0;
+38                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+925          keep event_id flag_ir_from_3prime flag_ir_from_5prime;
+926        run;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_IR_FUS_FRAG.
+NOTE: There were 247983 observations read from the data set WORK.IR_COORD.
+NOTE: The data set WORK.INTRON_TO_IR_W_COORD has 154934 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.52 seconds
+      cpu time            0.39 seconds
+      
+
+927        
+928        proc freq data=intron_to_ir_w_coord;
+929           tables flag_ir_from_5prime*flag_ir_from_3prime;
+930        run;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_IR_W_COORD.
+NOTE: The PROCEDURE FREQ printed page 7.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.05 seconds
+      
+
+931        
+932        /* First, I want keep only the corresponding donor fusion/fragment for each IR event */
+933        
+934        data intron2ir_info;
+935           set event.intron2ir_frag_fus_all_info_apn5;
+936        run;
+
+NOTE: There were 136629 observations read from the data set EVENT.INTRON2IR_FRAG_FUS_ALL_INFO_APN5.
+NOTE: The data set WORK.INTRON2IR_INFO has 136629 observations and 28 variables.
+NOTE: DATA statement used (Total process time):
+      real time           3.01 seconds
+      cpu time            0.29 seconds
+      
+
+937        
+938        proc sort data=intron2ir_info;
+939          by event_id;
+
+NOTE: There were 136629 observations read from the data set WORK.INTRON2IR_INFO.
+NOTE: The data set WORK.INTRON2IR_INFO has 136629 observations and 28 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.66 seconds
+      cpu time            0.47 seconds
+      
+
+940        proc sort data=intron_to_ir_w_coord;
+941          by event_id;
+942        run;
+
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_IR_W_COORD.
+NOTE: The data set WORK.INTRON_TO_IR_W_COORD has 154934 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.32 seconds
+      cpu time            0.32 seconds
+      
+39                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+
+943        
+944        
+945        data intron2ir_info2;
+946          merge intron2ir_info (in=in1) intron_to_ir_w_coord (in=in2);
+947          by event_id;
+948          if in1 and in2;
+949        run;
+
+NOTE: There were 136629 observations read from the data set WORK.INTRON2IR_INFO.
+NOTE: There were 154934 observations read from the data set WORK.INTRON_TO_IR_W_COORD.
+NOTE: The data set WORK.INTRON2IR_INFO2 has 136629 observations and 30 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.51 seconds
+      cpu time            0.37 seconds
+      
+
+950        
+951        data intron2ir_min_info;
+952           set intron2ir_info2;
+953           length fusion_id $10.;
+954           length fragment_id $20.;
+955           if flag_ir_from_5prime=1 then do;
+956             fusion_id=fusion_id_5prime;
+957             fragment_id=fragment_id_5prime;
+958             flag_fusion_on=flag_fusion_on_5prime;
+959             mean_apn_fusion=mean_apn_fusion_5prime;
+960             flag_fragment_on=flag_fragment_on_5prime;
+961             mean_apn_fragment=mean_apn_fragment_5prime;
+962             ir_to_fus_ratio=ir_to_5fus_ratio;
+963             ir_to_frag_ratio=ir_to_5frag_ratio; end;
+964           else do;
+965             fusion_id=fusion_id_3prime;
+966             fragment_id=fragment_id_3prime;
+967             flag_fusion_on=flag_fusion_on_3prime;
+968             mean_apn_fusion=mean_apn_fusion_3prime;
+969             flag_fragment_on=flag_fragment_on_3prime;
+970             mean_apn_fragment=mean_apn_fragment_3prime;
+971             ir_to_fus_ratio=ir_to_3fus_ratio;
+972             ir_to_frag_ratio=ir_to_3frag_ratio; end;
+973           keep event_id intron_id gene_id flag_no_computed_intron fusion_id fragment_id flag_intron_nsc_on
+974                mean_apn_intron flag_splicing_on_ge5 mean_apn_ir flag_fusion_on mean_apn_fusion flag_fragment_on
+975                mean_apn_fragment ir_to_fus_ratio ir_to_frag_ratio;
+976        run;
+
+NOTE: There were 136629 observations read from the data set WORK.INTRON2IR_INFO2.
+NOTE: The data set WORK.INTRON2IR_MIN_INFO has 136629 observations and 16 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.42 seconds
+      cpu time            0.24 seconds
+      
+
+977        
+978        
+979        /*
+980        
+981        (1) If IR APN > 5 and IR  ~ exon, then flag_possible_novel_donor=1
+982        (2) If IR APN > 5, IR ~ intron, then flag_possible_IR
+40                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+983        (3) If IR APN > 5, IR > intron, then flag_unprocessed_rna=1
+984        (4) If IR APN < 5 then flag_low_expression=1
+985        
+986        Figure 1. Possible classifications for putative IR events. Putative IR events are considered representative of a possible
+986      !  novel donor site if the abundance of the event is equivalent to the abundance of its adjacent 5’ exonic region and
+986      ! there is little expression of the adjacent intron. Events are considered as possible IR events if the abundance of the
+986      ! putative IR event and the adjacent intron are equivalent. The remaining set of putative IR events consist of instances
+986      ! where there is low abundance of the event and the intron relative to the 5’ exon, and are considered possible
+986      ! unprocessed transcript.
+987        
+988        */
+989        
+990        
+991        
+992        data classify_introns_ir2;
+993          set intron2ir_min_info;
+994           if flag_fusion_on=1 and flag_splicing_on_ge5=1 then do; *only do for "analyzable" events;
+995           flag_low_expressed=0;
+996               /* APN > 1*/
+997             if mean_apn_ir ge 5 then do;
+998               flag_possible_unprocessed=0;
+999               if mean_apn_ir ge (0.9 * mean_apn_fusion) then flag_possible_novel_donor=1;
+1000              else flag_possible_novel_donor=0;
+1001              if mean_apn_ir ge (0.1 * mean_apn_fusion) then do;
+1002                     if mean_apn_intron ge (0.5 * mean_apn_IR) then do;
+1003                           flag_possible_ir=1;
+1004                           flag_possible_unprocessed=0; end;
+1005                     else do;
+1006                           flag_possible_ir=0;
+1007                           flag_possible_unprocessed=1; end;
+1008               end;
+1009               else do;
+1010                 flag_possible_ir=0;
+1011                 flag_possible_novel_donor=0;
+1012                 flag_possible_unprocessed=1; end;
+1013                end;
+1014            else  do;
+1015                 flag_possible_ir=0;
+1016                 flag_possible_novel_donor=0;flag_possible_unprocessed=1;
+1017            end;  end;
+1018          else flag_low_expressed=1;
+1019       run;
+
+NOTE: There were 136629 observations read from the data set WORK.INTRON2IR_MIN_INFO.
+NOTE: The data set WORK.CLASSIFY_INTRONS_IR2 has 136629 observations and 20 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.17 seconds
+      cpu time            0.18 seconds
+      
+
+1020       
+1021       proc freq data=classify_introns_ir2 noprint;
+1022          where flag_fusion_on=1 and flag_splicing_on_ge5=1;
+1023          tables flag_low_expressed*flag_possible_novel_donor*flag_possible_ir*flag_possible_unprocessed / out=ir_class;
+1024       run;
+
+NOTE: There were 505 observations read from the data set WORK.CLASSIFY_INTRONS_IR2.
+      WHERE (flag_fusion_on=1) and (flag_splicing_on_ge5=1);
+41                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+NOTE: The data set WORK.IR_CLASS has 4 observations and 6 variables.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.03 seconds
+      
+
+1025       
+1026       proc print data=ir_class;
+1027       run;
+
+NOTE: There were 4 observations read from the data set WORK.IR_CLASS.
+NOTE: The PROCEDURE PRINT printed page 8.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1028       
+1029       data check;
+1030          set classify_introns_ir2;
+1031          where flag_possible_novel_donor=0 and flag_possible_ir=0 and flag_possible_unprocessed=0;
+1032       run;
+
+NOTE: There were 0 observations read from the data set WORK.CLASSIFY_INTRONS_IR2.
+      WHERE (flag_possible_novel_donor=0) and (flag_possible_ir=0) and (flag_possible_unprocessed=0);
+NOTE: The data set WORK.CHECK has 0 observations and 20 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+1033       
+1034       
+1035       
+1036       /*
+1037                                           flag_
+1038          flag_low_    flag_possible_    possible_    flag_possible_
+1039          expressed      novel_donor         ir         unprocessed     COUNT    PERCENT
+1040       
+1041              0               0              0               1          24794    97.7990
+1042              0               0              1               0            200     0.7889
+1043              0               1              0               1            314     1.2386
+1044              0               1              1               0             44     0.1736
+1045       
+1046       
+1047       
+1048       */
+1049       
+1050       
+1051       
+1052       proc freq data=classify_introns_ir2;
+1053          tables flag_splicing_on_ge5*flag_fusion_on;
+1054       run;
+
+NOTE: There were 136629 observations read from the data set WORK.CLASSIFY_INTRONS_IR2.
+NOTE: The PROCEDURE FREQ printed page 9.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.04 seconds
+42                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+      cpu time            0.05 seconds
+      
+
+1055       
+1056       *1669 events where the donor fusion is off but the IR is on;
+1057       *25352 events where the donor fusion and IR are on;
+1058       
+1059       
+1060       /* Export APNs and flags so I can make plots of IR vs donor, IR vs intron, intron vs donor */
+1061       
+1062       data data_for_plots;
+1063         set classify_introns_ir2;
+1064         keep event_id flag_no_computed_intron mean_apn_intron flag_splicing_on_ge5 mean_apn_ir
+1065              flag_fusion_on mean_apn_fusion flag_low_expressed flag_possible_novel_donor flag_possible_ir
+1065     ! flag_possible_unprocessed ;
+1066       run;
+
+NOTE: There were 136629 observations read from the data set WORK.CLASSIFY_INTRONS_IR2.
+NOTE: The data set WORK.DATA_FOR_PLOTS has 136629 observations and 11 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.13 seconds
+      cpu time            0.14 seconds
+      
+
+1067       
+1068       proc export data=data_for_plots
+1069           outfile="!MCLAB/event_analysis/analysis_output/event_analysis_reclassified_ir_jrbn3_apn5_both_reps.csv"
+1070          dbms=csv replace;
+1071       run;
+
+1072        /**********************************************************************
+1073        *   PRODUCT:   SAS
+1074        *   VERSION:   9.4
+1075        *   CREATOR:   External File Interface
+1076        *   DATE:      04JUN17
+1077        *   DESC:      Generated SAS Datastep Code
+1078        *   TEMPLATE SOURCE:  (None Specified.)
+1079        ***********************************************************************/
+1080           data _null_;
+1081           %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+1082           %let _EFIREC_ = 0;     /* clear export record count macro variable */
+1083           file '!MCLAB/event_analysis/analysis_output/event_analysis_reclassified_ir_jrbn3_apn5_both_reps.csv' delimiter=','
+1083     ! DSD DROPOVER lrecl=32767;
+1084           if _n_ = 1 then        /* write column names or labels */
+1085            do;
+1086              put
+1087                 "event_id"
+1088              ','
+1089                 "flag_no_computed_intron"
+1090              ','
+1091                 "mean_apn_intron"
+1092              ','
+1093                 "flag_splicing_on_ge5"
+1094              ','
+1095                 "mean_apn_IR"
+1096              ','
+1097                 "flag_fusion_on"
+1098              ','
+43                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+1099                 "mean_apn_fusion"
+1100              ','
+1101                 "flag_low_expressed"
+1102              ','
+1103                 "flag_possible_unprocessed"
+1104              ','
+1105                 "flag_possible_novel_donor"
+1106              ','
+1107                 "flag_possible_ir"
+1108              ;
+1109            end;
+1110          set  DATA_FOR_PLOTS   end=EFIEOD;
+1111              format event_id $335. ;
+1112              format flag_no_computed_intron best12. ;
+1113              format mean_apn_intron best12. ;
+1114              format flag_splicing_on_ge5 best12. ;
+1115              format mean_apn_IR best12. ;
+1116              format flag_fusion_on best12. ;
+1117              format mean_apn_fusion best12. ;
+1118              format flag_low_expressed best12. ;
+1119              format flag_possible_unprocessed best12. ;
+1120              format flag_possible_novel_donor best12. ;
+1121              format flag_possible_ir best12. ;
+1122            do;
+1123              EFIOUT + 1;
+1124              put event_id $ @;
+1125              put flag_no_computed_intron @;
+1126              put mean_apn_intron @;
+1127              put flag_splicing_on_ge5 @;
+1128              put mean_apn_IR @;
+1129              put flag_fusion_on @;
+1130              put mean_apn_fusion @;
+1131              put flag_low_expressed @;
+1132              put flag_possible_unprocessed @;
+1133              put flag_possible_novel_donor @;
+1134              put flag_possible_ir ;
+1135              ;
+1136            end;
+1137           if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+1138           if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+1139           run;
+
+NOTE: The file '!MCLAB/event_analysis/analysis_output/event_analysis_reclassified_ir_jrbn3_apn5_both_reps.csv' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/analysis_output/event_analysis_reclassified_ir_jrbn3_apn5_both_reps.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Sun Jun  4 03:01:54 2017
+
+NOTE: 136630 records were written to the file 
+      '!MCLAB/event_analysis/analysis_output/event_analysis_reclassified_ir_jrbn3_apn5_both_reps.csv'.
+      The minimum record length was 31.
+      The maximum record length was 200.
+NOTE: There were 136629 observations read from the data set WORK.DATA_FOR_PLOTS.
+NOTE: DATA statement used (Total process time):
+      real time           0.64 seconds
+      cpu time            0.44 seconds
+      
+
+44                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+136629 records created in !MCLAB/event_analysis/analysis_output/event_analysis_reclassified_ir_jrbn3_apn5_both_reps.csv from 
+DATA_FOR_PLOTS.
+  
+  
+NOTE: "!MCLAB/event_analysis/analysis_output/event_analysis_reclassified_ir_jrbn3_apn5_both_reps.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.71 seconds
+      cpu time            0.49 seconds
+      
+
+1140       
+1141       
+1142       
+1143       /* Make permenant */
+1144       
+1145       data event.ir_reclassification_v3_apn5;
+1146          set classify_introns_ir2;
+1147       run;
+
+NOTE: There were 136629 observations read from the data set WORK.CLASSIFY_INTRONS_IR2.
+NOTE: The data set EVENT.IR_RECLASSIFICATION_V3_APN5 has 136629 observations and 20 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.49 seconds
+      cpu time            0.20 seconds
+      
+
+1148       
+1149       
+1150       /*********************************************************/
+1151       
+1152       
+1153       /* Count reclassified IR events by type and by whether they have a PB hit or not */
+1154       
+1155       * IR with hit;
+1156       data ir_w_hit;
+1157         set event.blast_junc_to_pb_w_annot;
+1158         where flag_intron_retention=1 and flag_feature_on_ge5=1
+1159               and flag_event_has_hit=1;
+1160         keep event_id;
+1161       run;
+
+NOTE: There were 223 observations read from the data set EVENT.BLAST_JUNC_TO_PB_W_ANNOT.
+      WHERE (flag_intron_retention=1) and (flag_feature_on_ge5=1) and (flag_event_has_hit=1);
+NOTE: The data set WORK.IR_W_HIT has 223 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           15.76 seconds
+      cpu time            1.14 seconds
+      
+
+1162       
+1163       * IR reclassification;
+1164       data ir_class;
+1165         set event.ir_reclassification_v3_apn5;
+1166         where flag_splicing_on_ge5=1;
+1167         keep event_id flag_low_expressed flag_possible_unprocessed flag_possible_novel_donor flag_possible_ir ;
+1168       run;
+
+NOTE: There were 879 observations read from the data set EVENT.IR_RECLASSIFICATION_V3_APN5.
+45                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+      WHERE flag_splicing_on_ge5=1;
+NOTE: The data set WORK.IR_CLASS has 879 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.67 seconds
+      cpu time            0.11 seconds
+      
+
+1169       
+1170       
+1171       proc sort data=ir_w_hit nodup;
+1172          by event_id;
+
+NOTE: There were 223 observations read from the data set WORK.IR_W_HIT.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.IR_W_HIT has 223 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1173       proc sort data=ir_class;
+1174          by event_id;
+1175       run;
+
+NOTE: There were 879 observations read from the data set WORK.IR_CLASS.
+NOTE: The data set WORK.IR_CLASS has 879 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1176       
+1177       data ir_class_pb_hit;
+1178         merge ir_class (in=in1) ir_w_hit (in=in2);
+1179         if in2 then flag_pb_hit=1; else flag_pb_hit=0;
+1180         if in1 then output;
+1181       run;
+
+NOTE: There were 879 observations read from the data set WORK.IR_CLASS.
+NOTE: There were 223 observations read from the data set WORK.IR_W_HIT.
+NOTE: The data set WORK.IR_CLASS_PB_HIT has 879 observations and 6 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+1182       
+1183       proc freq data=ir_class_pb_hit noprint;
+1184          tables flag_low_expressed*flag_possible_unprocessed*
+1185                 flag_possible_novel_donor*flag_possible_ir*flag_pb_hit / out=ir_count;
+1186       run;
+
+NOTE: There were 879 observations read from the data set WORK.IR_CLASS_PB_HIT.
+NOTE: The data set WORK.IR_COUNT has 10 observations and 7 variables.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+46                                                         The SAS System                                 02:48 Sunday, June 4, 2017
+
+
+1187       
+1188       proc print data=ir_count;
+1189       run;
+
+NOTE: There were 10 observations read from the data set WORK.IR_COUNT.
+NOTE: The PROCEDURE PRINT printed page 10.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+1190       
+1191       
+1192       /*
+1193                                                             flag_
+1194       
+1195                                                          flag_
+1196       flag_low_    flag_possible_    flag_possible_    possible_    flag_pb_
+1197       expressed      unprocessed       novel_donor         ir          hit      COUNT    PERCENT
+1198       
+1199           0               0                 0              1            0         194     0.7652
+1200           0               0                 0              1            1           6     0.0237
+1201           0               0                 1              1            0          42     0.1657
+1202           0               0                 1              1            1           2     0.0079
+1203           0               1                 0              0            0       24208    95.4875
+1204           0               1                 0              0            1         586     2.3115
+1205           0               1                 1              0            0         282     1.1123
+1206           0               1                 1              0            1          32     0.1262
+1207           1               .                 .              .            0        1491      .
+1208           1               .                 .              .            1         178      .
+1209       
+1210       TABLE
+1211       
+1212       CLASS           NO HIT  HIT
+1213       Poss. IR        194     6
+1214       Ambig IR        42      2
+1215       Unprocessed     24208   586
+1216       Novel donor     282     32
+1217       Low Express     1491    178
+1218       
+1219       */
+1220       
+1221       
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           12:57.17
+      cpu time            1:36.94
+      

@@ -1,0 +1,1011 @@
+1                                                          The SAS System                               16:46 Saturday, June 3, 2017
+
+NOTE: Unable to open SASUSER.REGSTRY. WORK.REGSTRY will be opened instead.
+NOTE: All registry changes will be lost at the end of the session.
+
+WARNING: Unable to copy SASUSER registry to WORK registry. Because of this, you will not see registry customizations during this 
+         session.
+NOTE: Unable to open SASUSER.PROFILE. WORK.PROFILE will be opened instead.
+NOTE: All profile changes will be lost at the end of the session.
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to UNIVERSITY OF FLORIDA - SFA T&R, Site 70095659.
+NOTE: This session is executing on the Linux 4.4.0-78-generic (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 4.4.0-78-generic #99~14.04.2-Ubuntu SMP Thu Apr 27 18:49:46 UTC 2017 x86_64 Unrecognized Linux Distribution 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.16 seconds
+      cpu time            0.03 seconds
+      
+1          ods listing; ods html close;
+2          libname mm10 '!MCLAB/useful_mouse_data/mm10/sas_data';
+NOTE: Libref MM10 was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/useful_mouse_data/mm10/sas_data
+3          libname event '!MCLAB/event_analysis/sas_data';
+NOTE: Libref EVENT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/sas_data
+4          libname evspl '!MCLAB/conesa_pacbio/sas_data/splicing';
+2                                                          The SAS System                               16:46 Saturday, June 3, 2017
+
+NOTE: Libref EVSPL was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data/splicing
+5          libname conesa '!MCLAB/conesa_pacbio/sas_data';
+NOTE: Libref CONESA was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data
+6          libname refseq '!MCLAB/event_analysis/refseq_fusions/sas_data';
+NOTE: Libref REFSEQ was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/refseq_fusions/sas_data
+7          
+8          /* Flag hits with gaps or mismatch */
+9          
+10         data flag_partial;
+11           set event.blast_junc_pb_hits_with_annot;
+12           if perc_identity >= 95 then flag_perc_ident_ge95=1; else flag_perc_ident_ge95=0;
+13           if mismatch = 0 then flag_no_mismatch=1; else flag_no_mismatch=0;
+14           if gapopen = 0 then flag_no_gap=1; else flag_no_gap=0;
+15         run;
+
+NOTE: There were 155834 observations read from the data set EVENT.BLAST_JUNC_PB_HITS_WITH_ANNOT.
+NOTE: The data set WORK.FLAG_PARTIAL has 155834 observations and 19 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.83 seconds
+      cpu time            0.22 seconds
+      
+
+16         
+17         data dtct_events;
+18            set event.flag_feature_on_all_reps_ge5;
+19            keep feature_id flag_feature_on_ge5 flag_feature_on_ge10;
+20            rename feature_id=event_id;
+21         run;
+
+NOTE: There were 3358690 observations read from the data set EVENT.FLAG_FEATURE_ON_ALL_REPS_GE5.
+NOTE: The data set WORK.DTCT_EVENTS has 3358690 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           23.50 seconds
+      cpu time            3.74 seconds
+      
+
+22         
+23         
+24         proc sort data=flag_partial;
+25           by event_id;
+
+NOTE: There were 155834 observations read from the data set WORK.FLAG_PARTIAL.
+NOTE: The data set WORK.FLAG_PARTIAL has 155834 observations and 19 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.72 seconds
+      cpu time            0.37 seconds
+      
+
+26         proc sort data=dtct_events;
+27           by event_id;
+28         run;
+
+3                                                          The SAS System                               16:46 Saturday, June 3, 2017
+
+NOTE: There were 3358690 observations read from the data set WORK.DTCT_EVENTS.
+NOTE: The data set WORK.DTCT_EVENTS has 3358690 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           20.14 seconds
+      cpu time            9.36 seconds
+      
+
+29         
+30         data flag_partial2;
+31           merge flag_partial (in=in1) dtct_events (in=in2);
+32           by event_id;
+33           if in1 and in2;
+34         run;
+
+WARNING: Multiple lengths were specified for the BY variable event_id by input data sets. This might cause unexpected results.
+NOTE: There were 155834 observations read from the data set WORK.FLAG_PARTIAL.
+NOTE: There were 3358690 observations read from the data set WORK.DTCT_EVENTS.
+NOTE: The data set WORK.FLAG_PARTIAL2 has 155834 observations and 21 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.90 seconds
+      cpu time            1.90 seconds
+      
+
+35         
+36         proc freq data=flag_partial2 noprint;
+37           tables flaG_perc_ident_ge95*flag_no_mismatch*flag_no_gap*flag_feature_on_ge10 / out=check;
+
+NOTE: There were 155834 observations read from the data set WORK.FLAG_PARTIAL2.
+NOTE: The data set WORK.CHECK has 21 observations and 6 variables.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.08 seconds
+      
+
+38         proc print data=check;
+39         run;
+
+NOTE: There were 21 observations read from the data set WORK.CHECK.
+NOTE: The PROCEDURE PRINT printed page 1.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.00 seconds
+      
+
+40         
+41         /*
+42         flag_perc_    flag_no_    flag_no_    flag_feature_
+43         ident_ge95    mismatch       gap          on_ge5        COUNT    PERCENT
+44         
+45              0            0           0             .              18      .
+46              0            0           0             0             166     0.1180
+47              0            0           0             1             171     0.1216
+48              0            0           1             .              18      .
+49              0            0           1             0             107     0.0761
+50              0            0           1             1             301     0.2140
+51              0            1           0             .               2      .
+52              0            1           0             0               7     0.0050
+53              0            1           0             1               9     0.0064
+4                                                          The SAS System                               16:46 Saturday, June 3, 2017
+
+54              1            0           0             .              50      .
+55              1            0           0             0             421     0.2994
+56              1            0           0             1             217     0.1543
+57              1            0           1             .             362      .
+58              1            0           1             0            2200     1.5644
+59              1            0           1             1            2166     1.5402
+60              1            1           0             .              37      .
+61              1            1           0             0             588     0.4181
+62              1            1           0             1             152     0.1081
+63              1            1           1             .           14720      .
+64              1            1           1             0           32900    23.3952
+65              1            1           1             1          101222    71.9791
+66         
+67         
+68         101222 to keep
+69         */
+70         
+71         
+72         data event_means;
+73            set event.mean_apn_events_npc;
+74            if mean_apn_npc > 0 then flag_mean_apn_gt0=1; else flag_mean_apn_gt0=0;
+75            if mean_apn_npc >= 5 then flag_mean_apn_ge5=1; else flag_mean_apn_ge5=0;
+76            if mean_apn_npc >= 10 then flag_mean_apn_ge10=1; else flag_mean_apn_ge10=0;
+77            rename feature_id=event_id;
+78         run;
+
+NOTE: There were 3358690 observations read from the data set EVENT.MEAN_APN_EVENTS_NPC.
+NOTE: The data set WORK.EVENT_MEANS has 3358690 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           21.42 seconds
+      cpu time            3.80 seconds
+      
+
+79         
+80         data event_annot;
+81            set event.features_w_annotations_nomulti;
+82            where feature_type="splicing" ;
+83            keep feature_id flag_feature_on flag_junction_annotated flag_intron_retention;
+84            rename feature_id=event_id;
+85         run;
+
+NOTE: There were 1965069 observations read from the data set EVENT.FEATURES_W_ANNOTATIONS_NOMULTI.
+      WHERE feature_type='splicing';
+NOTE: The data set WORK.EVENT_ANNOT has 1965069 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           17.18 seconds
+      cpu time            2.51 seconds
+      
+
+86         
+87         proc sort data=flag_partial2;
+88            by event_id;
+
+NOTE: There were 155834 observations read from the data set WORK.FLAG_PARTIAL2.
+NOTE: The data set WORK.FLAG_PARTIAL2 has 155834 observations and 21 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.61 seconds
+      cpu time            0.34 seconds
+5                                                          The SAS System                               16:46 Saturday, June 3, 2017
+
+      
+
+89         proc sort data=event_means;
+90            by event_id;
+
+NOTE: There were 3358690 observations read from the data set WORK.EVENT_MEANS.
+NOTE: The data set WORK.EVENT_MEANS has 3358690 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           15.84 seconds
+      cpu time            9.80 seconds
+      
+
+91         proc sort data=event_annot;
+92            by event_id;
+93         run;
+
+NOTE: There were 1965069 observations read from the data set WORK.EVENT_ANNOT.
+NOTE: The data set WORK.EVENT_ANNOT has 1965069 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           11.86 seconds
+      cpu time            5.92 seconds
+      
+
+94         
+95         data blast_hits_check_on;
+96           merge flag_partial2 (in=in1) event_annot (in=in2) event_means;
+97           by event_id;
+98           if in1 then flag_event_has_blast=1; else flag_event_has_blast=0;
+99           if in2 ;
+100        run;
+
+WARNING: Multiple lengths were specified for the BY variable event_id by input data sets. This might cause unexpected results.
+NOTE: There were 155834 observations read from the data set WORK.FLAG_PARTIAL2.
+NOTE: There were 1965069 observations read from the data set WORK.EVENT_ANNOT.
+NOTE: There were 3358690 observations read from the data set WORK.EVENT_MEANS.
+NOTE: The data set WORK.BLAST_HITS_CHECK_ON has 2028834 observations and 29 variables.
+NOTE: DATA statement used (Total process time):
+      real time           4.30 seconds
+      cpu time            4.31 seconds
+      
+
+101        
+102        
+103        /* add fragment length */
+104        
+105        data junc_length;
+106           set evspl.splicing_events_annot_refseq;
+107           feature_length=event_size;
+108           keep event_id feature_length gene_id;
+109        run;
+
+NOTE: There were 2998454 observations read from the data set EVSPL.SPLICING_EVENTS_ANNOT_REFSEQ.
+NOTE: The data set WORK.JUNC_LENGTH has 2998454 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           6:22.60
+      cpu time            27.82 seconds
+      
+
+6                                                          The SAS System                               16:46 Saturday, June 3, 2017
+
+110        
+111        proc sort data=blast_hits_check_on;
+112          by event_id;
+
+NOTE: There were 2028834 observations read from the data set WORK.BLAST_HITS_CHECK_ON.
+NOTE: The data set WORK.BLAST_HITS_CHECK_ON has 2028834 observations and 29 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           16.99 seconds
+      cpu time            8.32 seconds
+      
+
+113        proc sort data=junc_length;
+114          by event_id;
+115        run;
+
+NOTE: There were 2998454 observations read from the data set WORK.JUNC_LENGTH.
+NOTE: The data set WORK.JUNC_LENGTH has 2998454 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           17.88 seconds
+      cpu time            10.60 seconds
+      
+
+116        
+117        
+118        data blast_hits_w_len;
+119          merge blast_hits_check_on (in=in1) junc_length (in=in2);
+120          by event_id;
+121          if in2 ;
+122        run;
+
+WARNING: Multiple lengths were specified for the BY variable event_id by input data sets. This might cause unexpected results.
+NOTE: There were 2028834 observations read from the data set WORK.BLAST_HITS_CHECK_ON.
+NOTE: There were 2998454 observations read from the data set WORK.JUNC_LENGTH.
+NOTE: The data set WORK.BLAST_HITS_W_LEN has 3062219 observations and 30 variables.
+NOTE: DATA statement used (Total process time):
+      real time           4.98 seconds
+      cpu time            4.99 seconds
+      
+
+123        
+124        data gene_exp;
+125          set event.flag_gene_expressed;
+126          where flag_gene_expressed=1;
+127          keep gene_id;
+128        run;
+
+NOTE: There were 20875 observations read from the data set EVENT.FLAG_GENE_EXPRESSED.
+      WHERE flag_gene_expressed=1;
+NOTE: The data set WORK.GENE_EXP has 20875 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.00 seconds
+      
+
+129        
+130        proc sort data=blast_hits_w_len;
+131          by gene_id;
+
+7                                                          The SAS System                               16:46 Saturday, June 3, 2017
+
+NOTE: There were 3062219 observations read from the data set WORK.BLAST_HITS_W_LEN.
+NOTE: The data set WORK.BLAST_HITS_W_LEN has 3062219 observations and 30 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           26.29 seconds
+      cpu time            12.11 seconds
+      
+
+132        proc sort data=gene_exp;
+133          by gene_id;
+134        run;
+
+NOTE: There were 20875 observations read from the data set WORK.GENE_EXP.
+NOTE: The data set WORK.GENE_EXP has 20875 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+135        
+136        data blast_hits_w_len2;
+137          merge blast_hits_w_len (in=in1) gene_exp (in=in2);
+138          by gene_id;
+139          if in1 and in2;
+140        run;
+
+NOTE: There were 3062219 observations read from the data set WORK.BLAST_HITS_W_LEN.
+NOTE: There were 20875 observations read from the data set WORK.GENE_EXP.
+NOTE: The data set WORK.BLAST_HITS_W_LEN2 has 1956459 observations and 30 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.87 seconds
+      cpu time            2.87 seconds
+      
+
+141        
+142        data flag_length;
+143           set blast_hits_W_len2;
+144           if flag_event_has_blast=1 then do;
+145              if length >= 0.9 * feature_length then flag_hit_90perc_len=1; else flag_hit_90perc_len=0;
+146              if length >= 0.95 * feature_length then flag_hit_95perc_len=1; else flag_hit_95perc_len=0;
+147              if length >= 0.99 * feature_length then flag_hit_99perc_len=1; else flag_hit_99perc_len=0;
+148              if length >= 1 * feature_length then flag_hit_100perc_len=1; else flag_hit_100perc_len=0;
+149           end;
+150        run;
+
+NOTE: There were 1956459 observations read from the data set WORK.BLAST_HITS_W_LEN2.
+NOTE: The data set WORK.FLAG_LENGTH has 1956459 observations and 34 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.17 seconds
+      cpu time            2.18 seconds
+      
+
+151        
+152        *add these back in;
+153        data event_dtct;
+154           set event.flag_feature_on_all_reps_ge5;
+155           keep feature_id flag_feature_on_ge10;
+156           rename feature_id=event_id;
+157        run;
+8                                                          The SAS System                               16:46 Saturday, June 3, 2017
+
+
+NOTE: There were 3358690 observations read from the data set EVENT.FLAG_FEATURE_ON_ALL_REPS_GE5.
+NOTE: The data set WORK.EVENT_DTCT has 3358690 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           23.24 seconds
+      cpu time            3.77 seconds
+      
+
+158        
+159        proc sort data=flag_length;
+160           by event_id;
+
+NOTE: There were 1956459 observations read from the data set WORK.FLAG_LENGTH.
+NOTE: The data set WORK.FLAG_LENGTH has 1956459 observations and 34 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           27.38 seconds
+      cpu time            8.34 seconds
+      
+
+161        proc sort data=event_dtct;
+162          by event_id;
+163        run;
+
+NOTE: There were 3358690 observations read from the data set WORK.EVENT_DTCT.
+NOTE: The data set WORK.EVENT_DTCT has 3358690 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           19.24 seconds
+      cpu time            9.29 seconds
+      
+
+164        
+165         data flag_length2;
+166           merge flag_length (in=in1) event_dtct (in=in2);
+167           by event_id;
+168           if in1 and in2;
+169        run;
+
+WARNING: Multiple lengths were specified for the BY variable event_id by input data sets. This might cause unexpected results.
+NOTE: There were 1956459 observations read from the data set WORK.FLAG_LENGTH.
+NOTE: There were 3358690 observations read from the data set WORK.EVENT_DTCT.
+NOTE: The data set WORK.FLAG_LENGTH2 has 1956459 observations and 34 variables.
+NOTE: DATA statement used (Total process time):
+      real time           4.22 seconds
+      cpu time            4.23 seconds
+      
+
+170        
+171        proc sort data=flag_length2;
+172           by event_id;
+
+NOTE: There were 1956459 observations read from the data set WORK.FLAG_LENGTH2.
+NOTE: The data set WORK.FLAG_LENGTH2 has 1956459 observations and 34 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           16.42 seconds
+      cpu time            8.67 seconds
+      
+
+173        proc means data=flag_length2 noprint;
+9                                                          The SAS System                               16:46 Saturday, June 3, 2017
+
+174           by event_id;
+175           var flag_event_has_blast flag_pb_gene_has_refseq flag_junction_annotated flag_intron_retention
+176                 flag_perc_ident_ge95 flag_no_mismatch flag_no_gap
+177                 flag_feature_on flag_hit_90perc_len flag_mean_apn_gt0
+178                 flag_mean_apn_ge5 flag_feature_on_ge10;
+179           output out=flag_length3 max=;
+180        run;
+
+NOTE: There were 1956459 observations read from the data set WORK.FLAG_LENGTH2.
+NOTE: The data set WORK.FLAG_LENGTH3 has 1894233 observations and 15 variables.
+NOTE: PROCEDURE MEANS used (Total process time):
+      real time           6.65 seconds
+      cpu time            6.66 seconds
+      
+
+181        
+182        /* count -- this is per hit */
+183        
+184        proc freq data=flag_length2 noprint;
+185          tables flag_event_has_blast*flag_pb_gene_has_refseq*flag_junction_annotated*flag_intron_retention*
+186                 flag_perc_ident_ge95*flag_no_mismatch*flag_no_gap*
+187                 flag_feature_on*flag_hit_90perc_len*flag_mean_apn_gt0*
+188                 flag_mean_apn_ge5*flag_feature_on_ge10 /
+189                 out=pb_hit_count;
+190        run;
+
+NOTE: There were 1956459 observations read from the data set WORK.FLAG_LENGTH2.
+NOTE: The data set WORK.PB_HIT_COUNT has 187 observations and 14 variables.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           1.49 seconds
+      cpu time            1.49 seconds
+      
+
+191        
+192        proc export data=pb_hit_count
+192      ! outfile="!MCLAB/event_analysis/analysis_output/blast_junctions_to_pacbio_summary_of_hits.csv"
+193           dbms=csv replace;
+194        run;
+
+195         /**********************************************************************
+196         *   PRODUCT:   SAS
+197         *   VERSION:   9.4
+198         *   CREATOR:   External File Interface
+199         *   DATE:      03JUN17
+200         *   DESC:      Generated SAS Datastep Code
+201         *   TEMPLATE SOURCE:  (None Specified.)
+202         ***********************************************************************/
+203            data _null_;
+204            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+205            %let _EFIREC_ = 0;     /* clear export record count macro variable */
+206            file '!MCLAB/event_analysis/analysis_output/blast_junctions_to_pacbio_summary_of_hits.csv' delimiter=',' DSD DROPOVER
+206      !  lrecl=32767;
+207            if _n_ = 1 then        /* write column names or labels */
+208             do;
+209               put
+210                  "flag_event_has_blast"
+211               ','
+212                  "flag_pb_gene_has_refseq"
+10                                                         The SAS System                               16:46 Saturday, June 3, 2017
+
+213               ','
+214                  "flag_junction_annotated"
+215               ','
+216                  "flag_intron_retention"
+217               ','
+218                  "flag_perc_ident_ge95"
+219               ','
+220                  "flag_no_mismatch"
+221               ','
+222                  "flag_no_gap"
+223               ','
+224                  "flag_feature_on"
+225               ','
+226                  "flag_hit_90perc_len"
+227               ','
+228                  "flag_mean_apn_gt0"
+229               ','
+230                  "flag_mean_apn_ge5"
+231               ','
+232                  "flag_feature_on_ge10"
+233               ','
+234                  "COUNT"
+235               ','
+236                  "PERCENT"
+237               ;
+238             end;
+239           set  PB_HIT_COUNT   end=EFIEOD;
+240               format flag_event_has_blast best12. ;
+241               format flag_pb_gene_has_refseq best12. ;
+242               format flag_junction_annotated best12. ;
+243               format flag_intron_retention best12. ;
+244               format flag_perc_ident_ge95 best12. ;
+245               format flag_no_mismatch best12. ;
+246               format flag_no_gap best12. ;
+247               format flag_feature_on best12. ;
+248               format flag_hit_90perc_len best12. ;
+249               format flag_mean_apn_gt0 best12. ;
+250               format flag_mean_apn_ge5 best12. ;
+251               format flag_feature_on_ge10 best12. ;
+252               format COUNT best12. ;
+253               format PERCENT best12. ;
+254             do;
+255               EFIOUT + 1;
+256               put flag_event_has_blast @;
+257               put flag_pb_gene_has_refseq @;
+258               put flag_junction_annotated @;
+259               put flag_intron_retention @;
+260               put flag_perc_ident_ge95 @;
+261               put flag_no_mismatch @;
+262               put flag_no_gap @;
+263               put flag_feature_on @;
+264               put flag_hit_90perc_len @;
+265               put flag_mean_apn_gt0 @;
+266               put flag_mean_apn_ge5 @;
+267               put flag_feature_on_ge10 @;
+268               put COUNT @;
+269               put PERCENT ;
+270               ;
+11                                                         The SAS System                               16:46 Saturday, June 3, 2017
+
+271             end;
+272            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+273            if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+274            run;
+
+NOTE: The file '!MCLAB/event_analysis/analysis_output/blast_junctions_to_pacbio_summary_of_hits.csv' is:
+      Filename=/home/jrbnewman/McLab/event_analysis/analysis_output/blast_junctions_to_pacbio_summary_of_hits.csv,
+      Owner Name=jrbnewman,Group Name=jrbnewman,
+      Access Permission=-rwx------,
+      Last Modified=Sat Jun  3 16:58:15 2017
+
+NOTE: 188 records were written to the file '!MCLAB/event_analysis/analysis_output/blast_junctions_to_pacbio_summary_of_hits.csv'.
+      The minimum record length was 19.
+      The maximum record length was 247.
+NOTE: There were 187 observations read from the data set WORK.PB_HIT_COUNT.
+NOTE: DATA statement used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.00 seconds
+      
+
+187 records created in !MCLAB/event_analysis/analysis_output/blast_junctions_to_pacbio_summary_of_hits.csv from PB_HIT_COUNT.
+  
+  
+NOTE: "!MCLAB/event_analysis/analysis_output/blast_junctions_to_pacbio_summary_of_hits.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.10 seconds
+      cpu time            0.05 seconds
+      
+
+275        
+276        /* Extract only hits that are "good" */
+277        
+278        data good_blast ;
+279          set flag_length3;
+280          if flag_pb_gene_has_refseq=1 and flag_perc_ident_ge95=1 and flag_no_mismatch=1 and flag_no_gap=1
+281          and flag_feature_on=1 and flag_hit_90perc_len=1 and flag_feature_on_ge10=1 ;
+282          keep event_id;
+283        run;
+
+NOTE: There were 1894233 observations read from the data set WORK.FLAG_LENGTH3.
+NOTE: The data set WORK.GOOD_BLAST has 20846 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.27 seconds
+      cpu time            0.27 seconds
+      
+
+284        
+285        data all_juncs;
+286           set flag_length3;
+287           if flag_feature_on_ge5=1;
+288           keep event_id flag_mean_apn_gt0 flag_mean_apn_ge5 flag_junction_annotated flag_intron_retention;
+289        run;
+
+NOTE: Variable flag_feature_on_ge5 is uninitialized.
+NOTE: There were 1894233 observations read from the data set WORK.FLAG_LENGTH3.
+NOTE: The data set WORK.ALL_JUNCS has 0 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.51 seconds
+12                                                         The SAS System                               16:46 Saturday, June 3, 2017
+
+      cpu time            0.52 seconds
+      
+
+290        
+291        
+292        proc sort data=good_blast nodup;
+293           by event_id;
+
+NOTE: There were 20846 observations read from the data set WORK.GOOD_BLAST.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.GOOD_BLAST has 20846 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.02 seconds
+      
+
+294        proc sort data=all_juncs nodup;
+295          by event_id;
+296        run;
+
+NOTE: Input data set is empty.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.ALL_JUNCS has 0 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+297        
+298        
+299        data blast_summary;
+300          merge all_juncs (in=in1) good_blast (in=in2);
+301          by event_id;
+302          if in2 then flag_event_has_blast=1;
+303          else flag_event_has_blast=0;
+304        run;
+
+NOTE: There were 0 observations read from the data set WORK.ALL_JUNCS.
+NOTE: There were 20846 observations read from the data set WORK.GOOD_BLAST.
+NOTE: The data set WORK.BLAST_SUMMARY has 20846 observations and 6 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+305        
+306        proc freq data=blast_summary noprint;
+307          tables  flag_mean_apn_gt0*flag_mean_apn_ge5*flag_junction_annotated*
+308                  flag_intron_retention*flag_event_has_blast / out=summarize_flags;
+309        run;
+
+NOTE: There were 20846 observations read from the data set WORK.BLAST_SUMMARY.
+NOTE: The data set WORK.SUMMARIZE_FLAGS has 1 observations and 7 variables.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+13                                                         The SAS System                               16:46 Saturday, June 3, 2017
+
+310        
+311        proc print data=summarize_flags;
+312        run;
+
+NOTE: There were 1 observations read from the data set WORK.SUMMARIZE_FLAGS.
+NOTE: The PROCEDURE PRINT printed page 2.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+313        
+314        /*
+315          flag_      flag_
+316          mean_      mean_     flag_junction_    flag_intron_    flag_event_
+317         apn_gt0    apn_ge5       annotated        retention      has_blast     COUNT
+318        
+319            1          1              0                0              0             4
+320            1          1              0                0              1            16
+321            1          1              0                1              0           118
+322            1          1              0                1              1           214
+323            1          1              1                0              0           705
+324            1          1              1                0              1         27667
+325        
+326        16/(16+4) unannotated with hits
+327        214/(214+118) IR with hits
+328        27667/(27667+705) annot with hits
+329        
+330        */
+331        
+332        /* Make permanent */
+333        
+334        data event.blast_junc_to_pb_summary_apn10;
+335          set blast_summary;
+336        run;
+
+NOTE: There were 20846 observations read from the data set WORK.BLAST_SUMMARY.
+NOTE: The data set EVENT.BLAST_JUNC_TO_PB_SUMMARY_APN10 has 20846 observations and 6 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.20 seconds
+      cpu time            0.01 seconds
+      
+
+337        
+338        
+339        data event.blast_junc_to_pb_all_hits_apn10;
+340          set flag_length;
+341        run;
+
+NOTE: There were 1956459 observations read from the data set WORK.FLAG_LENGTH.
+NOTE: The data set EVENT.BLAST_JUNC_TO_PB_ALL_HITS_APN10 has 1956459 observations and 34 variables.
+NOTE: DATA statement used (Total process time):
+      real time           32.73 seconds
+      cpu time            3.61 seconds
+      
+
+342        
+343        
+14                                                         The SAS System                               16:46 Saturday, June 3, 2017
+
+344        /* hits */
+345        
+346        data hits;
+347          set flag_length2;
+348          if flag_perc_ident_ge95=1 and flag_no_mismatch=1
+349          and flag_no_gap=1 and flag_hit_90perc_len=1;
+350          keep event_id;
+351        run;
+
+NOTE: There were 1956459 observations read from the data set WORK.FLAG_LENGTH2.
+NOTE: The data set WORK.HITS has 96262 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.54 seconds
+      cpu time            0.54 seconds
+      
+
+352        
+353        data annot;
+354          set evspl.splicing_events_annot_refseq;
+355          keep event_id gene_id flag_junction_annotated flag_intron_retention;
+356        run;
+
+NOTE: There were 2998454 observations read from the data set EVSPL.SPLICING_EVENTS_ANNOT_REFSEQ.
+NOTE: The data set WORK.ANNOT has 2998454 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           5:24.40
+      cpu time            28.72 seconds
+      
+
+357        
+358        data event_on;
+359           set event.flag_feature_on_all_reps_ge5;
+360           keep feature_id flag_feature_on_ge10;
+361           rename feature_id=event_id;
+362        run;
+
+NOTE: There were 3358690 observations read from the data set EVENT.FLAG_FEATURE_ON_ALL_REPS_GE5.
+NOTE: The data set WORK.EVENT_ON has 3358690 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           25.13 seconds
+      cpu time            3.75 seconds
+      
+
+363        
+364        data exp_Gene;
+365          set event.flag_gene_expressed;
+366          where flag_gene_expressed=1;
+367          keep gene_id;
+368        run;
+
+NOTE: There were 20875 observations read from the data set EVENT.FLAG_GENE_EXPRESSED.
+      WHERE flag_gene_expressed=1;
+NOTE: The data set WORK.EXP_GENE has 20875 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.07 seconds
+      cpu time            0.01 seconds
+      
+
+15                                                         The SAS System                               16:46 Saturday, June 3, 2017
+
+369        
+370        proc sort data=exp_gene;
+371          by gene_id;
+
+NOTE: There were 20875 observations read from the data set WORK.EXP_GENE.
+NOTE: The data set WORK.EXP_GENE has 20875 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+372        proc sort data=annot;
+373          by gene_id;
+374        run;
+
+NOTE: There were 2998454 observations read from the data set WORK.ANNOT.
+NOTE: The data set WORK.ANNOT has 2998454 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           19.66 seconds
+      cpu time            9.10 seconds
+      
+
+375        
+376        data annot_exp;
+377          merge annot (in=in1) exp_gene (in=in2);
+378          by gene_id;
+379          if in1 and in2;
+380        run;
+
+NOTE: There were 2998454 observations read from the data set WORK.ANNOT.
+NOTE: There were 20875 observations read from the data set WORK.EXP_GENE.
+NOTE: The data set WORK.ANNOT_EXP has 1894233 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.17 seconds
+      cpu time            2.18 seconds
+      
+
+381        
+382        
+383        proc sort data=event_on;
+384          by event_id;
+
+NOTE: There were 3358690 observations read from the data set WORK.EVENT_ON.
+NOTE: The data set WORK.EVENT_ON has 3358690 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           15.36 seconds
+      cpu time            9.13 seconds
+      
+
+385        proc sort data=annot_exp;
+386          by event_id;
+
+NOTE: There were 1894233 observations read from the data set WORK.ANNOT_EXP.
+NOTE: The data set WORK.ANNOT_EXP has 1894233 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           10.99 seconds
+      cpu time            7.04 seconds
+      
+16                                                         The SAS System                               16:46 Saturday, June 3, 2017
+
+
+387        proc sort data=hits nodup;
+388          by event_id;
+389        run;
+
+NOTE: There were 96262 observations read from the data set WORK.HITS.
+NOTE: 49679 duplicate observations were deleted.
+NOTE: The data set WORK.HITS has 46583 observations and 1 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.11 seconds
+      cpu time            0.11 seconds
+      
+
+390        
+391        data hits_w_annot;
+392          merge annot_exp (in=in1) hits (in=in2) event_on (in=in3);
+393          by event_id;
+394          if in2 then flag_event_has_hit=1; else flag_event_has_hit=0;
+395          if in1;
+396        run;
+
+NOTE: There were 1894233 observations read from the data set WORK.ANNOT_EXP.
+NOTE: There were 46583 observations read from the data set WORK.HITS.
+NOTE: There were 3358690 observations read from the data set WORK.EVENT_ON.
+NOTE: The data set WORK.HITS_W_ANNOT has 1894233 observations and 6 variables.
+NOTE: DATA statement used (Total process time):
+      real time           4.36 seconds
+      cpu time            4.36 seconds
+      
+
+397        
+398        proc freq data=hits_w_annot noprint;
+399           tables flag_junction_annotated*flag_intron_retention*flag_feature_on_ge10*flag_event_has_hit / out=blast_check;
+400        run;
+
+NOTE: There were 1894233 observations read from the data set WORK.HITS_W_ANNOT.
+NOTE: The data set WORK.BLAST_CHECK has 18 observations and 6 variables.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.69 seconds
+      cpu time            0.69 seconds
+      
+
+401        
+402        proc print data=blast_check;
+403        run;
+
+NOTE: There were 18 observations read from the data set WORK.BLAST_CHECK.
+NOTE: The PROCEDURE PRINT printed page 3.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+404        
+405        
+406        
+407        
+408        
+17                                                         The SAS System                               16:46 Saturday, June 3, 2017
+
+409        /*
+410                                                             flag_
+411         flag_junction_    flag_intron_    flag_feature_     event_
+412            annotated        retention         on_ge5       has_hit      COUNT    PERCENT
+413        
+414                0                0               1             0           211     0.0112
+415                0                0               1             1           432     0.0229
+416        
+417                0                1               1             0           743     0.0394
+418                0                1               1             1           223     0.0118
+419        
+420                1                0               1             0          4627     0.2456
+421                1                0               1             1         27890     1.4804
+422        
+423        
+424                0                0               .             0           208      .
+425                0                0               .             1           148      .
+426                0                1               .             0           709      .
+427                0                1               .             1           167      .
+428                1                0               .             0          3258      .
+429                1                0               .             1          5734      .
+430                0                0               0             0       1563420    82.9837
+431                0                0               0             1           521     0.0277
+432                0                1               0             0        152495     8.0942
+433                0                1               0             1           650     0.0345
+434                1                0               0             0        121979     6.4744
+435                1                0               0             1         10818     0.5742
+436        
+437        */
+438        
+439        
+440        data event.blast_junc_to_pb_w_annot_apn10;
+441          set hits_w_annot;
+442        run;
+
+NOTE: There were 1894233 observations read from the data set WORK.HITS_W_ANNOT.
+NOTE: The data set EVENT.BLAST_JUNC_TO_PB_W_ANNOT_APN10 has 1894233 observations and 6 variables.
+NOTE: DATA statement used (Total process time):
+      real time           22.63 seconds
+      cpu time            2.33 seconds
+      
+
+443        
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           18:52.70
+      cpu time            3:46.30
+      

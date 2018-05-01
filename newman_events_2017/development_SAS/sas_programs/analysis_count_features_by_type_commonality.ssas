@@ -1,0 +1,251 @@
+/* Summarizing some event analysis stuff:
+
+(1) Count the number of detected events and fragments:
+	(a) by type (fusion, fragment, junction, unannotated junc, etc.)
+	(b) by commonality type (unique, common, constitutive)
+
+(2) For unique features detected, how many isoforms?
+	(a) fragments only
+	(b) fusions only
+	(c) events only
+	(d) fragments + events
+	(e) fusions + events
+	(f) overlap between (a) and (b)
+	(g) overlap between (a) and (c)
+	(h) overlap between (b) and (c)
+	(i) overlap between (d) and (e)
+
+(3) Calculate the distribution of transcripts by number of detected unique pieces
+	(a) #uniq * transcript (features, fragments, events, fusions)
+	(b) %uniq * transcript (features, fragments, events, fusions)
+
+(4) Bin transcripts by whether they have a unique pieces, common or constitutive
+	e.g. # xs with at least one uniq detected
+	     # xs with no uniq, but have common detected
+             # xs with no uniq, no common, only constitutive
+	(a) fusions + events
+	(b) fragments + events
+
+(ignore multigene for now)
+*/
+
+libname event '!MCLAB/event_analysis/sas_data';
+libname evspl '!MCLAB/conesa_pacbio/sas_data/splicing';
+libname conesa '!MCLAB/conesa_pacbio/sas_data';
+libname refseq '!MCLAB/event_analysis/refseq_fusions/sas_data';
+
+/* (1) Count the number of detected events and fragments */
+
+data fusions_on;
+   set refseq.rfsq_flag_fusions_on;
+   length feature_type $8.;
+   where flag_fusion_on=1;
+   feature_type="fusion";
+  keep fusion_id feature_type;
+  rename fusion_id=feature_id;
+run;
+
+
+data fragments_on;
+   set event.flag_fragment_on;
+   length feature_type $8.;
+   where flag_fragment_nsc_on=1;
+   feature_type="fragment";
+   keep fragment_id feature_type;
+  rename fragment_id=feature_id;
+run;
+
+data fragment_subset;
+  set mm10.mm10_refseq_exon_fragment_info;
+  if fragment_end-fragment_start < 27 then delete;
+  keep fragment_id;
+  rename fragment_id=feature_id;
+run;
+
+proc sort data=fragments_on;
+  by feature_id;
+proc sort data=fragment_subset;
+  by feature_id;
+run;
+
+data fragments_on2;
+  merge fragments_on (in=in1) fragment_subset (in=in2);
+  by feature_id;
+  if in1 and in2;
+run;
+
+
+data splicing_on;
+   set refseq.rfsq_flag_splicing_on;
+   length feature_type $8.;
+   where flag_splicing_on=1;
+   feature_type = "splicing";
+   keep event_id  feature_type;
+  rename event_id=feature_id;
+run;
+
+data feature_on;
+  set splicing_on fusions_on fragments_on2;
+run;
+
+data fusion_commonality;
+  set refseq.ref_flag_feature_commonality;
+  keep feature_id xscripts_per_feature flag_feature_unique flag_feature_common flag_feature_constitutive;
+run;
+
+data fragment_commonality;
+   set mm10.mm10_exon_fragment_flagged;
+   if flag_unique=1 then flag_constitutive=0; *clarify fragments from single-isoform genes as unique only;
+   keep fragment_id num_xscripts_per_fragment flag_unique flag_constitutive flag_common;
+   rename fragment_id=feature_id
+          num_xscripts_per_fragment=xscripts_per_feature
+          flag_unique=flag_feature_unique
+          flag_constitutive=flag_feature_constitutive
+          flag_common=flag_feature_common;
+run;
+
+data feature_commonality;
+  set fusion_commonality fragment_commonality;
+run;
+
+data splicing_annot;
+  set evspl.splicing_events_annot_refseq;
+  if num_transcripts > 0 then flag_junction_annotated=1;
+  keep event_id flag_junction_annotated flag_intron_retention flag_exonskip
+       flag_alt_donor flag_alt_acceptor;
+  rename event_id=feature_id;
+run;
+
+proc sort data=feature_on nodup;
+   by feature_id;
+proc sort data=feature_commonality nodup;
+   by feature_id;
+proc sort data=splicing_annot;
+   by feature_id;
+run;
+
+data feature_on_comm;
+  merge feature_on (in=in1) feature_commonality splicing_annot;
+  by feature_id;
+  if in1;
+run;
+
+/* Make permenant */
+
+data event.dtct_features_by_class;
+  set feature_on_comm;
+run;
+
+/* Make some counts */
+
+* count total detected features;
+proc freq data=event.dtct_features_by_class;
+   tables feature_type;
+run;
+
+/*
+fragment      205826
+fusion        164455
+splicing      179653 */
+
+* count splicing events by type ;
+proc freq data=event.dtct_features_by_class;
+   where feature_type="splicing";
+   tables flag_junction_annotated*flag_intron_retention;
+run;
+/*
+ flag_junction_annotated
+           flag_intron_retention
+
+ Frequency|
+ Percent  |
+ Row Pct  |
+ Col Pct  |       0|       1|  Total
+ ---------+--------+--------+
+        0 |  12275 |  40443 |  52718
+          |   6.83 |  22.51 |  29.34
+          |  23.28 |  76.72 |
+          |   8.82 | 100.00 |
+ ---------+--------+--------+
+        1 | 126935 |      0 | 126935
+          |  70.66 |   0.00 |  70.66
+          | 100.00 |   0.00 |
+          |  91.18 |   0.00 |
+ ---------+--------+--------+
+ Total      139210    40443   179653
+             77.49    22.51   100.00
+
+
+126935 annotated junctions
+12275 unannotated junctions
+40443 IR events
+*/
+
+proc freq data=event.dtct_features_by_class;
+   where feature_type="splicing" and flag_intron_retention=0;
+   tables flag_exonskip flag_alt_donor*flag_alt_acceptor;
+run;
+
+/*
+
+ flag_exonskip    Frequency
+ --------------------------
+             0      115182
+             1       24028
+
+flag_alt_donor
+          flag_alt_acceptor
+
+Frequency|
+Percent  |
+Row Pct  |
+Col Pct  |       0|       1|  Total
+---------+--------+--------+
+       0 | 127048 |   5254 | 132302
+         |  91.26 |   3.77 |  95.04
+         |  96.03 |   3.97 |
+         |  96.20 |  73.54 |
+---------+--------+--------+
+       1 |   5018 |   1890 |   6908
+         |   3.60 |   1.36 |   4.96
+         |  72.64 |  27.36 |
+         |   3.80 |  26.46 |
+---------+--------+--------+
+Total      132066     7144   139210
+            94.87     5.13   100.00
+
+24028 exon-skipping junctions
+115182 non-exon-skipping junctions
+
+127048 junctions with ref donor and acceptor
+5018 junctions with alt donor
+5254 junctions with alt acceptor
+1890 junctions with alt donor and acceptor
+
+*/
+* count features by commonality ;
+
+proc freq data=event.dtct_features_by_class;
+   tables feature_type*flag_feature_unique
+          feature_type*flag_feature_common
+          feature_type*flag_feature_constitutive;
+run;
+
+/*
+Unique:
+Fragments 51171
+Fusions 39487
+Splicing 32187
+
+Common:
+Fragments  54292
+Fusions 35771
+Splicing 33493
+
+Constitutive:
+Fragments 100363
+Fusions 89196
+Splicing 57554
+
+*/
+

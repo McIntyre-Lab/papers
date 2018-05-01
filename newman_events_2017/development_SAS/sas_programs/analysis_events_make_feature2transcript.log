@@ -1,0 +1,243 @@
+1                                                          The SAS System                          16:17 Thursday, December 14, 2017
+
+NOTE: Unable to open SASUSER.REGSTRY. WORK.REGSTRY will be opened instead.
+NOTE: All registry changes will be lost at the end of the session.
+
+WARNING: Unable to copy SASUSER registry to WORK registry. Because of this, you will not see registry customizations during this 
+         session.
+NOTE: Unable to open SASUSER.PROFILE. WORK.PROFILE will be opened instead.
+NOTE: All profile changes will be lost at the end of the session.
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to UNIVERSITY OF FLORIDA - SFA T&R, Site 70095659.
+NOTE: This session is executing on the Linux 4.4.0-101-generic (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 4.4.0-101-generic #124~14.04.1-Ubuntu SMP Fri Nov 10 19:05:36 UTC 2017 x86_64 Unrecognized Linux Distribution 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.14 seconds
+      cpu time            0.03 seconds
+      
+1          ods listing; ods html close;
+2          libname mm10 '!MCLAB/useful_mouse_data/mm10/sas_data';
+NOTE: Libref MM10 was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/useful_mouse_data/mm10/sas_data
+3          libname event '!MCLAB/event_analysis/sas_data';
+NOTE: Libref EVENT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/sas_data
+4          libname evspl '!MCLAB/conesa_pacbio/sas_data/splicing';
+2                                                          The SAS System                          16:17 Thursday, December 14, 2017
+
+NOTE: Libref EVSPL was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data/splicing
+5          libname conesa '!MCLAB/conesa_pacbio/sas_data';
+NOTE: Libref CONESA was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data
+6          libname refseq '!MCLAB/event_analysis/refseq_fusions/sas_data';
+NOTE: Libref REFSEQ was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/event_analysis/refseq_fusions/sas_data
+7          
+8          /* From the list of filtered features, create a list of features by transcript and gene */
+9          
+10         * List of features after length filtering;
+11         data feature_gt_min;
+12           set event.flagged_feature_short;
+13           where flag_feature_short=0;
+14           keep feature_id;
+15         run;
+
+NOTE: There were 2390628 observations read from the data set EVENT.FLAGGED_FEATURE_SHORT.
+      WHERE flag_feature_short=0;
+NOTE: The data set WORK.FEATURE_GT_MIN has 2390628 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           20.32 seconds
+      cpu time            3.59 seconds
+      
+
+16         
+17         * Fusion to transcript;
+18         data fus2xs;
+19           set mm10.mm10_fusion_si_info_unique;
+20           length transcript_id2 $20.;
+21           if transcript_id = '' then delete;
+22           else do i=1 by 1 while(scan(transcript_id,i,"|") ^= "");
+23               transcript_id2=scan(transcript_id,i,"|");
+24               keep fusion_id transcript_id2;
+25               output;
+26               end;
+27           rename fusion_id=feature_id transcript_id2=transcript_id;
+28         run;
+
+NOTE: There were 275177 observations read from the data set MM10.MM10_FUSION_SI_INFO_UNIQUE.
+NOTE: The data set WORK.FUS2XS has 1210200 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           15.10 seconds
+      cpu time            4.13 seconds
+      
+
+29         
+30         
+31         * Fragment to transcript;
+32         data frag2xs;
+33           set mm10.mm10_exon_fragment_flagged;
+34           length transcript_id2 $20.;
+35           if transcript_id = '' then delete;
+36           else do i=1 by 1 while(scan(transcript_id,i,"|") ^= "");
+3                                                          The SAS System                          16:17 Thursday, December 14, 2017
+
+37               transcript_id2=scan(transcript_id,i,"|");
+38               keep fragment_id transcript_id2;
+39               output;
+40               end;
+41           rename fragment_id=feature_id transcript_id2=transcript_id;
+42         run;
+
+NOTE: There were 360236 observations read from the data set MM10.MM10_EXON_FRAGMENT_FLAGGED.
+NOTE: The data set WORK.FRAG2XS has 1529795 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           17.23 seconds
+      cpu time            4.58 seconds
+      
+
+43         
+44         
+45         * Splicing to transcript;
+46         data event2xs;
+47           set evspl.splicing_events_annot_refseq;
+48           length transcript_id2 $20.;
+49           if transcript_id = '' then delete;
+50           else do i=1 by 1 while(scan(transcript_id,i,"|") ^= "");
+51               transcript_id2=scan(transcript_id,i,"|");
+52               keep event_id transcript_id2;
+53               output;
+54               end;
+55           rename event_id=feature_id transcript_id2=transcript_id;
+56         run;
+
+NOTE: There were 2998454 observations read from the data set EVSPL.SPLICING_EVENTS_ANNOT_REFSEQ.
+NOTE: The data set WORK.EVENT2XS has 1096520 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           5:33.12
+      cpu time            46.32 seconds
+      
+
+57         
+58         
+59         * Transcript to gene;
+60         data xs2gene;
+61           set refseq.ref_transcript2geneid;
+62         run;
+
+NOTE: There were 128632 observations read from the data set REFSEQ.REF_TRANSCRIPT2GENEID.
+NOTE: The data set WORK.XS2GENE has 128632 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.14 seconds
+      cpu time            0.02 seconds
+      
+
+63         
+64         * Stack features;
+65         data feature2xs;
+66           length feature_id $450.;
+67           format feature_id $450.;
+68           set event2xs frag2xs fus2xs;
+69         run;
+
+4                                                          The SAS System                          16:17 Thursday, December 14, 2017
+
+NOTE: There were 1096520 observations read from the data set WORK.EVENT2XS.
+NOTE: There were 1529795 observations read from the data set WORK.FRAG2XS.
+NOTE: There were 1210200 observations read from the data set WORK.FUS2XS.
+NOTE: The data set WORK.FEATURE2XS has 3836515 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.54 seconds
+      cpu time            2.55 seconds
+      
+
+70         
+71         proc sort data=xs2gene;
+72            by transcript_id;
+
+NOTE: There were 128632 observations read from the data set WORK.XS2GENE.
+NOTE: The data set WORK.XS2GENE has 128632 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.09 seconds
+      cpu time            0.10 seconds
+      
+
+73         proc sort data=feature2xs;
+74            by transcript_id;
+75         run;
+
+NOTE: There were 3836515 observations read from the data set WORK.FEATURE2XS.
+NOTE: The data set WORK.FEATURE2XS has 3836515 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           27.15 seconds
+      cpu time            13.45 seconds
+      
+
+76         
+77         data feature2xs2gene;
+78            merge feature2xs (in=in1) xs2gene (in=in2);
+79            by transcript_id;
+80            if in1 and in2;
+81         run;
+
+NOTE: There were 3836515 observations read from the data set WORK.FEATURE2XS.
+NOTE: There were 128632 observations read from the data set WORK.XS2GENE.
+NOTE: The data set WORK.FEATURE2XS2GENE has 3836515 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           3.79 seconds
+      cpu time            3.79 seconds
+      
+
+82         
+83         /* Make permenant */
+84         
+85         *data event.feature2xs2gene;
+86         *  set feature2xs2gene;
+87         *run;
+88         
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           6:59.98
+      cpu time            1:18.60
+5                                                          The SAS System                          16:17 Thursday, December 14, 2017
+
+      

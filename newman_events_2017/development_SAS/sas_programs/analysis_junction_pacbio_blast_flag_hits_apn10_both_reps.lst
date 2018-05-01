@@ -1,0 +1,57 @@
+                                                           The SAS System                           16:46 Saturday, June 3, 2017   1
+
+                                  flag_perc_    flag_no_    flag_no_    flag_feature_
+                           Obs    ident_ge95    mismatch       gap         on_ge10       COUNT    PERCENT
+
+                             1         0            0           0             .             12      .    
+                             2         0            0           0             0            191     0.1376
+                             3         0            0           0             1            152     0.1095
+                             4         0            0           1             .             47      .    
+                             5         0            0           1             0            131     0.0944
+                             6         0            0           1             1            248     0.1786
+                             7         0            1           0             .              2      .    
+                             8         0            1           0             0              9     0.0065
+                             9         0            1           0             1              7     0.0050
+                            10         1            0           0             .             22      .    
+                            11         1            0           0             0            486     0.3501
+                            12         1            0           0             1            180     0.1297
+                            13         1            0           1             .            153      .    
+                            14         1            0           1             0           2669     1.9226
+                            15         1            0           1             1           1906     1.3729
+                            16         1            1           0             .             32      .    
+                            17         1            1           0             0            642     0.4624
+                            18         1            1           0             1            103     0.0742
+                            19         1            1           1             .          16740      .    
+                            20         1            1           1             0          50820    36.6070
+                            21         1            1           1             1          81282    58.5496
+                                                           The SAS System                           16:46 Saturday, June 3, 2017   2
+
+                           flag_      flag_
+                           mean_      mean_     flag_junction_    flag_intron_    flag_event_
+                   Obs    apn_gt0    apn_ge5       annotated        retention      has_blast     COUNT    PERCENT
+
+                    1        .          .              .                .              1         20846       .   
+                                                           The SAS System                           16:46 Saturday, June 3, 2017   3
+
+                                                                                 flag_
+                             flag_junction_    flag_intron_    flag_feature_     event_
+                      Obs       annotated        retention        on_ge10       has_hit      COUNT    PERCENT
+
+                        1           0                0               .             0            84      .    
+                        2           0                0               .             1           124      .    
+                        3           0                0               0             0       1563649    82.8840
+                        4           0                0               0             1           696     0.0369
+                        5           0                0               1             0           106     0.0056
+                        6           0                0               1             1           281     0.0149
+                        7           0                1               .             0           265      .    
+                        8           0                1               .             1           101      .    
+                        9           0                1               0             0        153284     8.1251
+                       10           0                1               0             1           832     0.0441
+                       11           0                1               1             0           398     0.0211
+                       12           0                1               1             1           107     0.0057
+                       13           1                0               .             0          1395      .    
+                       14           1                0               .             1          5714      .    
+                       15           1                0               0             0        125793     6.6679
+                       16           1                0               0             1         17923     0.9500
+                       17           1                0               1             0          2676     0.1418
+                       18           1                0               1             1         20805     1.1028

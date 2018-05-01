@@ -1,0 +1,648 @@
+1                                                          The SAS System                         00:59 Wednesday, November 23, 2016
+
+NOTE: Copyright (c) 2002-2012 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M0) 
+      Licensed to UNIVERSITY OF FLORIDA - SFA T&R, Site 70095659.
+NOTE: This session is executing on the Linux 4.4.0-47-generic (LIN X64) platform.
+
+
+
+NOTE: Updated analytical products:
+      
+      SAS/STAT 12.3 (maintenance)
+      SAS/ETS 12.3 (maintenance)
+      SAS/OR 12.3 (maintenance)
+      SAS/IML 12.3 (maintenance)
+      SAS/QC 12.3 (maintenance)
+
+NOTE: Additional host information:
+
+ Linux LIN X64 4.4.0-47-generic #68~14.04.1-Ubuntu SMP Wed Oct 26 19:42:11 UTC 2016 x86_64 Unrecognized Linux Distribution 
+
+You are running SAS 9. Some SAS 8 files will be automatically converted 
+by the V9 engine; others are incompatible.  Please see 
+http://support.sas.com/rnd/migration/planning/platform/64bit.html
+
+PROC MIGRATE will preserve current SAS file attributes and is 
+recommended for converting all your SAS libraries from any 
+SAS 8 release to SAS 9.  For details and examples, please see
+http://support.sas.com/rnd/migration/index.html
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the file "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+
+NOTE: SAS initialization used:
+      real time           0.13 seconds
+      cpu time            0.02 seconds
+      
+1          /* For each exon chunk, I want to count the number of exons, transcripts and genes*/
+2          
+3          libname conesa '!MCLAB/conesa_pacbio/sas_data';
+NOTE: Libref CONESA was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data
+4          libname splicing '!MCLAB/conesa_pacbio/sas_data/splicing';
+NOTE: Libref SPLICING was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/jrbnewman/McLab/conesa_pacbio/sas_data/splicing
+5          
+6          /* Will have two files:
+7             exon chunks with all exons/transcripts/genes stack
+8             and the same but catted together */
+9          
+10         data exon_info;
+11            set splicing.pacbio_exons;
+2                                                          The SAS System                         00:59 Wednesday, November 23, 2016
+
+12            keep chrom exon_id transcript_id gene_id;
+13            run;
+
+NOTE: There were 91609 observations read from the data set SPLICING.PACBIO_EXONS.
+NOTE: The data set WORK.EXON_INFO has 91609 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.69 seconds
+      cpu time            0.09 seconds
+      
+
+14         
+15         data exon_chunks;
+16            set conesa.exon_chunk2fusion;
+17            keep exonchunk_id chrom chunk_start chunk_end exon_id;
+18            run;
+
+NOTE: There were 92832 observations read from the data set CONESA.EXON_CHUNK2FUSION.
+NOTE: The data set WORK.EXON_CHUNKS has 92832 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.50 seconds
+      cpu time            0.09 seconds
+      
+
+19         
+20         *stack exon_ids;
+21         
+22         data exon_chunks2;
+23           set exon_chunks;
+24           length exon_id2 $15.;
+25           do i=1 by 1 while(scan(exon_id,i,'|') ^= ' ');
+26           exon_id2=scan(exon_id,i,'|');
+27           drop exon_id i;
+28           output;
+29           end;
+30           rename exon_id2=exon_id;
+31         run;
+
+NOTE: There were 92832 observations read from the data set WORK.EXON_CHUNKS.
+NOTE: The data set WORK.EXON_CHUNKS2 has 126942 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.12 seconds
+      cpu time            0.12 seconds
+      
+
+32         
+33         proc sort data=exon_chunks2;
+34            by chrom exon_id;
+
+NOTE: There were 126942 observations read from the data set WORK.EXON_CHUNKS2.
+NOTE: The data set WORK.EXON_CHUNKS2 has 126942 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.09 seconds
+      cpu time            0.10 seconds
+      
+
+35         proc sort data=exon_info;
+36            by chrom exon_id;
+37         run;
+3                                                          The SAS System                         00:59 Wednesday, November 23, 2016
+
+
+NOTE: There were 91609 observations read from the data set WORK.EXON_INFO.
+NOTE: The data set WORK.EXON_INFO has 91609 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.61 seconds
+      cpu time            0.14 seconds
+      
+
+38         
+39         data chunk2info;
+40           merge exon_chunks2 (in=in1) exon_info (in=in2);
+41           by chrom exon_id;
+42           if in1 and in2;
+43           run;
+
+NOTE: There were 126942 observations read from the data set WORK.EXON_CHUNKS2.
+NOTE: There were 91609 observations read from the data set WORK.EXON_INFO.
+NOTE: The data set WORK.CHUNK2INFO has 126942 observations and 7 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.17 seconds
+      cpu time            0.17 seconds
+      
+
+44         
+45         
+46         *stack transcript_ids;
+47         
+48         data chunk2info2;
+49           set chunk2info;
+50           length transcript_id2 $15.;
+51           if transcript_id=' ' then do;
+52                transcript_id2=transcript_id;
+53                output;
+54                end;
+55           else
+56             do i=1 by 1 while(scan(transcript_id,i,'|') ^= ' ');
+57           transcript_id2=scan(transcript_id,i,'|');
+58           drop transcript_id i;
+59           output;
+60           end;
+61           rename transcript_id2=transcript_id;
+62         run;
+
+NOTE: There were 126942 observations read from the data set WORK.CHUNK2INFO.
+NOTE: The data set WORK.CHUNK2INFO2 has 208633 observations and 7 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.24 seconds
+      cpu time            0.25 seconds
+      
+
+63         
+64         %macro count_feat(feature);
+65         
+66         data &feature.2chunk;
+67           set chunk2info2;
+68           keep exonchunk_id &feature._id;
+69           run;
+70         
+4                                                          The SAS System                         00:59 Wednesday, November 23, 2016
+
+71         proc sort data=&feature.2chunk nodup;
+72           by exonchunk_id &feature._id;
+73         proc freq data=&feature.2chunk noprint;
+74           tables exonchunk_id / out=&feature.s_per_chunk;
+75         run;
+76         
+77         
+78         data &feature.s_per_chunk2;
+79            set &feature.s_per_chunk;
+80            rename count=&feature._count;
+81            run;
+82         
+83         proc sort data=&feature.s_per_chunk2;
+84            by exonchunk_id;
+85            run;
+86         %mend;
+87         
+88         * count number of exons per chunk;
+89         %count_feat(exon);
+
+NOTE: There were 208633 observations read from the data set WORK.CHUNK2INFO2.
+NOTE: The data set WORK.EXON2CHUNK has 208633 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.04 seconds
+      
+
+NOTE: There were 208633 observations read from the data set WORK.EXON2CHUNK.
+NOTE: 81691 duplicate observations were deleted.
+NOTE: The data set WORK.EXON2CHUNK has 126942 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.13 seconds
+      cpu time            0.14 seconds
+      
+
+
+NOTE: There were 126942 observations read from the data set WORK.EXON2CHUNK.
+NOTE: The data set WORK.EXONS_PER_CHUNK has 92832 observations and 3 variables.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.17 seconds
+      cpu time            0.17 seconds
+      
+
+
+NOTE: There were 92832 observations read from the data set WORK.EXONS_PER_CHUNK.
+NOTE: The data set WORK.EXONS_PER_CHUNK2 has 92832 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+      
+
+
+NOTE: There were 92832 observations read from the data set WORK.EXONS_PER_CHUNK2.
+NOTE: The data set WORK.EXONS_PER_CHUNK2 has 92832 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.05 seconds
+      
+5                                                          The SAS System                         00:59 Wednesday, November 23, 2016
+
+
+90         
+91         * count number of transcripts per chunk;
+92         %count_feat(transcript);
+
+NOTE: There were 208633 observations read from the data set WORK.CHUNK2INFO2.
+NOTE: The data set WORK.TRANSCRIPT2CHUNK has 208633 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.04 seconds
+      
+
+NOTE: There were 208633 observations read from the data set WORK.TRANSCRIPT2CHUNK.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.TRANSCRIPT2CHUNK has 208633 observations and 2 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.13 seconds
+      cpu time            0.13 seconds
+      
+
+
+NOTE: There were 208633 observations read from the data set WORK.TRANSCRIPT2CHUNK.
+NOTE: The data set WORK.TRANSCRIPTS_PER_CHUNK has 92832 observations and 3 variables.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.18 seconds
+      cpu time            0.20 seconds
+      
+
+
+NOTE: There were 92832 observations read from the data set WORK.TRANSCRIPTS_PER_CHUNK.
+NOTE: The data set WORK.TRANSCRIPTS_PER_CHUNK2 has 92832 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+
+NOTE: There were 92832 observations read from the data set WORK.TRANSCRIPTS_PER_CHUNK2.
+NOTE: The data set WORK.TRANSCRIPTS_PER_CHUNK2 has 92832 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.05 seconds
+      
+
+93         
+94         * count number of genes per chunk ;
+95         %count_feat(gene);
+
+NOTE: There were 208633 observations read from the data set WORK.CHUNK2INFO2.
+NOTE: The data set WORK.GENE2CHUNK has 208633 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.05 seconds
+      
+
+NOTE: There were 208633 observations read from the data set WORK.GENE2CHUNK.
+NOTE: 113080 duplicate observations were deleted.
+NOTE: The data set WORK.GENE2CHUNK has 95553 observations and 2 variables.
+6                                                          The SAS System                         00:59 Wednesday, November 23, 2016
+
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.12 seconds
+      cpu time            0.12 seconds
+      
+
+
+NOTE: There were 95553 observations read from the data set WORK.GENE2CHUNK.
+NOTE: The data set WORK.GENES_PER_CHUNK has 92832 observations and 3 variables.
+NOTE: PROCEDURE FREQ used (Total process time):
+      real time           0.14 seconds
+      cpu time            0.14 seconds
+      
+
+
+NOTE: There were 92832 observations read from the data set WORK.GENES_PER_CHUNK.
+NOTE: The data set WORK.GENES_PER_CHUNK2 has 92832 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+
+NOTE: There were 92832 observations read from the data set WORK.GENES_PER_CHUNK2.
+NOTE: The data set WORK.GENES_PER_CHUNK2 has 92832 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.06 seconds
+      
+
+96         
+97         proc sort data=chunk2info2;
+98            by exonchunk_id;
+99         run;
+
+NOTE: There were 208633 observations read from the data set WORK.CHUNK2INFO2.
+NOTE: The data set WORK.CHUNK2INFO2 has 208633 observations and 7 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.16 seconds
+      cpu time            0.17 seconds
+      
+
+100        
+101        
+102        data exon_chunk_w_info;
+103          merge chunk2info2 (in=in1) exons_per_chunk2 transcripts_per_chunk2 genes_per_chunk2;
+104          by exonchunk_id;
+105          if exon_count=1 then flag_chunk_multiexon=0;
+106          else flag_chunk_multiexon=1;
+107            if transcript_count=1 then flag_chunk_multitranscript=0;
+108          else flag_chunk_multitranscript=1;
+109            if gene_count=1 then flag_chunk_multigene=0;
+110          else flag_chunk_multigene=1;
+111        
+112          if in1 then output;
+113        run;
+
+NOTE: There were 208633 observations read from the data set WORK.CHUNK2INFO2.
+NOTE: There were 92832 observations read from the data set WORK.EXONS_PER_CHUNK2.
+7                                                          The SAS System                         00:59 Wednesday, November 23, 2016
+
+NOTE: There were 92832 observations read from the data set WORK.TRANSCRIPTS_PER_CHUNK2.
+NOTE: There were 92832 observations read from the data set WORK.GENES_PER_CHUNK2.
+NOTE: The data set WORK.EXON_CHUNK_W_INFO has 208633 observations and 14 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.17 seconds
+      cpu time            0.17 seconds
+      
+
+114        
+115        
+116        *cat exons;
+117        
+118        proc sort data=exons_per_chunk;
+119          by descending count;
+120          run;
+
+NOTE: There were 92832 observations read from the data set WORK.EXONS_PER_CHUNK.
+NOTE: The data set WORK.EXONS_PER_CHUNK has 92832 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.06 seconds
+      
+
+121        
+122        proc print data=exons_per_chunk(obs=10);
+123        run;
+
+NOTE: There were 10 observations read from the data set WORK.EXONS_PER_CHUNK.
+NOTE: The PROCEDURE PRINT printed page 1.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.02 seconds
+      
+
+124        
+125        
+126        *cat transcripts;
+127        
+128        proc sort data=transcripts_per_chunk;
+129          by descending count;
+130          run;
+
+NOTE: There were 92832 observations read from the data set WORK.TRANSCRIPTS_PER_CHUNK.
+NOTE: The data set WORK.TRANSCRIPTS_PER_CHUNK has 92832 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.07 seconds
+      
+
+131        
+132        proc print data=transcripts_per_chunk(obs=10);
+133        run;
+
+NOTE: There were 10 observations read from the data set WORK.TRANSCRIPTS_PER_CHUNK.
+NOTE: The PROCEDURE PRINT printed page 2.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+8                                                          The SAS System                         00:59 Wednesday, November 23, 2016
+
+      
+
+134        
+135        *cat genes;
+136        proc sort data=genes_per_chunk;
+137          by descending count;
+138          run;
+
+NOTE: There were 92832 observations read from the data set WORK.GENES_PER_CHUNK.
+NOTE: The data set WORK.GENES_PER_CHUNK has 92832 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.06 seconds
+      
+
+139        
+140        proc print data=genes_per_chunk(obs=10);
+141        run;
+
+NOTE: There were 10 observations read from the data set WORK.GENES_PER_CHUNK.
+NOTE: The PROCEDURE PRINT printed page 3.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+142        
+143        %macro cat_feat(feature,count);
+144        
+145        data cat_&feature.;
+146          array &feature.[&count.] $ 10.;
+147          retain &feature.1-&feature.&count.;
+148          set &feature.2chunk;
+149          by exonchunk_id;
+150          if first.exonchunk_id then do;
+151             call missing(of &feature.1-&feature.&count.);
+152             records = 0;
+153          end;
+154          records + 1;
+155          &feature.[records]=&feature._id;
+156          if last.exonchunk_id then output;
+157        run;
+158        
+159          *clean up the output file;
+160        data cat_&feature.2;
+161          set cat_&feature.;
+162          length &feature._id2 $ 4000.;
+163          rename records= &feature._count;
+164                 &feature._id2= catx("|", OF &feature.1-&feature.&count.);
+165          drop &feature.1-&feature.&count. &feature._id;
+166          rename &feature._id2=&feature._id;
+167          run;
+168        
+169        
+170        proc sort data=cat_&feature.2;
+171           by exonchunk_id;
+172           run;
+173        
+9                                                          The SAS System                         00:59 Wednesday, November 23, 2016
+
+174        %mend;
+175        
+176        %cat_feat(exon,19);
+
+NOTE: There were 126942 observations read from the data set WORK.EXON2CHUNK.
+NOTE: The data set WORK.CAT_EXON has 92832 observations and 22 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.09 seconds
+      
+
+
+NOTE: There were 92832 observations read from the data set WORK.CAT_EXON.
+NOTE: The data set WORK.CAT_EXON2 has 92832 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.69 seconds
+      cpu time            0.71 seconds
+      
+
+
+NOTE: There were 92832 observations read from the data set WORK.CAT_EXON2.
+NOTE: The data set WORK.CAT_EXON2 has 92832 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           5.63 seconds
+      cpu time            1.06 seconds
+      
+
+177        %cat_feat(transcript,36);
+
+NOTE: There were 208633 observations read from the data set WORK.TRANSCRIPT2CHUNK.
+NOTE: The data set WORK.CAT_TRANSCRIPT has 92832 observations and 39 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.15 seconds
+      cpu time            0.16 seconds
+      
+
+
+NOTE: There were 92832 observations read from the data set WORK.CAT_TRANSCRIPT.
+NOTE: The data set WORK.CAT_TRANSCRIPT2 has 92832 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.76 seconds
+      cpu time            0.75 seconds
+      
+
+
+NOTE: There were 92832 observations read from the data set WORK.CAT_TRANSCRIPT2.
+NOTE: The data set WORK.CAT_TRANSCRIPT2 has 92832 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           8.61 seconds
+      cpu time            1.06 seconds
+      
+
+178        %cat_feat(gene,7);
+
+NOTE: There were 95553 observations read from the data set WORK.GENE2CHUNK.
+NOTE: The data set WORK.CAT_GENE has 92832 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+10                                                         The SAS System                         00:59 Wednesday, November 23, 2016
+
+      cpu time            0.06 seconds
+      
+
+
+NOTE: There were 92832 observations read from the data set WORK.CAT_GENE.
+NOTE: The data set WORK.CAT_GENE2 has 92832 observations and 3 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.67 seconds
+      cpu time            0.67 seconds
+      
+
+
+NOTE: There were 92832 observations read from the data set WORK.CAT_GENE2.
+NOTE: The data set WORK.CAT_GENE2 has 92832 observations and 3 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           6.76 seconds
+      cpu time            1.04 seconds
+      
+
+179        
+180        
+181        data chunk_info;
+182           set conesa.exon_chunk2fusion;
+183           keep exonchunk_id chrom chunk_start chunk_end;
+184           run;
+
+NOTE: There were 92832 observations read from the data set CONESA.EXON_CHUNK2FUSION.
+NOTE: The data set WORK.CHUNK_INFO has 92832 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           1.41 seconds
+      cpu time            0.05 seconds
+      
+
+185        
+186        proc sort data=chunk_info nodup;
+187           by exonchunk_id;
+188        run;
+
+NOTE: There were 92832 observations read from the data set WORK.CHUNK_INFO.
+NOTE: 0 duplicate observations were deleted.
+NOTE: The data set WORK.CHUNK_INFO has 92832 observations and 4 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.05 seconds
+      
+
+189        
+190        data exon_chunk_w_info_uniq;
+191          merge chunk_info (in=in1) cat_exon2 cat_transcript2 cat_gene2;
+192          by exonchunk_id;
+193          if exon_count=1 then flag_chunk_multiexon=0;
+194          else flag_chunk_multiexon=1;
+195            if transcript_count=1 then flag_chunk_multitranscript=0;
+196          else flag_chunk_multitranscript=1;
+197            if gene_count=1 then flag_chunk_multigene=0;
+198          else flag_chunk_multigene=1;
+199            if in1 then output;
+200          run;
+11                                                         The SAS System                         00:59 Wednesday, November 23, 2016
+
+
+NOTE: There were 92832 observations read from the data set WORK.CHUNK_INFO.
+NOTE: There were 92832 observations read from the data set WORK.CAT_EXON2.
+NOTE: There were 92832 observations read from the data set WORK.CAT_TRANSCRIPT2.
+NOTE: There were 92832 observations read from the data set WORK.CAT_GENE2.
+NOTE: The data set WORK.EXON_CHUNK_W_INFO_UNIQ has 92832 observations and 13 variables.
+NOTE: DATA statement used (Total process time):
+      real time           2.12 seconds
+      cpu time            2.13 seconds
+      
+
+201        
+202        
+203        /* Make permenant */
+204        
+205        
+206        data conesa.exon_chunk_w_info;
+207           set exon_chunk_w_info;
+208           run;
+
+NOTE: There were 208633 observations read from the data set WORK.EXON_CHUNK_W_INFO.
+NOTE: The data set CONESA.EXON_CHUNK_W_INFO has 208633 observations and 14 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.88 seconds
+      cpu time            0.08 seconds
+      
+
+209        
+210        data conesa.exon_chunk_w_info_uniq;
+211         set exon_chunk_w_info_uniq;
+212        run;
+
+NOTE: There were 92832 observations read from the data set WORK.EXON_CHUNK_W_INFO_UNIQ.
+NOTE: The data set CONESA.EXON_CHUNK_W_INFO_UNIQ has 92832 observations and 13 variables.
+NOTE: DATA statement used (Total process time):
+      real time           31.69 seconds
+      cpu time            2.32 seconds
+      
+
+213        
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           1:05.08
+      cpu time            13.04 seconds
+      
