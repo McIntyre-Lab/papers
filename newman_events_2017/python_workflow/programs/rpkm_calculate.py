@@ -5,6 +5,7 @@ import logging
 import csv
 import collections
 import numpy as np
+import pysam
 from argparse import RawDescriptionHelpFormatter
 csv.field_size_limit(1000000000)
 
@@ -31,7 +32,7 @@ def getOptions():
     parser = argparse.ArgumentParser(description=description, formatter_class=RawDescriptionHelpFormatter)
     parser.add_argument("-m", "--mpileup", dest="mname", action='store', required=True, help="mpileup file [Required]",metavar="MPILEUP_FILE")
     parser.add_argument("-n", "--name", dest="name", action='store', required=True, help="Name of file to be printed in output")
-    parser.add_argument("-s", "--sam", dest="sname", action='store', required=True, help="sam alignment file [Required]", metavar="SAM_FILE")
+    parser.add_argument("-s", "--sam", dest="sname", action='store', required=True, help="BAM alignment file [Required]", metavar="BAM_FILE")
     parser.add_argument("-b", "--bed", dest="bname", action='store', required=True, help="bed file (3 or 4 columns) [Required]", metavar="BED_FILE")
     parser.add_argument("-c", "--cv", dest="cv", action='store_true', required=False, help="A flag to indicate if you want output for the coefficient of variation [OPTIONAL]")
     parser.add_argument("-g", "--log", dest="log", action='store', required=False, help="Log File", metavar="LOG_FILE") 
@@ -45,18 +46,19 @@ def setLogger(fname,loglevel):
 
 # SAM Functions
 def read_sam(args):
-    """ Read SAM file to get read length and number of mapped reads. Note: if
+    """ Read BAM file to get read length and number of mapped reads. Note: if
         you have allowed ambiguous mapping then reads are counted multiple times.  """
-    logging.info("Reading the SAM File '%s'." % args.sname)
+    logging.info("Reading the BAM File '%s'." % args.sname)
     num_mapped_reads = 0
     read_length = 0
-    with open(args.sname,'r') as SAM:
-        for row in SAM:
-            if not row.startswith('@'):
-                record = row.strip().split('\t')
-                if record[1] != 4 or record[1] != 77 or record[1]!=141 or record[1] !=181 or record[1] !=121 or record[1] !=133 or record[1] !=117 or record[1] !=69:          # only look at aligned reads, editing this to account for PE alignments. 
-                    num_mapped_reads += 1
-                read_length = max(read_length,len(record[9]))    # find the maximum read length
+    bamfile=pysam.AlignmentFile(args.sname,'rb')
+    for read in bamfile:
+        #print str(row)
+        row=str(read)
+        record = row.strip().split('\t')
+        if record[1] != 4 or record[1] != 77 or record[1]!=141 or record[1] !=181 or record[1] !=121 or record[1] !=133 or record[1] !=117 or record[1] !=69:          # only look at aligned reads, editing this to account for PE alignments. 
+            num_mapped_reads += 1
+        read_length = max(read_length,len(record[9]))    # find the maximum read length
     return(num_mapped_reads,read_length)
 
 # BED Functions
@@ -144,7 +146,7 @@ def writeOutput(args,bdict,num_mapped_reads,read_length):
     logging.info("Writing Output")
 
     if args.cv:
-        header = ['sample_id','fusion_id','mapped_reads','read_length','region_length','region_depth','reads_in_region','apn','rpkm','mean','std','cv']
+        header = ['sample_id','event_id','mapped_reads','read_length','region_length','region_depth','reads_in_region','apn','rpkm','mean','std','cv']
         with open(args.out, 'wb') as OUT:
             OUT.write(','.join(header) + '\n')
             for key in bdict:
