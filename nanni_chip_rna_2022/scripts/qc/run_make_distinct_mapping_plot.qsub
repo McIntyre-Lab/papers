@@ -1,0 +1,27 @@
+#!/bin/bash
+#PBS -M jrbnewman@ufl.edu
+#PBS -N qc_plots
+#PBS -m n
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/cegs2.0/scripts/PBS_LOGS
+#PBS -l walltime=0:30:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=8gb
+#PBS -t 1
+
+module load python/2.7.3
+
+## Set directories
+PROJ=/scratch/lfs/mcintyre/cegs2.0
+QC=/scratch/lfs/mcintyre/cegs2.0/qc_plate1
+OUTPUT=$QC/qc_plots
+if [ ! -e $OUTPUT ]; then mkdir -p $OUTPUT; fi
+
+SCRIPTS=/scratch/lfs/mcintyre/qc_pipeline/scripts
+
+## Set summary files
+BWA=$QC/bwa_mem_aln_pe_distinct_summary.csv
+
+### Make plots for distinct reads mapping uniquely 
+python $SCRIPTS/unique_mapping_plots.py --input $BWA --obar $OUTPUT/uniq_mapped_distinct_reads_by_sample.png --ohist $OUTPUT/uniq_mapped_distinct_reads_distribution.png --name "Plate 1"

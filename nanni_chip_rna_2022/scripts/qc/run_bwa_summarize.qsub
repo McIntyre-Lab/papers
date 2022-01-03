@@ -1,0 +1,29 @@
+#!/bin/bash
+#PBS -M jrbnewman@ufl.edu
+#PBS -N bwa_summary
+#PBS -m n
+#PBS -r n
+#PBS -j oe
+#PBS -o /scratch/lfs/mcintyre/cegs2.0/scripts/PBS_LOGS
+#PBS -l walltime=1:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l pmem=4gb
+#PBS -t 1
+
+PROJ=/scratch/lfs/mcintyre/cegs2.0
+QC=/scratch/lfs/mcintyre/cegs2.0/qc_plate1
+INFILE=$QC/bwa_mem_aln_pe_distinct/bwa_split
+OUTFILE=$QC/bwa_mem_aln_pe_distinct_summary.csv
+
+cd $INFILE
+FLAG=0
+for FILE in *_summary.csv
+do
+    if [ $FLAG == 0 ]
+    then
+    cat $FILE > $OUTFILE
+    FLAG=1
+    else
+    tail -n +2 $FILE >> $OUTFILE
+    fi
+done
