@@ -1,0 +1,140 @@
+Term,flag_B73Zero_restUp,flag_DE_B73,flag_DE_C123,flag_DE_Hp301,flag_DE_Mo17,flag_DE_NC338,flag_DE_all,flag_DE_all_noB73
+NADH dehydrogenase complex (plastoquinone) assembly,0,0,rsemB73map,0,0,0,0,0
+amine transport,0,0,0,rsemB73map,0,rsemB73map,0,0
+aromatic amino acid family biosynthetic process,0,0,2,rsemB73map,2,2,0,2
+carotenoid biosynthetic process,0,0,2,2,2,2,0,rsemB73map
+cellular cation homeostasis,0,0,2,2,2,2,0,2
+cellular response to hydrogen peroxide,0,0,2,0,rsemB73map,rsemB73map,0,2
+chloroplast ribulose bisphosphate carboxylase complex biogenesis,0,0,rsemB73map,0,0,0,0,0
+chromatin silencing,0,0,0,0,2,2,0,0
+coenzyme biosynthetic process,0,0,2,0,2,rsemB73map,0,2
+cotyledon development,0,0,0,rsemB73map,0,rsemB73map,0,0
+covalent chromatin modification,0,0,0,0,0,rsemB73map,0,0
+cytoplasmic translation,0,0,ccB73map,ccB73map,ccB73map,2,0,0
+de-etiolation,rsemB73map,0,0,0,0,2,0,0
+dephosphorylation,0,0,0,0,0,rsemB73map,0,0
+detection of biotic stimulus,0,0,2,2,2,2,0,2
+divalent metal ion transport,0,0,2,2,2,2,0,2
+extracellular matrix organization,0,0,rsemB73map,0,0,0,0,0
+formation of translation preinitiation complex,0,0,0,0,0,2,0,0
+galactose transport,0,0,rsemB73map,0,0,0,0,0
+glucosinolate metabolic process,0,0,0,0,0,rsemB73map,0,0
+glutathione metabolic process,rsemB73map,0,rsemB73map,0,0,rsemB73map,0,0
+glycine catabolic process,0,0,2,0,2,2,0,rsemB73map
+heat acclimation,0,2,0,2,0,rsemB73map,2,0
+hexose transmembrane transport,0,0,rsemB73map,rsemB73map,0,rsemB73map,0,0
+histone acetylation,0,0,0,0,rsemB73map,rsemB73map,0,0
+hydrogen peroxide catabolic process,0,0,2,0,0,rsemB73map,0,rsemB73map
+indoleacetic acid biosynthetic process,0,0,rsemB73map,0,rsemB73map,0,0,0
+iron-sulfur cluster assembly,0,0,2,0,2,2,0,2
+lipoate metabolic process,0,0,2,0,2,2,0,ccB73map
+mRNA export from nucleus,0,0,rsemB73map,0,0,rsemB73map,0,0
+mRNA modification,0,0,2,2,2,2,0,2
+mature ribosome assembly,0,0,2,2,ccB73map,2,0,0
+meristem structural organization,0,0,0,0,0,rsemB73map,0,0
+mitotic G2 phase,0,0,0,0,rsemB73map,rsemB73map,0,0
+mitotic cell cycle,0,0,rsemB73map,0,0,0,0,0
+myo-inositol transport,0,0,rsemB73map,0,0,0,0,0
+negative regulation of transcription from RNA polymerase II promoter,0,0,0,0,0,rsemB73map,0,0
+nonphotochemical quenching,0,0,0,0,0,rsemB73map,0,2
+nuclear-transcribed mRNA catabolic process,0,0,0,0,rsemB73map,rsemB73map,0,0
+oxylipin biosynthetic process,0,0,rsemB73map,0,rsemB73map,rsemB73map,0,rsemB73map
+phosphate ion transmembrane transport,0,0,0,ccB73map,0,2,0,rsemB73map
+phosphatidylglycerol biosynthetic process,0,0,rsemB73map,0,2,2,0,0
+phosphoglycerate transport,0,0,0,0,0,0,0,rsemB73map
+photosynthesis,0,0,2,2,2,2,0,2
+"photosynthesis, light harvesting in photosystem I",0,rsemB73map,2,2,2,2,rsemB73map,2
+"photosynthesis, light reaction",0,rsemB73map,2,2,2,2,rsemB73map,2
+photosynthetic electron transport chain,0,0,0,rsemB73map,0,rsemB73map,0,2
+photosynthetic electron transport in photosystem I,0,0,2,2,2,2,0,2
+photosynthetic electron transport in photosystem II,0,0,0,0,rsemB73map,0,0,0
+photosystem I assembly,0,0,0,0,rsemB73map,0,0,2
+photosystem II stabilization,0,0,rsemB73map,0,0,rsemB73map,0,0
+plant ovule development,0,0,0,0,rsemB73map,0,0,0
+plastid organization,0,0,2,2,2,2,0,2
+plastid translation,0,0,2,0,2,2,0,2
+polyamine catabolic process,0,0,0,0,rsemB73map,0,0,0
+positive regulation of flavonoid biosynthetic process,0,0,0,0,rsemB73map,0,0,0
+positive regulation of secondary metabolite biosynthetic process,0,0,0,0,rsemB73map,0,0,0
+proline transport,0,0,0,0,0,rsemB73map,0,0
+protein deneddylation,0,0,rsemB73map,0,rsemB73map,2,0,0
+protein desumoylation,0,0,0,0,rsemB73map,0,0,0
+protein deubiquitination,0,0,rsemB73map,0,rsemB73map,rsemB73map,0,0
+protein import into nucleus,0,0,rsemB73map,0,rsemB73map,rsemB73map,0,0
+protein maturation,0,0,0,0,2,2,0,0
+protein targeting to chloroplast,0,0,2,0,2,2,0,2
+protein targeting to mitochondrion,0,0,0,0,0,rsemB73map,0,0
+protein transmembrane import into intracellular organelle,0,0,0,rsemB73map,0,rsemB73map,0,0
+protein-chromophore linkage,0,rsemB73map,2,2,2,2,rsemB73map,2
+recognition of pollen,rsemB73map,0,0,0,0,0,0,0
+reductive pentose-phosphate cycle,0,0,rsemB73map,0,0,rsemB73map,0,2
+regulation of lipid metabolic process,0,0,2,rsemB73map,2,2,0,2
+regulation of multi-organism process,0,0,2,2,2,2,0,2
+regulation of proton transport,0,0,2,rsemB73map,rsemB73map,2,0,2
+regulation of response to biotic stimulus,0,0,2,2,2,2,0,2
+regulation of translational initiation,0,0,0,0,0,2,0,0
+response to cyclopentenone,0,0,0,0,2,rsemB73map,0,0
+response to desiccation,0,2,2,2,0,2,0,0
+response to ethanol,0,0,0,rsemB73map,0,0,0,0
+response to growth hormone,rsemB73map,0,0,ccB73map,0,2,0,0
+response to light stimulus,0,0,rsemB73map,0,rsemB73map,rsemB73map,0,rsemB73map
+response to low light intensity stimulus,0,0,rsemB73map,rsemB73map,0,0,0,2
+response to nematode,0,0,0,2,rsemB73map,rsemB73map,0,0
+response to red light,0,0,2,2,2,2,rsemB73map,rsemB73map
+response to salicylic acid,rsemB73map,0,0,0,0,0,0,0
+secondary metabolic process,0,0,2,0,2,2,0,0
+stomatal complex morphogenesis,0,0,2,2,2,2,0,2
+tRNA metabolic process,0,0,0,0,rsemB73map,0,0,0
+transcription from plastid promoter,0,0,2,rsemB73map,2,2,0,2
+translational elongation,0,0,0,ccB73map,ccB73map,2,0,0
+transmembrane receptor protein serine/threonine kinase signaling pathway,rsemB73map,0,0,0,rsemB73map,0,0,0
+triose phosphate transmembrane transport,0,0,0,0,0,0,0,rsemB73map
+tryptophan catabolic process,0,0,rsemB73map,0,0,0,0,0
+unsaturated fatty acid biosynthetic process,0,0,2,2,2,2,0,2
+virus induced gene silencing,0,0,rsemB73map,0,0,0,0,0
+vitamin metabolic process,0,0,2,0,2,0,0,ccB73map
+ATP hydrolysis coupled proton transport,0,0,0,0,ccB73map,ccB73map,0,0
+DNA endoreduplication,0,0,0,0,0,ccB73map,0,0
+"RNA splicing, via endonucleolytic cleavage and ligation",0,0,0,0,0,ccB73map,0,0
+aerobic respiration,0,0,0,0,0,ccB73map,0,0
+cellular lipid metabolic process,0,0,0,0,0,ccB73map,0,0
+chitin catabolic process,0,0,0,ccB73map,0,0,0,0
+chloroplast relocation,0,0,0,0,0,ccB73map,0,0
+"defense response to fungus, incompatible interaction",0,0,ccB73map,0,0,0,0,0
+jasmonic acid biosynthetic process,0,0,0,0,0,ccB73map,0,0
+"mRNA splicing, via spliceosome",0,0,ccB73map,ccB73map,ccB73map,ccB73map,0,0
+nucleotide metabolic process,0,0,ccB73map,0,ccB73map,0,0,0
+phosphatidylinositol biosynthetic process,0,0,0,0,0,ccB73map,0,0
+photomorphogenesis,0,0,0,0,0,ccB73map,0,0
+positive regulation of catalytic activity,0,0,0,0,ccB73map,0,0,0
+post-embryonic animal morphogenesis,0,0,0,0,0,0,0,ccB73map
+postreplication repair,0,0,0,0,ccB73map,0,0,0
+protein peptidyl-prolyl isomerization,0,0,0,0,0,0,0,ccB73map
+protein targeting to vacuole,0,0,0,ccB73map,0,ccB73map,0,0
+pyrimidine ribonucleotide biosynthetic process,0,0,0,0,0,ccB73map,0,0
+regulation of hydrogen peroxide metabolic process,0,0,0,ccB73map,0,ccB73map,0,0
+regulation of seed germination,0,ccB73map,0,0,0,0,0,0
+response to bacterium,0,0,0,0,0,ccB73map,0,0
+response to blue light,0,0,ccB73map,ccB73map,ccB73map,ccB73map,0,0
+response to far red light,0,0,ccB73map,ccB73map,ccB73map,0,0,0
+response to red or far red light,0,0,0,0,0,0,0,ccB73map
+ribosomal small subunit assembly,0,0,0,0,0,ccB73map,0,0
+salicylic acid biosynthetic process,0,0,ccB73map,ccB73map,0,0,0,0
+translational initiation,0,0,ccB73map,0,0,0,0,0
+"DNA-templated transcription, elongation",0,0,0,0,0,0,0,0
+ER to Golgi vesicle-mediated transport,0,0,0,0,0,0,0,0
+RNA methylation,0,0,0,0,0,0,0,0
+RNA processing,0,0,0,0,0,0,0,0
+chlorophyll biosynthetic process,0,0,0,0,0,0,0,0
+chloroplast organization,0,0,0,0,0,0,0,0
+defense response,0,0,0,0,0,0,0,0
+nucleosome assembly,0,0,0,0,0,0,0,0
+regulation of photosynthesis,0,0,0,0,0,0,0,0
+regulation of protein dephosphorylation,0,0,0,0,0,0,0,0
+response to karrikin,0,0,0,0,0,0,0,0
+anther development,0,0,0,0,0,0,0,0
+carbohydrate transport,0,0,0,0,0,0,0,0
+chloroplast RNA processing,0,0,0,0,0,0,0,0
+glucose transport,0,0,0,0,0,0,0,0
+nucleic acid phosphodiester bond hydrolysis,0,0,0,0,0,0,0,0
+protein polyubiquitination,0,0,0,0,0,0,0,0

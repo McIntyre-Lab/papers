@@ -1,0 +1,30 @@
+Term,flag_DE_B73,flag_DE_C123,flag_DE_Hp301,flag_DE_Mo17,flag_DE_NC338,flag_DE_all,flag_DE_all_noB73
+L-glutamate transmembrane transporter activity,0.0,1.0,0.0,0.0,0.0,0.0,0.0
+active transmembrane transporter activity,0.0,0.0,1.0,0.0,0.0,0.0,0.0
+amine transmembrane transporter activity,0.0,0.0,0.0,0.0,1.0,0.0,0.0
+chlorophyll binding,1.0,4.0,4.0,4.0,3.0,1.0,4.0
+glucose transmembrane transporter activity,0.0,1.0,0.0,0.0,0.0,0.0,0.0
+glutathione transferase activity,0.0,0.0,0.0,0.0,1.0,0.0,0.0
+monooxygenase activity,0.0,0.0,0.0,0.0,3.0,0.0,0.0
+pigment binding,1.0,4.0,4.0,4.0,4.0,1.0,4.0
+poly(U) RNA binding,0.0,3.0,0.0,1.0,1.0,0.0,4.0
+protein disulfide isomerase activity,0.0,0.0,0.0,0.0,1.0,0.0,0.0
+protein domain specific binding,0.0,0.0,0.0,0.0,0.0,0.0,4.0
+NADH dehydrogenase (ubiquinone) activity,0.0,0.0,0.0,0.0,2.0,0.0,0.0
+acid phosphatase activity,0.0,2.0,0.0,0.0,0.0,0.0,0.0
+acid-amino acid ligase activity,0.0,2.0,0.0,2.0,3.0,0.0,0.0
+chitin binding,0.0,0.0,2.0,0.0,0.0,0.0,0.0
+chitinase activity,0.0,0.0,0.0,1.0,0.0,0.0,0.0
+"electron transporter, transferring electrons within the cyclic electron transport pathway of photosynthesis activity",0.0,0.0,0.0,0.0,0.0,0.0,3.0
+histone binding,0.0,0.0,0.0,0.0,2.0,0.0,0.0
+"oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen",0.0,0.0,0.0,0.0,3.0,0.0,0.0
+peroxidase activity,0.0,0.0,1.0,0.0,0.0,0.0,0.0
+protein heterodimerization activity,0.0,0.0,0.0,1.0,0.0,0.0,0.0
+translation initiation factor activity,0.0,1.0,0.0,0.0,2.0,0.0,0.0
+GTP binding,0.0,0.0,1.0,0.0,0.0,0.0,0.0
+GTPase activity,0.0,0.0,1.0,0.0,0.0,0.0,0.0
+chromatin binding,0.0,0.0,0.0,0.0,1.0,0.0,0.0
+"glucan endo-1,3-beta-D-glucosidase activity",0.0,0.0,1.0,0.0,0.0,0.0,0.0
+peptidyl-prolyl cis-trans isomerase activity,0.0,0.0,0.0,0.0,0.0,0.0,1.0
+phosphoglycerate transmembrane transporter activity,0.0,0.0,0.0,0.0,0.0,0.0,1.0
+ubiquitin protein ligase activity,0.0,0.0,0.0,0.0,1.0,0.0,0.0

@@ -1,0 +1,41 @@
+Term,flag_DE_B73,flag_DE_C123,flag_DE_Hp301,flag_DE_Mo17,flag_DE_NC338,flag_DE_all,flag_DE_all_noB73
+Cul4-RING E3 ubiquitin ligase complex,0,0,rsemB73map,0,rsemB73map,0,0
+NAD(P)H dehydrogenase complex (plastoquinone),0,2,rsemB73map,rsemB73map,2,0,2
+P-body,0,0,0,2,2,0,0
+anchored component of plasma membrane,0,2,2,0,0,0,0
+catalytic step 2 spliceosome,0,rsemB73map,rsemB73map,rsemB73map,2,0,0
+centrosome,0,0,0,0,rsemB73map,0,0
+chloroplast inner membrane,0,2,rsemB73map,rsemB73map,2,0,0
+chloroplast membrane,0,0,rsemB73map,rsemB73map,2,0,2
+chloroplast photosystem II,0,2,2,2,2,0,2
+chloroplast stromal thylakoid,0,ccB73map,0,2,0,0,2
+chloroplast thylakoid,0,rsemB73map,0,rsemB73map,2,0,ccB73map
+chloroplast thylakoid lumen,0,2,2,2,2,0,2
+endoplasmic reticulum lumen,0,ccB73map,rsemB73map,2,ccB73map,0,rsemB73map
+eukaryotic 43S preinitiation complex,0,0,0,0,2,0,0
+eukaryotic 48S preinitiation complex,0,0,0,0,2,0,0
+eukaryotic translation initiation factor 3 complex,0,0,0,0,2,0,0
+extrinsic component of membrane,0,ccB73map,ccB73map,2,ccB73map,0,2
+integral component of organelle membrane,rsemB73map,0,0,0,0,0,0
+light-harvesting complex,0,2,2,rsemB73map,0,0,2
+melanosome,rsemB73map,ccB73map,2,0,0,0,0
+mitochondrial respiratory chain complex I,0,2,2,2,2,0,0
+nuclear chromatin,0,0,0,0,rsemB73map,0,0
+nuclear pore,0,0,0,rsemB73map,0,0,0
+nuclear speck,0,2,0,rsemB73map,2,0,0
+photosystem I,rsemB73map,2,2,2,2,rsemB73map,2
+photosystem I reaction center,0,2,2,ccB73map,2,0,2
+photosystem II,rsemB73map,2,2,2,2,2,2
+photosystem II oxygen evolving complex,0,2,2,2,2,0,2
+plastid chromosome,0,0,0,rsemB73map,0,0,0
+plastoglobule,rsemB73map,2,2,2,2,rsemB73map,2
+polysomal ribosome,0,0,ccB73map,0,2,0,0
+stromule,0,2,2,rsemB73map,2,0,2
+thylakoid,0,rsemB73map,0,rsemB73map,rsemB73map,0,rsemB73map
+cytosolic small ribosomal subunit,0,ccB73map,ccB73map,ccB73map,ccB73map,0,0
+nitrite reductase complex [NAD(P)H],0,0,0,0,0,0,ccB73map
+plant-type cell wall,0,ccB73map,0,0,0,0,0
+precatalytic spliceosome,0,0,0,0,ccB73map,0,0
+"proteasome regulatory particle, base subcomplex",0,0,0,0,ccB73map,0,0
+nucleoplasm,0,0,0,0,0,0,0
+vesicle,0,0,0,0,0,0,0
