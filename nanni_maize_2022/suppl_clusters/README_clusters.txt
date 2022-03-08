@@ -6,8 +6,9 @@ NOTE: All documentation can be found https://github.com/McIntyre-Lab/papers/tree
 
 ## Directory contents ##
 
-* cluster_map_id_cov_counts.csv :
-    Table containing the number and proportion of clusters mapped to B73 v4 reference genome
+* cluster_map_id_cov_counts/ :
+    Tables containing the number and proportion of clusters mapped to
+        B73 v4 (b73), Mo17 Yan (mo17_yan), or Mo17 Cau (mo17_cau) reference genomes
         with at least 95, 90, 85, or 80 percent sequence identity based on the alignment.
         Also included are the number and proportion of clusters with an alignment length
         that is at least 95, 90, 85, or 80 percent of the total cluster sequence length.

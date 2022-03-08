@@ -11,8 +11,9 @@ NOTE: All documentation can be found https://github.com/McIntyre-Lab/papers/tree
         A histogram of B73 v4 reference transcript lengths is included for comparison (ref_b73_seq_length_hist.png).
     Documentation = map_ccs_reads.xlsx (see row 16)
 
-* ccs_map_id_cov_counts.csv :
-    Table containing the number and proportion of CCS reads mapped to B73 v4 reference genome
+* ccs_map_id_cov_counts/ :
+    Tables containing the number and proportion of CCS reads mapped to
+        B73 v4 (b73) Mo17 Yan (mo17_yan) or Mo17 Cau (mo17_cau) reference genomes
         with at least 95, 90, 85, or 80 percent sequence identity based on the alignment.
         Also included are the number and proportion of CCS reads with an alignment length
         that is at least 95, 90, 85, or 80 percent of the total CCS read length.
