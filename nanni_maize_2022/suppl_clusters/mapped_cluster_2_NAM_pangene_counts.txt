@@ -1,0 +1,118 @@
+Count of NAM pangene classifications to those contained in all temperate (['B73', 'B97', 'HP301', 'Il14H', 'Ky21', 'M162W', 'Ms71', 'Oh7B', 'Oh43', 'P39'])
+class                  Core Gene  Dispensable Gene  Near-Core Gene  Private Gene
+flag_in_all_temperate                                                           
+0                              0             50432            1828         19888
+1                          27910               661            2314             0
+
+       sample  num_annotated_gene
+ 113_c123_amb                7004
+  120_c123_oz                8300
+  19_mo17_amb                7393
+ 21-2_mo17_oz                9071
+   21_mo17_oz                8732
+   42_b73_amb                7514
+    46_b73_oz                9697
+ 67_hp301_amb                7807
+  70_hp301_oz                8650
+ 89_nc338_amb                7133
+  96_nc338_oz                8961
+
+15055 unique annotated genes across all samples (union)
+
+2817 unique annotated genes across all samples (intersection)
+
+6211 unique annotated genes across all genotypes (intersection)
+
+       sample  num_novel_loci
+ 113_c123_amb             496
+  120_c123_oz             646
+  19_mo17_amb             368
+ 21-2_mo17_oz             534
+   21_mo17_oz             533
+   42_b73_amb             810
+    46_b73_oz             767
+ 67_hp301_amb             575
+  70_hp301_oz             527
+ 89_nc338_amb             362
+  96_nc338_oz             601
+
+       sample  num_novel_loci_no_AS_or_fusion
+ 113_c123_amb                             367
+  120_c123_oz                             470
+  19_mo17_amb                             245
+ 21-2_mo17_oz                             363
+   21_mo17_oz                             345
+   42_b73_amb                             646
+    46_b73_oz                             562
+ 67_hp301_amb                             399
+  70_hp301_oz                             354
+ 89_nc338_amb                             245
+  96_nc338_oz                             436
+
+After merge with V4-to-V5 (left-only indicate # missing from V5)
+right_only    23614
+both          14742
+left_only       313
+
+After merge with NAM pangenes (left-only indicate # missing from NAM pangenes)
+right_only    89017
+both          14383
+left_only      2544
+
+16630 unique gene-pangene pairs (some genes are associated with more than one pangene so there can be duplicates)
+
+Counts of pangene classifications (NOTE: Not mutually exclusive due to multiple v5 associations with each v4 gene)
+flag_core                12106.0
+flag_near_core             851.0
+flag_dispensable           628.0
+flag_private                44.0
+flag_in_all_temperate    12617.0
+
+1686 genes could not be associated with a pangene due to either no v5 ID or no associated pangene in the NAM pangene list.Counts of highest pangene classifications for each associated gene:
+core           12106
+none            1686
+near-core        818
+dispensable      416
+private           29
+
+12106 associated genes (80.41%) are core
+818 associated genes (5.43%) are near-core
+12924 associated genes (85.85%) are core or near-core
+
+12617 associated genes (83.81%) are in all 10 temperate NAM genotypesFor the 29 genes private to B73, they were in the following samples:
+ 113_c123_amb  120_c123_oz  19_mo17_amb  21-2_mo17_oz  21_mo17_oz  42_b73_amb  46_b73_oz  67_hp301_amb  70_hp301_oz  89_nc338_amb  96_nc338_oz  associated_gene
+            0            0            0             0           0           0          0             0            0             0            1                1
+            0            0            0             0           0           0          0             0            1             0            0                1
+            0            0            0             0           0           0          0             1            1             0            0                1
+            0            0            0             0           0           0          1             0            0             0            0                4
+            0            0            0             0           0           1          0             0            0             0            0                1
+            0            0            0             0           0           1          1             0            0             0            0                7
+            0            0            0             0           0           1          1             0            0             0            1                1
+            0            0            0             0           1           0          0             0            0             0            0                1
+            0            0            0             1           0           0          1             0            0             0            0                1
+            0            0            1             0           1           1          1             0            0             0            1                1
+            0            0            1             1           0           1          1             0            0             0            0                1
+            0            0            1             1           1           0          0             0            0             0            0                1
+            0            1            0             0           0           0          0             0            0             0            0                2
+            0            1            1             1           1           0          1             1            0             1            1                1
+            1            0            0             0           0           1          0             0            0             0            0                1
+            1            0            0             1           0           0          0             1            0             0            0                1
+            1            0            1             1           1           1          1             1            0             1            1                1
+            1            1            0             0           0           1          1             0            0             1            1                1
+            1            1            1             1           1           1          1             1            1             0            0                1
+
+Genes private to B73 and only found in B73 samples:
+ 42_b73_amb  46_b73_oz associated_gene
+        0.0        3.0  Zm00001d023342
+        1.0        0.0  Zm00001d027606
+        0.0        1.0  Zm00001d032131
+        0.0        3.0  Zm00001d036651
+        2.0        1.0  Zm00001d037870
+        1.0        1.0  Zm00001d039421
+        2.0        4.0  Zm00001d043484
+        0.0        1.0  Zm00001d043485
+        1.0        3.0  Zm00001d043982
+        2.0        1.0  Zm00001d044366
+        2.0        2.0  Zm00001d051794
+        1.0        3.0  Zm00001d053283
+

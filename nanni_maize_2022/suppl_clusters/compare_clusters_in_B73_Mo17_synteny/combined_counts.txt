@@ -1,0 +1,19 @@
+Input Files:['19_mo17_amb_b73_mo17CAU_cluster_compare.csv', '21_mo17_oz_b73_mo17CAU_cluster_compare.csv', '21-2_mo17_oz_b73_mo17CAU_cluster_compare.csv']956832 total clusters
+811562 clusters in 10664 B73 annotated genes (SQANTI QC FSM, ISM, NIC, or NNC)
+758253 clusters in 11074 Mo17 CAU annotated genes (SQANTI QC FSM, ISM, NIC, or NNC)
+694533 clusters in 10299 B73 and Mo17 CAU annotated gene pairs (SQANTI QC FSM, ISM, NIC, or NNC)
+793600 clusters in 9640 of the 12604 genes of interest
+
+PBid assignment categories for all clusters:
+both       874058
+mo17CAU     58657
+b73         12877
+none        11240
+
+PBid assignment categories for clusters in the 9640 of 12604 genes of interest:
+both    784476
+b73       9124
+
+697185 clusters are in 9786 matching B73-Mo17CAU syntenic genes
+657614 clusters are in 8643 matching B73-Mo17CAU syntenic genes in the 9640 of 12604 genes of interest
+

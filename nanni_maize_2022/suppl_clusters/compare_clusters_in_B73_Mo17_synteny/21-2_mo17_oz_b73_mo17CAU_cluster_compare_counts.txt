@@ -1,0 +1,27 @@
+Input Files:
+	/blue/mcintyre/share/maize_ainsworth/supp_from_resubmission_2021/Supplementary_File_5.csv
+	/blue/mcintyre/share/references/maize_mo17/B73v4.36_Mo17CAU_synfind_synmap_SASoutput_avn.tsv
+	/blue/mcintyre/share/maize_ainsworth/compare_b73_2_mo17/tofu2_b73/21-2_mo17_oz/21-2_mo17_oz.collapsed.read_stat.txt
+	/blue/mcintyre/share/maize_ainsworth/compare_b73_2_mo17/tofu2_mo17_cau/21-2_mo17_oz/21-2_mo17_oz.collapsed.read_stat.txt
+	/blue/mcintyre/share/maize_ainsworth/compare_b73_2_mo17/sqanti_b73/mo17/oz/21-2_mo17_oz_classification.txt
+	/blue/mcintyre/share/maize_ainsworth/compare_b73_2_mo17/sqanti_mo17_cau/mo17/oz/21-2_mo17_oz_classification.txt
+
+328260 total clusters
+275742 clusters in 8732 B73 annotated genes (SQANTI QC FSM, ISM, NIC, or NNC)
+269651 clusters in 9074 Mo17 CAU annotated genes (SQANTI QC FSM, ISM, NIC, or NNC)
+245479 clusters in 8384 B73 and Mo17 CAU annotated gene pairs (SQANTI QC FSM, ISM, NIC, or NNC)
+268229 clusters in 8000 of the 12604 genes of interest
+
+PBid assignment categories for all clusters:
+both       295848
+mo17CAU     23077
+none         5001
+b73          4334
+
+PBid assignment categories for clusters in the 8000 of 12604 genes of interest:
+both    265146
+b73       3083
+
+243695 clusters are in 8033 matching B73-Mo17CAU syntenic genes
+228860 clusters are in 7175 matching B73-Mo17CAU syntenic genes in the 8000 of 12604 genes of interest
+
