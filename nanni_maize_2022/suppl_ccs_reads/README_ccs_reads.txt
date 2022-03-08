@@ -17,12 +17,12 @@ NOTE: All documentation can be found https://github.com/McIntyre-Lab/papers/tree
         Also included are the number and proportion of CCS reads with an alignment length
         that is at least 95, 90, 85, or 80 percent of the total CCS read length.
         See documentation below for full column header descriptions.
-    Documentation = map_ccs_reads.xlsx (see row 22)
+    Documentation = map_ccs_reads.xlsx (see row 30)
 
 * ccs_FSM_ISM_readLength_plots/ :
     PNG histogram plots of read lengths for CCS reads that map to B73 v4 reference genome and are
         full-splice match (FSM) to a reference transcript (${GENO}_FSM_ccs_seq_length_hist.png). 
         A scatter plot of FSM and incomplete-splice match (ISM) CCS read lengths vs.
         the associated B73 v4 reference transcript length is also included (${GENO}_FSM_ISM_vs_ref_length.png).
-    Documentation = map_ccs_reads.xlsx (see row 32)
+    Documentation = map_ccs_reads.xlsx (see row 40)
 
