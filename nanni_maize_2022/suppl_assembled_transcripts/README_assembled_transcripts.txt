@@ -6,7 +6,7 @@ NOTE: All documentation can be found https://github.com/McIntyre-Lab/papers/tree
 
 ## Directory contents ##
 
-* combined_GO_results/ :
+* DE_GO_results/ :
     For each Gene Ontology (GO) category (biologcal process, cellular component,
         molecular function), combined GO enrichment results from 4 different
         enrichment tests of DE groups (comb_GO_gse_tappas_DE_*_sig_terms.csv) from:
