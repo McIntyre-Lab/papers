@@ -14,5 +14,5 @@
 - [What functional annotation (GO) are enriched in sets of differentially expressed genes?](https://github.com/McIntyre-Lab/papers/tree/master/nanni_maize_2022/suppl_assembled_transcripts/DE_GO_results)
 - [Are expression values similar within one-to-one B73-Mo17 syntenic gene pairs when mapped to the B73 v4 reference genome vs. Mo17 Cau?](https://github.com/McIntyre-Lab/papers/tree/master/nanni_maize_2022/suppl_assembled_transcripts/B73_vs_Mo17_CAU_mapped_read_scatter)
 
-[Links to supplementary information in flowchart.](https://htmlpreview.github.io/?https://github.com/McIntyre-Lab/papers/blob/master/nanni_maize_2022/master/nanni_maize_2022/supplement_github_flowchart.drawio.html)
+![Supplementary information in flowchart](https://raw.githubusercontent.com/McIntyre-Lab/papers/blob/master/nanni_maize_2022/master/nanni_maize_2022/supplement_github_flowchart.drawio.svg)
 
