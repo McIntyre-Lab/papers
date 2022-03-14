@@ -37,13 +37,6 @@ NOTE: All documentation can be found https://github.com/McIntyre-Lab/papers/tree
         the B73 v4 reference genome for each long read sample.
     Documentation = cluster_mapping_evaluation.xlsx (see row 32)
 
-* passing_clusterLength_distributions/ :
-    PNG histogram plots of cluster sequence lengths passing the thresholds
-        of coverage (>=99%) and identity (>=95%) in mapping to the B73 v4
-        reference genome for each long read sample
-        (*_pass_tofu_filter_b73_ref_seq_length_hist.png).
-    Documentation = cluster_mapping_evaluation.xlsx (see row 40)
-
 * cluster_fastqc_output/ :
     FASTQC output of cluster sequnces ignored due to low coverage (<99%)
         (*_unCollapsed_low_cov_b73_ref_fastqc.html) or ignored due to low

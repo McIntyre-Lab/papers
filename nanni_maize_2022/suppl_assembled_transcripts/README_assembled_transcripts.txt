@@ -6,6 +6,14 @@ NOTE: All documentation can be found https://github.com/McIntyre-Lab/papers/tree
 
 ## Directory contents ##
 
+* assembXcrpt_length_distributions/ :
+    PNG histogram plots of assembled transcript sequence lengths following
+        TOFU2 Cupcake collapse of cluster sequences passing the thresholds
+        of coverage (>=99%) and identity (>=95%) in mapping to the B73 v4
+        reference genome for each long read sample
+        (*_pass_tofu_filter_b73_ref_seq_length_hist.png).
+    Documentation = cluster_mapping_evaluation.xlsx (see row 40)
+
 * DE_GO_results/ :
     For each Gene Ontology (GO) category (biologcal process, cellular component,
         molecular function), combined GO enrichment results from 4 different
