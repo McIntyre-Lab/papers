@@ -1,4 +1,6 @@
 # Nanni, et al. 2022 Supplementary Information
+### Short reads
+- [How well do the short reads from each genotype map to the B73 v4, Mo17 Yan, and Mo17 Cau reference genomes?](https://github.com/McIntyre-Lab/papers/tree/master/nanni_maize_2022/suppl_short_reads)
 ### CCS long reads
 - [What is the length distribution of CCS reads from each genotype?](https://github.com/McIntyre-Lab/papers/tree/master/nanni_maize_2022/suppl_ccs_reads/ccs_readLength_distributions)
 - [How well do CCS reads from each genotype map to B73 v4, Mo17 Yan, and Mo17 Cau reference genomes?](https://github.com/McIntyre-Lab/papers/tree/master/nanni_maize_2022/suppl_ccs_reads/ccs_map_id_cov_counts)
