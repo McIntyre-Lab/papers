@@ -1,0 +1,129 @@
+sampleID	oldSampleID	set	batch	rack_position	run_order	tube_sample	genotype	wormgrowth_sample_name	Solvent	parameters	rank	study_group	sample
+aos100_ga_ms2_73	aos100_ga_ms2_NMR_CDCL3_73	2	4	C3	73	nmr68	KJ550	aos100_ga_ms2	CDCl3	proton	1	g2	aos100
+aos101_ga_ms2_121	aos101_ga_ms2_NMR_CDCL3_121	3	6	C3	121	nmr111	UGT49	aos101_ga_ms2	CDCl3	proton	1	g3	aos101
+aos102_ga_ms3_122	aos102_ga_ms3_NMR_CDCL3_122	3	6	C4	122	nmr112	PD1074	aos102_ga_ms3	CDCl3	proton	1	g3	aos102
+aos105_co_ms2_123	aos105_co_ms2_NMR_CDCL3_123	3	6	C5	123	nmr113	VC2524	aos105_co_ms2	CDCl3	proton	1		aos105
+aos106_co_ms2_25	aos106_co_ms2_NMR_CDCL3_25	1	2	C1	25	nmr25	N2	aos106_co_ms2	CDCl3	proton	1	g1	aos106
+aos107_ga_bku_80	aos107_ga_bku_NMR_CDCL3_80	2	4	C10	80	nmr75	PD1074	aos107_ga_bku	CDCl3	proton	1	g1	aos107
+aos108_ga_ms2_27	aos108_ga_ms2_NMR_CDCL3_27	1	2	C3	27	nmr27	RB2011	aos108_ga_ms2	CDCl3	proton	1	g3	aos108
+aos109_ga_ms2_81	aos109_ga_ms2_NMR_CDCL3_81	2	4	C11	81	nmr76	KJ550	aos109_ga_ms2	CDCl3	proton	1	g2	aos109
+aos111_ga_ms2_82	aos111_ga_ms2_NMR_CDCL3_82	2	4	C12	82	nmr77	RB2550	aos111_ga_ms2	CDCl3	proton	1	g1	aos111
+aos113_ga_ms1_124	aos113_ga_ms1_NMR_CDCL3_124	3	6	C6	124	nmr114	PD1074	aos113_ga_ms1	CDCl3	proton	1	g2	aos113
+aos113_ga_ms1_28	aos113_ga_ms1_NMR_CDCL3_28	1	2	C4	28	nmr28	PD1074	aos113_ga_ms1	CDCl3	proton	1	g2_g3	aos113
+aos113_ga_ms1_84	aos113_ga_ms1_NMR_CDCL3_84	2	4	D2	84	nmr79	PD1074	aos113_ga_ms1	CDCl3	proton	1	g1	aos113
+aos114_ga_ms2_125	aos114_ga_ms2_NMR_CDCL3_125	3	6	C7	125	nmr115	RB2055	aos114_ga_ms2	CDCl3	proton	1	g2_g3	aos114
+aos115_gt_ms1_29	aos115_gt_ms1_NMR_CDCL3_29	1	2	C5	29	nmr29	CB4856	aos115_gt_ms1	CDCl3	proton	1	g1	aos115
+aos116_ga_ms2_83	aos116_ga_ms2_NMR_CDCL3_83	2	4	D1	83	nmr78	RB2347	aos116_ga_ms2	CDCl3	proton	1	g2	aos116
+aos118_ga_ms2_126	aos118_ga_ms2_NMR_CDCL3_126	3	6	C8	126	nmr116	RB2055	aos118_ga_ms2	CDCl3	proton	1	g3	aos118
+aos120_ga_ms2_127	aos120_ga_ms2_NMR_CDCL3_127	3	6	C9	127	nmr117	AUM2073	aos120_ga_ms2	CDCl3	proton	1	g2	aos120
+aos122_ga_ms2_4	aos122_ga_ms2_NMR_CDCL3_4	1	1	A4	4	nmr3	RB2011	aos122_ga_ms2	CDCl3	proton	1	g3	aos122
+aos125_ga_ms2_85	aos125_ga_ms2_NMR_CDCL3_85	2	4	D3	85	nmr80	VC1265	aos125_ga_ms2	CDCl3	proton	1	g2	aos125
+aos127_ga_ms2_5	aos127_ga_ms2_NMR_CDCL3_5	1	1	A5	5	nmr4	CX11314	aos127_ga_ms2	CDCl3	proton	1	g1	aos127
+aos127_ga_ms3_24	aos127_ga_ms3_NMR_CDCL3_24	1	2	B12	24	nmr24	CX11314	aos127_ga_ms3	CDCl3	proton	1	g1	aos127
+aos129_ga_ms2_6	aos129_ga_ms2_NMR_CDCL3_6	1	1	A6	6	nmr5	PD1074	aos129_ga_ms2	CDCl3	proton	1	g1	aos129
+aos133_ga_ms2_128	aos133_ga_ms2_NMR_CDCL3_128	3	6	C10	128	nmr118	UGT49	aos133_ga_ms2	CDCl3	proton	1	g3	aos133
+aos134_ga_ms2_86	aos134_ga_ms2_NMR_CDCL3_86	2	4	D4	86	nmr81	KJ550	aos134_ga_ms2	CDCl3	proton	1	g1	aos134
+aos135_ga_ms2_129	aos135_ga_ms2_NMR_CDCL3_129	3	6	C11	129	nmr119	AUM2073	aos135_ga_ms2	CDCl3	proton	1	g2	aos135
+aos140_ga_ms3_87	aos140_ga_ms3_NMR_CDCL3_87	2	4	D5	87	nmr82	PD1074	aos140_ga_ms3	CDCl3	proton	1	g1	aos140
+aos140_gt_ms3_130	aos140_gt_ms3_NMR_CDCL3_130	3	6	C12	130	nmr120	PD1074	aos140_gt_ms3	CDCl3	proton	1	g3	aos140
+aos142_ga_ms2_7	aos142_ga_ms2_NMR_CDCL3_7	1	1	A7	7	nmr6	CB4856	aos142_ga_ms2	CDCl3	proton	1	g1	aos142
+aos145_ga_ms2_8	aos145_ga_ms2_NMR_CDCL3_8	1	1	A8	8	nmr7	CB4856	aos145_ga_ms2	CDCl3	proton	1	g1	aos145
+aos149_ga_ms2_9	aos149_ga_ms2_NMR_CDCL3_9	1	1	A9	9	nmr8	PD1074	aos149_ga_ms2	CDCl3	proton	1	g1	aos149
+aos165_ga_ms2_30	aos165_ga_ms2_NMR_CDCL3_30	1	2	C6	30	nmr30	DL238	aos165_ga_ms2	CDCl3	proton	1	g3	aos165
+aos166_ga_ms2_131	aos166_ga_ms2_NMR_CDCL3_131	3	6	D1	131	nmr121	UGT49	aos166_ga_ms2	CDCl3	proton	1	g3	aos166
+aos167_ga_ms3_31	aos167_ga_ms3_NMR_CDCL3_31	1	2	C7	31	nmr31	PD1074	aos167_ga_ms3	CDCl3	proton	1	g1	aos167
+aos167_ga_ms4_132	aos167_ga_ms4_NMR_CDCL3_132	3	6	D2	132	nmr122	PD1074	aos167_ga_ms4	CDCl3	proton	1	g2_g3	aos167
+aos169_ga_ms2_133	aos169_ga_ms2_NMR_CDCL3_133	3	6	D3	133	nmr123	AUM2073	aos169_ga_ms2	CDCl3	proton	1	g2	aos169
+aos170_ga_ms2_32	aos170_ga_ms2_NMR_CDCL3_32	1	2	C8	32	nmr32	CB4856	aos170_ga_ms2	CDCl3	proton	1	g1	aos170
+aos171_ga_ms2_88	aos171_ga_ms2_NMR_CDCL3_88	2	4	D6	88	nmr83	RB2347	aos171_ga_ms2	CDCl3	proton	1	g2	aos171
+aos173_ga_ms2_33	aos173_ga_ms2_NMR_CDCL3_33	1	2	C9	33	nmr33	RB2011	aos173_ga_ms2	CDCl3	proton	1	g3	aos173
+aos174_ga_ms2_34	aos174_ga_ms2_NMR_CDCL3_34	1	2	C10	34	nmr34	DL238	aos174_ga_ms2	CDCl3	proton	1	g2_g3	aos174
+aos175_ga_ms2_35	aos175_ga_ms2_NMR_CDCL3_35	1	2	C11	35	nmr35	CX11314	aos175_ga_ms2	CDCl3	proton	1	g1	aos175
+aos180_ga_ms2_89	aos180_ga_ms2_NMR_CDCL3_89	2	4	D7	89	nmr84	PD1074	aos180_ga_ms2	CDCl3	proton	1	g2	aos180
+aos181_ga_ms2_99	aos181_ga_ms2_NMR_CDCL3_99	3	5	A5	99	nmr88	PD1074	aos181_ga_ms2	CDCl3	proton	1	g2	aos181
+aos184_ga_ms2_50	aos184_ga_ms2_NMR_CDCL3_50	2	3	A4	50	nmr44	VC1265	aos184_ga_ms2	CDCl3	proton	1	g2	aos184
+aos185_ga_ms2_51	aos185_ga_ms2_NMR_CDCL3_51	2	3	A5	51	nmr45	PD1074	aos185_ga_ms2	CDCl3	proton	1	g3	aos185
+aos188_ga_ms3_36	aos188_ga_ms3_NMR_CDCL3_36	1	2	C12	36	nmr36	PD1074	aos188_ga_ms3	CDCl3	proton	1	g2_g3	aos188
+aos192_ga_ms2_37	aos192_ga_ms2_NMR_CDCL3_37	1	2	D1	37	nmr37	DL238	aos192_ga_ms2	CDCl3	proton	1	g1	aos192
+aos193_ga_ms2_136	aos193_ga_ms2_NMR_CDCL3_136	3	6	D6	136	nmr126	UGT60	aos193_ga_ms2	CDCl3	proton	1	g3	aos193
+aos193_ga_ms3_100	aos193_ga_ms3_NMR_CDCL3_100	3	5	A6	100	nmr89	UGT60	aos193_ga_ms3	CDCl3	proton	1	g3	aos193
+aos196_ga_ms2_101	aos196_ga_ms2_NMR_CDCL3_101	3	5	A7	101	nmr90	PD1074	aos196_ga_ms2	CDCl3	proton	1	g3	aos196
+aos196_ga_ms3_135	aos196_ga_ms3_NMR_CDCL3_135	3	6	D5	135	nmr125	PD1074	aos196_ga_ms3	CDCl3	proton	1	NA	aos196
+aos197_ga_ms1_134	aos197_ga_ms1_NMR_CDCL3_134	3	6	D4	134	nmr124	RB2055	aos197_ga_ms1	CDCl3	proton	1	g3	aos197
+aos198_ga_ms2_137	aos198_ga_ms2_NMR_CDCL3_137	3	6	D7	137	nmr127	PD1074	aos198_ga_ms2	CDCl3	proton	1	g3	aos198
+aos199_ga_ms2_38	aos199_ga_ms2_NMR_CDCL3_38	1	2	D2	38	nmr38	CX11314	aos199_ga_ms2	CDCl3	proton	1	g2	aos199
+aos200_ga_ms2_39	aos200_ga_ms2_NMR_CDCL3_39	1	2	D3	39	nmr39	PD1074	aos200_ga_ms2	CDCl3	proton	1	g1	aos200
+aos25_ga_ms2_10	aos25_ga_ms2_NMR_CDCL3_10	1	1	A10	10	nmr9	CX11314	aos25_ga_ms2	CDCl3	proton	1	g1	aos25
+aos26_ga_ms2_102	aos26_ga_ms2_NMR_CDCL3_102	3	5	A8	102	nmr91	RB2055	aos26_ga_ms2	CDCl3	proton	1	g3	aos26
+aos27_ga_ms3_11	aos27_ga_ms3_NMR_CDCL3_11	1	1	A11	11	nmr10	PD1074	aos27_ga_ms3	CDCl3	proton	1	g1	aos27
+aos27_ga_ms4_52	aos27_ga_ms4_NMR_CDCL3_52	2	3	A6	52	nmr46	PD1074	aos27_ga_ms4	CDCl3	proton	1	g2	aos27
+aos28_ga_ms2_53	aos28_ga_ms2_NMR_CDCL3_53	2	3	A7	53	nmr47	KJ550	aos28_ga_ms2	CDCl3	proton	1	g2	aos28
+aos32_ga_ms2_12	aos32_ga_ms2_NMR_CDCL3_12	1	1	A12	12	nmr11	RB2011	aos32_ga_ms2	CDCl3	proton	1	g3	aos32
+aos33_ga_ms2_105	aos33_ga_ms2_NMR_CDCL3_105	3	5	A11	105	nmr94	UGT60	aos33_ga_ms2	CDCl3	proton	1	g3	aos33
+aos35_ga_ms2_54	aos35_ga_ms2_NMR_CDCL3_54	2	3	A8	54	nmr48	RB2550	aos35_ga_ms2	CDCl3	proton	1	g3	aos35
+aos36_ga_ms2_55	aos36_ga_ms2_NMR_CDCL3_55	2	3	A9	55	nmr49	RB2347	aos36_ga_ms2	CDCl3	proton	1	g2	aos36
+aos37_ga_ms2_56	aos37_ga_ms2_NMR_CDCL3_56	2	3	A10	56	nmr50	RB2347	aos37_ga_ms2	CDCl3	proton	1	g2	aos37
+aos38_ga_ms2_57	aos38_ga_ms2_NMR_CDCL3_57	2	3	A11	57	nmr51	PD1074	aos38_ga_ms2	CDCl3	proton	1	g2_g3	aos38
+aos39_ga_ms2_103	aos39_ga_ms2_NMR_CDCL3_103	3	5	A9	103	nmr92	UGT49	aos39_ga_ms2	CDCl3	proton	1	g3	aos39
+aos40_ga_ms2_58	aos40_ga_ms2_NMR_CDCL3_58	2	3	A12	58	nmr52	RB2550	aos40_ga_ms2	CDCl3	proton	1	g3	aos40
+aos41_ga_ms2_104	aos41_ga_ms2_NMR_CDCL3_104	3	5	A10	104	nmr93	PD1074	aos41_ga_ms2	CDCl3	proton	1	g3	aos41
+aos42_ga_ms2_59	aos42_ga_ms2_NMR_CDCL3_59	2	3	B1	59	nmr53	VC1265	aos42_ga_ms2	CDCl3	proton	1	g1	aos42
+aos43_ga_bku_60	aos43_ga_bku_NMR_CDCL3_60	2	3	B2	60	nmr54	PD1074	aos43_ga_bku	CDCl3	proton	1	g2_g3	aos43
+aos43_ga_ms4_13	aos43_ga_ms4_NMR_CDCL3_13	1	1	B1	13	nmr12	PD1074	aos43_ga_ms4	CDCl3	proton	1	g2	aos43
+aos44_ga_ms2_106	aos44_ga_ms2_NMR_CDCL3_106	3	5	A12	106	nmr95	PD1074	aos44_ga_ms2	CDCl3	proton	1	g2_g3	aos44
+aos45_ga_ms2_110	aos45_ga_ms2_NMR_CDCL3_110	3	5	B4	110	nmr99	RB2055	aos45_ga_ms2	CDCl3	proton	1	g3	aos45
+aos46_ga_ms2_14	aos46_ga_ms2_NMR_CDCL3_14	1	1	B2	14	nmr13	DL238	aos46_ga_ms2	CDCl3	proton	1	g1	aos46
+aos47_ga_ms2_107	aos47_ga_ms2_NMR_CDCL3_107	3	5	B1	107	nmr96	VC2524	aos47_ga_ms2	CDCl3	proton	1		aos47
+aos48_ga_ms2_15	aos48_ga_ms2_NMR_CDCL3_15	1	1	B3	15	nmr14	N2	aos48_ga_ms2	CDCl3	proton	1	g1	aos48
+aos49_ga_ms2_108	aos49_ga_ms2_NMR_CDCL3_108	3	5	B2	108	nmr97	UGT49	aos49_ga_ms2	CDCl3	proton	1	g3	aos49
+aos50_ga_ms2_16	aos50_ga_ms2_NMR_CDCL3_16	1	1	B4	16	nmr15	DL238	aos50_ga_ms2	CDCl3	proton	1	g1	aos50
+aos51_ga_ms2_109	aos51_ga_ms2_NMR_CDCL3_109	3	5	B3	109	nmr98	AUM2073	aos51_ga_ms2	CDCl3	proton	1	g2	aos51
+aos53_ga_ms2_40	aos53_ga_ms2_NMR_CDCL3_40	1	2	D4	40	nmr40	PD1074	aos53_ga_ms2	CDCl3	proton	1	g2	aos53
+aos56_ga_ms2_41	aos56_ga_ms2_NMR_CDCL3_41	1	2	D5	41	nmr41	N2	aos56_ga_ms2	CDCl3	proton	1	g2	aos56
+aos58_ga_ms2_18	aos58_ga_ms2_NMR_CDCL3_18	1	1	B6	18	nmr17	N2	aos58_ga_ms2	CDCl3	proton	1	g1	aos58
+aos65_ga_ms2_19	aos65_ga_ms2_NMR_CDCL3_19	1	1	B7	19	nmr18	DL238	aos65_ga_ms2	CDCl3	proton	1	g1	aos65
+aos66_ga_ms2_112	aos66_ga_ms2_NMR_CDCL3_112	3	5	B6	112	nmr101	UGT60	aos66_ga_ms2	CDCl3	proton	1	g3	aos66
+aos67_ga_ms2_20	aos67_ga_ms2_NMR_CDCL3_20	1	1	B8	20	nmr19	N2	aos67_ga_ms2	CDCl3	proton	1	g1	aos67
+aos69_ga_ms1_64	aos69_ga_ms1_NMR_CDCL3_64	2	3	B6	64	nmr58	PD1074	aos69_ga_ms1	CDCl3	proton	1	g2_g3	aos69
+aos69_ga_ms3_114	aos69_ga_ms3_NMR_CDCL3_114	3	5	B8	114	nmr103	PD1074	aos69_ga_ms3	CDCl3	proton	1	g2	aos69
+aos70_ga_ms2_113	aos70_ga_ms2_NMR_CDCL3_113	3	5	B7	113	nmr102	VC2524	aos70_ga_ms2	CDCl3	proton	1		aos70
+aos71_ga_ms2_62	aos71_ga_ms2_NMR_CDCL3_62	2	3	B4	62	nmr56	RB2550	aos71_ga_ms2	CDCl3	proton	1	g3	aos71
+aos73_ga_ms2_70	aos73_ga_ms2_NMR_CDCL3_70	2	4	B12	70	nmr65	VC1265	aos73_ga_ms2	CDCl3	proton	1	g2	aos73
+aos74_ga_ms2_63	aos74_ga_ms2_NMR_CDCL3_63	2	3	B5	63	nmr57	RB2347	aos74_ga_ms2	CDCl3	proton	1	g2	aos74
+aos75_ga_ms4_115	aos75_ga_ms4_NMR_CDCL3_115	3	5	B9	115	nmr104	PD1074	aos75_ga_ms4	CDCl3	proton	1	g2_g3	aos75
+aos76_ga_ms2_21	aos76_ga_ms2_NMR_CDCL3_21	1	1	B9	21	nmr20	CX11314	aos76_ga_ms2	CDCl3	proton	1	g1	aos76
+aos78_ga_ms4_22	aos78_ga_ms4_NMR_CDCL3_22	1	1	B10	22	nmr21	PD1074	aos78_ga_ms4	CDCl3	proton	1	g2	aos78
+aos79_ga_ms2_116	aos79_ga_ms2_NMR_CDCL3_116	3	5	B10	116	nmr105	AUM2073	aos79_ga_ms2	CDCl3	proton	1	g2	aos79
+aos81_ga_ms2_71	aos81_ga_ms2_NMR_CDCL3_71	2	4	C1	71	nmr66	RB2550	aos81_ga_ms2	CDCl3	proton	1	g3	aos81
+aos82_ga_ms2_75	aos82_ga_ms2_NMR_CDCL3_75	2	4	C5	75	nmr70	RB2347	aos82_ga_ms2	CDCl3	proton	1	g2	aos82
+aos83_ga_ms2_117	aos83_ga_ms2_NMR_CDCL3_117	3	5	B11	117	nmr106	RB2055	aos83_ga_ms2	CDCl3	proton	1	g3	aos83
+aos84_ga_ms2_76	aos84_ga_ms2_NMR_CDCL3_76	2	4	C6	76	nmr71	VC1265	aos84_ga_ms2	CDCl3	proton	1	g1	aos84
+aos85_ga_ms2_140	aos85_ga_ms2_NMR_CDCL3_140	3	6	D10	140	nmr130	VC2524	aos85_ga_ms2	CDCl3	proton	1		aos85
+aos85_ga_ms3_98	aos85_ga_ms3_NMR_CDCL3_98	3	5	A4	98	nmr87	VC2524	aos85_ga_ms3	CDCl3	proton	1		aos85
+aos86_ga_ms2_65	aos86_ga_ms2_NMR_CDCL3_65	2	3	B7	65	nmr59	KJ550	aos86_ga_ms2	CDCl3	proton	1	g2	aos86
+aos87_co_ms3_72	aos87_co_ms3_NMR_CDCL3_72	2	4	C2	72	nmr67	PD1074	aos87_co_ms3	CDCl3	proton	1	g1	aos87
+aos87_ga_ms3_118	aos87_ga_ms3_NMR_CDCL3_118	3	5	B12	118	nmr107	PD1074	aos87_ga_ms3	CDCl3	proton	1	g2_g3	aos87
+aos88_ga_ms2_138	aos88_ga_ms2_NMR_CDCL3_138	3	6	D8	138	nmr128	UGT49	aos88_ga_ms2	CDCl3	proton	1	g3	aos88
+aos90_ga_ms3_66	aos90_ga_ms3_NMR_CDCL3_66	2	3	B8	66	nmr60	PD1074	aos90_ga_ms3	CDCl3	proton	1	NA	aos90
+aos91_ga_ms2_119	aos91_ga_ms2_NMR_CDCL3_119	3	5	C1	119	nmr108	AUM2073	aos91_ga_ms2	CDCl3	proton	1	g2	aos91
+aos92_ga_ms2_77	aos92_ga_ms2_NMR_CDCL3_77	2	4	C7	77	nmr72	PD1074	aos92_ga_ms2	CDCl3	proton	1	g3	aos92
+aos93_ga_ms2_78	aos93_ga_ms2_NMR_CDCL3_78	2	4	C8	78	nmr73	VC1265	aos93_ga_ms2	CDCl3	proton	1	g2	aos93
+aos94_ga_ms2_139	aos94_ga_ms2_NMR_CDCL3_139	3	6	D9	139	nmr129	VC2524	aos94_ga_ms2	CDCl3	proton	1		aos94
+aos95_ga_ms2_79	aos95_ga_ms2_NMR_CDCL3_79	2	4	C9	79	nmr74	RB2347	aos95_ga_ms2	CDCl3	proton	1	g2	aos95
+aos96_ga_ms2_74	aos96_ga_ms2_NMR_CDCL3_74	2	4	C4	74	nmr69	RB2550	aos96_ga_ms2	CDCl3	proton	1	g1	aos96
+aos98_ga_ms2_67	aos98_ga_ms2_NMR_CDCL3_67	2	3	B9	67	nmr61	VC1265	aos98_ga_ms2	CDCl3	proton	1	g2	aos98
+aos99_ga_ms2_141	aos99_ga_ms2_NMR_CDCL3_141	3	6	D11	141	nmr131	PD1074	aos99_ga_ms2	CDCl3	proton	1	g3	aos99
+aos99_ga_ms2_26	aos99_ga_ms2_NMR_CDCL3_26	1	2	C2	26	nmr26	PD1074	aos99_ga_ms2	CDCl3	proton	1	g2_g3	aos99
+aos99_ga_ms2_68	aos99_ga_ms2_NMR_CDCL3_68	2	3	B10	68	nmr62	PD1074	aos99_ga_ms2	CDCl3	proton	1	g1	aos99
+pooled_mutant_142	pooled_mutant_NMR_CDCL3_142	3	6	D12	142	pooled_mutant	pooled_mutant	pooled_mutant	CDCl3	proton	1		pooled
+pooled_mutant_90	pooled_mutant_NMR_CDCL3_90	2	4	D8	90	pooled_mutant	pooled_mutant	pooled_mutant	CDCl3	proton	1		pooled
+pooled_natural_isolate_42	pooled_natural_isolate_NMR_CDCL3_42	1	2	D6	42	pooled_natural_isolate	pooled_natural_isolate	pooled_natural_isolate	CDCl3	proton	1		pooled
+pooled_pd1074_143	pooled_pd1074_NMR_CDCL3_143	3	6	E1	143	pooled_pd1074	pooled_pd1074	pooled_pd1074	CDCl3	proton	1		pooled
+pooled_pd1074_43	pooled_pd1074_NMR_CDCL3_43	1	2	D7	43	pooled_pd1074	pooled_pd1074	pooled_pd1074	CDCl3	proton	1		pooled
+pooled_pd1074_91	pooled_pd1074_NMR_CDCL3_91	2	4	D9	91	pooled_pd1074	pooled_pd1074	pooled_pd1074	CDCl3	proton	1		pooled
+solera_144	solera_NMR_CDCL3_144	3	6	E2	144	nmr110	solera	solera	CDCl3	proton	1		solera
+solera_3	solera_NMR_CDCL3_3	1	1	A3	3	nmr2	solera	solera	CDCl3	proton	1		solera
+solera_44	solera_NMR_CDCL3_44	1	2	D8	44	nmr23	solera	solera	CDCl3	proton	1		solera
+solera_49	solera_NMR_CDCL3_49	2	3	A3	49	nmr43	solera	solera	CDCl3	proton	1		solera
+solera_92	solera_NMR_CDCL3_92	2	4	D10	92	nmr64	solera	solera	CDCl3	proton	1		solera
+solera_97	solera_NMR_CDCL3_97	3	5	A3	97	nmr86	solera	solera	CDCl3	proton	1		solera
