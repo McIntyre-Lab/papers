@@ -58,6 +58,6 @@ NOTE: All documentation can be found https://github.com/McIntyre-Lab/papers/tree
         and Mo17 samples using BLAST (summary_counts_2_b73_vs_b73_mo17_clusters.csv).
         FASTA files used for input to BLAST, BLAST output files, and best hits
         for each cluster (as defined by the largest bitscore and smallest
-        e-value) are available on zenodo ().
+        e-value) are available on zenodo (https://zenodo.org/record/6515984).
     Documentation = cluster_mapping_evaluation.xlsx (see row 32 and 38)
 

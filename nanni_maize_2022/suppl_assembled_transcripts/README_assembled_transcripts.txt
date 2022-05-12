@@ -39,11 +39,11 @@ NOTE: All documentation can be found https://github.com/McIntyre-Lab/papers/tree
         is indicated for each comparion.
     Documentation = shrt_read_alt_analysis.xlsx (see row 54)
 
-* blast_novel_lovi_B73_only_ge5reads_top_hit.tsv:
+* blast_novel_loci_B73_only_ge5reads_top_hit.tsv:
     The top BLAST hits for the 3 novel loci identified in B73 only with more
         than 5 short reads present in both ambient and ozone conditions when
         compared to the NCBI non-redundant nucleotide database. The FASTA
         sequences used as input and full BLAST hit results can be found on
-        zenodo ().
+        zenodo (https://zenodo.org/record/6515984).
     Documentation = transcriptome_evaluation_counting.xlsx (see row 21)
 
