@@ -1,4 +1,4 @@
-# Nanni, et al. 2022 Supplementary Information
+# [Nanni, et al. 2022](https://doi.org/10.1093/genetics/iyac080) Supplementary Information
 ### Short reads
 - [How well do the short reads from each genotype map to the B73 v4, Mo17 Yan, and Mo17 Cau reference genomes?](https://github.com/McIntyre-Lab/papers/tree/master/nanni_maize_2022/suppl_short_reads)
 ### CCS long reads
