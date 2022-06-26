@@ -1,0 +1,46 @@
+Consitency of conserved expression with previous studies:
+
+*** One-to-one orthologous genes with male-biased expression vs. Arbeitman 2016 dsx regulation ***
+	Observed Counts:
+        flag_arbeitman2016_dsx_regulated   0.0  1.0
+        flag_conserved_male_bias                   
+        0                                 7747  607
+        1                                 1028  126
+
+	Expected Counts:
+        flag_arbeitman2016_dsx_regulated          0.0         1.0
+        flag_conserved_male_bias                                 
+        0                                 7709.965292  644.034708
+        1                                 1065.034708   88.965292
+
+	Chi2 = 18.50237214186848, pval = 1.6969296543491084e-05, Cramer's V = 0.04411325651888959
+	Odds Ratio = 1.5643081045391316
+	Fisher exact pval (two-sided) = 3.500682005873126e-05
+	Fisher exact pval (less) = 0.9999879506526567
+	Fisher exact pval (greater) = 1.9317675481048233e-05
+	McNemar = 607.0, pval = 1.5448033451968904e-25
+	Kappa = 0.0433390326743072
+
+
+*** One-to-one orthologous genes with female-biased expression vs. Arbeitman 2016 dsx regulation ***
+	Observed Counts:
+        flag_arbeitman2016_dsx_regulated   0.0  1.0
+        flag_conserved_female_bias                 
+        0                                 7813  657
+        1                                  962   76
+
+	Expected Counts:
+        flag_arbeitman2016_dsx_regulated          0.0         1.0
+        flag_conserved_female_bias                               
+        0                                 7817.022507  652.977493
+        1                                  957.977493   80.022507
+
+	Chi2 = 0.18859903857978744, pval = 0.6640851921739094, Cramer's V = 0.004453742978990335
+	Odds Ratio = 0.9394874326381175
+	Fisher exact pval (two-sided) = 0.6661591664573394
+	Fisher exact pval (less) = 0.336098502459371
+	Fisher exact pval (greater) = 0.7081875385468026
+	McNemar = 657.0, pval = 3.526448529866634e-14
+	Kappa = -0.004993941356509509
+
+

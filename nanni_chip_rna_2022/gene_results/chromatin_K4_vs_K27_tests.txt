@@ -1,0 +1,178 @@
+Chromatin K4 vs. K27 gene-level
+
+*** In orthologs of D. melanogaster presence of any H3K4me3 vs. any H3K27me2me3 on the X ***
+	Observed Counts:
+        flag_any_k27    0    1
+        flag_any_k4           
+        0              63  247
+        1             956  616
+
+	Expected Counts:
+        flag_any_k27           0           1
+        flag_any_k4                         
+        0             167.848034  142.151966
+        1             851.151966  720.848034
+
+	Chi2 = 169.3667617935, pval = 1.017357295899402e-38, Cramer's V = 0.2999882762440894
+	Odds Ratio = 0.16434875408669727
+	Fisher exact pval (two-sided) = 2.007674852892509e-40
+	Fisher exact pval (less) = 1.7348360815531583e-40
+	Fisher exact pval (greater) = 0.999999999997838
+	McNemar = 247.0, pval = 9.801697090452598e-99
+	Kappa = -0.21110967273956643
+
+
+*** In orthologs of D. melanogaster presence of any H3K4me3 vs. any H3K27me2me3 on the autosomes ***
+	Observed Counts:
+        flag_any_k27     0     1
+        flag_any_k4             
+        0              524  1703
+        1             4854  3040
+
+	Expected Counts:
+        flag_any_k27            0            1
+        flag_any_k4                           
+        0             1183.361921  1043.638079
+        1             4194.638079  3699.361921
+
+	Chi2 = 1003.6165837307612, pval = 2.938680422815605e-220, Cramer's V = 0.3148996674910688
+	Odds Ratio = 0.19270387626382682
+	Fisher exact pval (two-sided) = 1.554470403382596e-227
+	Fisher exact pval (less) = 1.1850386009430934e-227
+	Fisher exact pval (greater) = 1.0
+	McNemar = 1703.0, pval = 0.0
+	Kappa = -0.25174767454408103
+
+
+*** In orthologs of D. simulans presence of any H3K4me3 vs. any H3K27me2me3 on the X ***
+	Observed Counts:
+        flag_any_k27     0    1
+        flag_any_k4            
+        0               94  187
+        1             1046  514
+
+	Expected Counts:
+        flag_any_k27           0           1
+        flag_any_k4                         
+        0             174.003259  106.996741
+        1             965.996741  594.003259
+
+	Chi2 = 112.58419899681877, pval = 2.661201568103087e-26, Cramer's V = 0.2472930021161343
+	Odds Ratio = 0.24701178924550873
+	Fisher exact pval (two-sided) = 9.614406225996718e-26
+	Fisher exact pval (less) = 6.561285636611565e-26
+	Fisher exact pval (greater) = 0.9999999999988419
+	McNemar = 187.0, pval = 4.072132992173871e-145
+	Kappa = -0.1491216124889326
+
+
+*** In orthologs of D. simulans presence of any H3K4me3 vs. any H3K27me2me3 on the autosomes ***
+	Observed Counts:
+        flag_any_k27     0    1
+        flag_any_k4            
+        0               94  187
+        1             1046  514
+
+	Expected Counts:
+        flag_any_k27           0           1
+        flag_any_k4                         
+        0             174.003259  106.996741
+        1             965.996741  594.003259
+
+	Chi2 = 112.58419899681877, pval = 2.661201568103087e-26, Cramer's V = 0.2472930021161343
+	Odds Ratio = 0.24701178924550873
+	Fisher exact pval (two-sided) = 9.614406225996718e-26
+	Fisher exact pval (less) = 6.561285636611565e-26
+	Fisher exact pval (greater) = 0.9999999999988419
+	McNemar = 187.0, pval = 4.072132992173871e-145
+	Kappa = -0.1491216124889326
+
+
+*** In orthologs of D. melanogaster presence of sex-limited H3K4me3 vs. sex-limited H3K27me2me3 on the X ***
+	Observed Counts:
+        flag_sex_limited_k27     0    1
+        flag_sex_limited_k4            
+        0                     1313  353
+        1                      167   49
+
+	Expected Counts:
+        flag_sex_limited_k27            0           1
+        flag_sex_limited_k4                          
+        0                     1310.138151  355.861849
+        1                      169.861849   46.138151
+
+	Chi2 = 0.17367872930363762, pval = 0.6768628869242298, Cramer's V = 0.009606462835851606
+	Odds Ratio = 1.0913640141812693
+	Fisher exact pval (two-sided) = 0.5975648519279274
+	Fisher exact pval (less) = 0.7262429516046527
+	Fisher exact pval (greater) = 0.33456509673921275
+	McNemar = 167.0, pval = 2.380632750658313e-16
+	Kappa = 0.01088727446200361
+
+
+*** In orthologs of D. melanogaster presence of sex-limited H3K4me3 vs. sex-limited H3K27me2me3 on the autosomes ***
+	Observed Counts:
+        flag_sex_limited_k27     0     1
+        flag_sex_limited_k4             
+        0                     7406  1690
+        1                      754   271
+
+	Expected Counts:
+        flag_sex_limited_k27            0            1
+        flag_sex_limited_k4                           
+        0                     7333.599447  1762.400553
+        1                      826.400553   198.599447
+
+	Chi2 = 35.92466028758329, pval = 2.0509639891434043e-09, Cramer's V = 0.05957782200262074
+	Odds Ratio = 1.5750521871517587
+	Fisher exact pval (two-sided) = 6.056670132129044e-09
+	Fisher exact pval (less) = 0.9999999978320259
+	Fisher exact pval (greater) = 3.4712047262809632e-09
+	McNemar = 754.0, pval = 8.603547075741194e-82
+	Kappa = 0.05593365447824314
+
+
+*** In orthologs of D. simulans presence of sex-limited H3K4me3 vs. sex-limited H3K27me2me3 on the X ***
+	Observed Counts:
+        flag_sex_limited_k27     0    1
+        flag_sex_limited_k4            
+        0                     1301  309
+        1                      163   68
+
+	Expected Counts:
+        flag_sex_limited_k27            0           1
+        flag_sex_limited_k4                          
+        0                     1280.304183  329.695817
+        1                      183.695817   47.304183
+
+	Chi2 = 12.398351860661158, pval = 0.00042971295497997006, Cramer's V = 0.08206445401014527
+	Odds Ratio = 1.75646752834197
+	Fisher exact pval (two-sided) = 0.00047541120713871733
+	Fisher exact pval (less) = 0.9998169122769547
+	Fisher exact pval (greater) = 0.0003355520037811613
+	McNemar = 163.0, pval = 1.7282589987912455e-11
+	Kappa = 0.0806238983276796
+
+
+*** In orthologs of D. simulans presence of sex-limited H3K4me3 vs. sex-limited H3K27me2me3 on the autosomes ***
+	Observed Counts:
+        flag_sex_limited_k27     0     1
+        flag_sex_limited_k4             
+        0                     7314  1613
+        1                      847   331
+
+	Expected Counts:
+        flag_sex_limited_k27            0            1
+        flag_sex_limited_k4                           
+        0                     7209.623652  1717.376348
+        1                      951.376348   226.623652
+
+	Chi2 = 66.73471929675382, pval = 3.106158909116884e-16, Cramer's V = 0.08126578972476481
+	Odds Ratio = 1.77200593466163
+	Fisher exact pval (two-sided) = 3.553391352811098e-15
+	Fisher exact pval (less) = 0.999999999995215
+	Fisher exact pval (greater) = 2.306165408843441e-15
+	McNemar = 847.0, pval = 1.5376401552477164e-54
+	Kappa = 0.07822107194275749
+
+

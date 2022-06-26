@@ -1,0 +1,107 @@
+Faster X-hypothesis: more sex-biased expression on X vs. A
+
+*** One-to-one orthologous pairs with sex-bias in both species X vs. A ***
+	Observed Counts:
+        flag_sex_bias_both_species     0     1
+        xsome                                 
+        X                            988   541
+        A                           6011  1968
+
+	Expected Counts:
+        flag_sex_bias_both_species            0            1
+        xsome                                               
+        X                           1125.522823   403.477177
+        A                           5873.477177  2105.522823
+
+	Chi2 = 75.32874546716478, pval = 3.985153003578696e-18, Cramer's V = 0.08900938100052389
+	Odds Ratio = 0.5979130681858368
+	Fisher exact pval (two-sided) = 2.085758840466688e-17
+	Fisher exact pval (less) = 1.2196343309938819e-17
+	Fisher exact pval (greater) = 1.0
+	McNemar = 541.0, pval = 0.0
+
+
+*** One-to-one orthologous pairs with unbiased in both species X vs. A ***
+	Observed Counts:
+        flag_conserved_unbiased     0     1
+        xsome                              
+        X                        1099   430
+        A                        4593  3386
+
+	Expected Counts:
+        flag_conserved_unbiased            0            1
+        xsome                                            
+        X                         915.341607   613.658393
+        A                        4776.658393  3202.341607
+
+	Chi2 = 108.81580013277194, pval = 1.7809019205157622e-25, Cramer's V = 0.10697970435929155
+	Odds Ratio = 1.884168527435582
+	Fisher exact pval (two-sided) = 1.9292045659507376e-26
+	Fisher exact pval (less) = 1.0
+	Fisher exact pval (greater) = 1.1444822917975062e-26
+	McNemar = 430.0, pval = 0.0
+
+
+*** One-to-one orthologous pairs with conserved sex-bias X vs. A ***
+	Observed Counts:
+        flag_conserved_sex_bias     0     1
+        xsome                              
+        X                        1077   452
+        A                        6229  1750
+
+	Expected Counts:
+        flag_conserved_sex_bias            0            1
+        xsome                                            
+        X                        1174.892091   354.107909
+        A                        6131.107909  1847.892091
+
+	Chi2 = 41.53956701853036, pval = 1.155092705902607e-10, Cramer's V = 0.06609770739168594
+	Odds Ratio = 0.669417384003171
+	Fisher exact pval (two-sided) = 2.39636035315084e-10
+	Fisher exact pval (less) = 1.4526757274626847e-10
+	Fisher exact pval (greater) = 0.9999999999123036
+	McNemar = 452.0, pval = 0.0
+
+
+*** One-to-one orthologous pairs with conserved male-bias X vs. A ***
+	Observed Counts:
+        flag_conserved_male_bias     0    1
+        xsome                              
+        X                         1294  235
+        A                         7060  919
+
+	Expected Counts:
+        flag_conserved_male_bias            0           1
+        xsome                                            
+        X                         1343.423012  185.576988
+        A                         7010.576988  968.423012
+
+	Chi2 = 17.491927415012633, pval = 2.885301983502393e-05, Cramer's V = 0.04289179747946475
+	Odds Ratio = 0.7167657163522392
+	Fisher exact pval (two-sided) = 3.9480835233809844e-05
+	Fisher exact pval (less) = 2.2989403214789607e-05
+	Fisher exact pval (greater) = 0.9999838218168348
+	McNemar = 235.0, pval = 0.0
+
+
+*** One-to-one orthologous pairs with conserved female-bias X vs. A ***
+	Observed Counts:
+        flag_conserved_female_bias     0    1
+        xsome                                
+        X                           1314  215
+        A                           7156  823
+
+	Expected Counts:
+        flag_conserved_female_bias            0           1
+        xsome                                              
+        X                           1362.077198  166.922802
+        A                           7107.922802  871.077198
+
+	Chi2 = 18.13963441204279, pval = 2.0528380314175986e-05, Cramer's V = 0.043678697425118186
+	Odds Ratio = 0.7028884526889129
+	Fisher exact pval (two-sided) = 3.0260559164631642e-05
+	Fisher exact pval (less) = 1.7392950705014275e-05
+	Fisher exact pval (greater) = 0.9999880039124704
+	McNemar = 215.0, pval = 0.0
+
+
