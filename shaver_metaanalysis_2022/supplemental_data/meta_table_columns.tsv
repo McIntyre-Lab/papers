@@ -1,8 +1,11 @@
 varName	description
 featureID	unique feature identifier
-effect_strain/pathway	meta-analysis effect size for indicated strain or pathway
-pval_strain/pathway	meta-analysis p-value for indicated strain or pathway
-flag_sig_strain/pathway	binary indicator variable. Equal to 1 if p-value <= 0.05
+effect_strain	meta-analysis effect size for indicated strain 
+pval_strain	meta-analysis p-value for indicated strain
+flag_sig_strain	binary indicator variable. Equal to 1 if MA p-value for strain is <= 0.05
+effect_study	meta-analysis effect size for study where study is a specific group of strains
+pval_study	meta-analysis p-value for study (group of strains)
+flag_sig_study	binary indicator variable. Equal to 1 if MA p-value for study is <= 0.05
 ms2_id	
 min_height	
 mean_sn	
@@ -55,23 +58,3 @@ ionMass	see Sirius reference for column descriptors
 retentionTimeInSeconds	see Sirius reference for column descriptors
 id	see Sirius reference for column descriptors
 num_strains_sig	
-b1_aos_num	batch number followed by sample number, see design file for sample information
-b1_pool_mutant	batch number followed by pool type
-b1_pool_natural	batch number followed by pool type
-b1_pool_pd1074	batch number followed by pool type
-b2_aos_num	batch number followed by sample number, see design file for sample information
-b2_pool_mutant	batch number followed by pool type
-b2_pool_natural	batch number followed by pool type
-b2_pool_pd1074	batch number followed by pool type
-b3_aos_num	batch number followed by sample number, see design file for sample information
-b3_pool_mutant	batch number followed by pool type
-b3_pool_pd1074	batch number followed by pool type
-b4_aos_num	batch number followed by sample number, see design file for sample information
-b4_pool_mutant	batch number followed by pool type
-b4_pool_pd1074	batch number followed by pool type
-b5_aos_num	batch number followed by sample number, see design file for sample information
-b5_pool_mutant	batch number followed by pool type
-b5_pool_pd1074	batch number followed by pool type
-b6_aos_num	batch number followed by sample number, see design file for sample information
-b6_pool_mutant	batch number followed by pool type
-b6_pool_pd1074	batch number followed by pool type
