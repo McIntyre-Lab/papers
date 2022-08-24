@@ -1,0 +1,64 @@
+varName,description
+featureID,unique feature identifier
+effect_strain,meta-analysis effect size for indicated strain
+pval_strain,meta-analysis p-value for indicated strain
+flag_sig05_strain,binary indicator variable. Equal to 1 if p-value <= 0.05 for indicated strain
+effect_study,meta-analysis effect size for indicated study (group of strains)
+pval_study,meta-analysis p-value for indicated study (group of strains)
+flag_sig05_study,binary indicator variable. Equal to 1 if p-value <= 0.05 for indicated study (group of strains)
+sum_flag_sig05_strain_4_study,sum of the flag_sig05_strain variables for indicated study
+direction_strain,"if effect size for indicated strain is > 0 then direction = “strain”, else direction = “pd1074”"
+dir_pd_vs_strain_study,"if the direction of the strains in the indicated study are all direction = “strain” then dir_pd_vs_strain_study = “all strain direction” 
+If the  direction of the strains in the indicated study are all direction = “pd1074” then dir_pd_vs_strain_study = “all pd1074 direction” 
+Else dir_pd_vs_strain_study = “mix strain & pd1074” "
+ms2_id,
+min_height,
+mean_sn,
+max_right_on_left_assymetry,
+clique,
+mean_right_on_left_assymetry,
+isotopic_pattern_annot,
+min_mz,
+mean_height,
+neutral_mass,
+num_clustered_ms2,
+min_intensity,
+mean_rt,
+main_peak,
+max_peakwidth,
+max_mz,
+num_detection,
+annotations,
+mean_intensity,
+max_intensity,
+total_detection,
+molecularFormula,
+adduct,
+precursorFormula,
+ZodiacScore,
+SiriusScore,
+TreeScore,
+IsotopeScore,
+numExplainedPeaks,
+explainedIntensity,
+medianMassErrorFragmentPeaks_ppm,
+medianAbsoluteMassErrorFragmentP,
+massErrorPrecursor_ppm_,
+ionMass,
+retentionTimeInSeconds,
+id,
+min_sn,see Sirius reference for column descriptors
+max_rt,see Sirius reference for column descriptors
+mean_rt_cor,see Sirius reference for column descriptors
+raw_isotopic_pattern,see Sirius reference for column descriptors
+rt,see Sirius reference for column descriptors
+min_right_on_left_assymetry,see Sirius reference for column descriptors
+min_rt_cor,see Sirius reference for column descriptors
+mean_peakwidth,see Sirius reference for column descriptors
+mean_mz,see Sirius reference for column descriptors
+min_peakwidth,see Sirius reference for column descriptors
+max_sn,see Sirius reference for column descriptors
+mz,see Sirius reference for column descriptors
+max_height,see Sirius reference for column descriptors
+max_rt_cor,see Sirius reference for column descriptors
+min_rt,see Sirius reference for column descriptors
