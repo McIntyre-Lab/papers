@@ -21,6 +21,24 @@ OUTD=$PROJ/SLAW_UGA_Output/meta_analysis_${VAR}
 ROZ=$PROJ/SLAW_UGA_Output/roz_MA/${VAR}
     mkdir -p $ROZ 
 
+PATHWAY="ALL"
+awk '$3=="CB4856" || $3=="CX11314" || $3=="DL238" || $3 == "VC1265" || $3 == "UGT60" || $3 == "RB2011" || $3 == "RB2550" || $3 == "RB2055" || $3 == "UGT49" || $3 == "KJ550" || $3 == "RB2347" || $3 == "AUM2073" || $3 == "VC2524" || $3 == "N2" || $3=="PD1074" || NR==1' $DESIGN > ${ROZ}/dsgn_model_${PATHWAY}.tsv
+python $SCRIPT/meta_analysis.py \
+    --wide $READY/${VAR}_analysisReady_rank_sbys.tsv  \
+    --design ${ROZ}/dsgn_model_${PATHWAY}.tsv \
+    -id uniqueID \
+    --study "batch" \
+    --treatment "strain" \
+    --contrast "AUM2073,CB4856,CX11314,DL238,KJ550,N2,RB2011,RB2055,RB2347,RB2550,UGT49,UGT60,VC1265,VC2524,PD1074" \
+    --forest no \
+    --report $OUTD/MA_FE_rank_byPath_${VAR}_${PATHWAY}_report.tsv \
+    -o $OUTD/MA_FE_rank_byPath_${VAR}_${PATHWAY}_SMD_summary.tsv \
+    --model FE \
+    --effectSize SMD \
+    --cmMethod UB
+
+: <<'END'
+
 PATHWAY="NInoN2"
 awk '$3=="CB4856" || $3=="CX11314" || $3=="DL238" || $3=="PD1074" || NR==1' $DESIGN > ${ROZ}/dsgn_model_${PATHWAY}.tsv
 python $SCRIPT/meta_analysis.py \
@@ -30,13 +48,13 @@ python $SCRIPT/meta_analysis.py \
     --study "batch" \
     --treatment "strain" \
     --contrast "CB4856,CX11314,DL238,PD1074" \
+    --forest no \
     --report $OUTD/MA_FE_rank_byPath_${VAR}_${PATHWAY}_report.tsv \
     -o $OUTD/MA_FE_rank_byPath_${VAR}_${PATHWAY}_SMD_summary.tsv \
     --model FE \
     --effectSize SMD \
     --cmMethod UB
 
-: <<'END'
 
 ## pull out following strain for meta pathway (VC1265=TCA,DL2238=NI,UGT60(VC2512)=UGT
 PATHWAY="COMBO"

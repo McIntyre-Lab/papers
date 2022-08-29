@@ -1,16 +1,18 @@
 #!/bash/bin
 
 
+#export Path to Secim conda env 
+export PATH=/TB14/TB14/galaxy_27oct21/galaxy/database/dependencies/_conda/envs/__secimtools@21.2.21/bin:$PATH
+
 PROJ=/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/CID/sweet16
-SCRIPT=/TB14/TB14/github/SECIMTools/src/scripts
+SCRIPT=/TB14/TB14/galaxy_27oct21/galaxy/tools/SECIMTools/src/scripts
 
 DATAIN=$PROJ/nmr
-
 OUTD=$PROJ/nmr/meta_analysis
     mkdir -p $OUTD
 
-#for TYPE in cdcl3 d2o
-for TYPE in d2o
+for TYPE in cdcl3 d2o
+#for TYPE in d2o
 do
 
     DESIGN=$DATAIN/dsgn_${TYPE}_sbys.tsv
@@ -25,8 +27,25 @@ do
     ROZ=$PROJ/roz_MA_nmr_${TYPE}_amm
         mkdir -p $ROZ
 
-    export PATH=/TB14/TB14/galaxy_18feb21/galaxy/database/dependencies/_conda/envs/__secimtools@21.2.21/bin:$PATH
 
+## pull out following strain for meta pathway (VC1265=TCA,DL2238=NI,UGT60(VC2512)=UGT
+    PATHWAY="ALL"
+    awk '$8=="CB4856" || $8=="CX11314" || $8=="DL238" || $8=="VC1265" || $8=="UGT60" || $8=="RB2011" || $8=="RB2550" || $8=="RB2055" || $8=="UGT49" || $8=="KJ550" || $8=="RB2347" || $8=="AUM2073" || $8=="VC2524" || $8=="N2" || $8=="PD1074" || NR==1' $DESIGN > ${ROZ}/dsgn_model_${TYPE}_${PATHWAY}.tsv
+    python $SCRIPT/meta_analysis.py \
+        --wide $WIDE \
+        --design ${ROZ}/dsgn_model_${TYPE}_${PATHWAY}.tsv \
+        -id ppm \
+        --study "batch" \
+        --treatment "genotype" \
+        --contrast "AUM2073,CB4856,CX11314,DL238,KJ550,N2,RB2011,RB2055,RB2347,RB2550,UGT49,UGT60,VC1265,VC2524,PD1074"  \
+        --forest no \
+        --report $OUTD/${MODEL}_${PATHWAY}_report.tsv \
+        -o $OUTD/${MODEL}_${PATHWAY}_summary.tsv \
+        --model FE \
+        --effectSize SMD \
+        --cmMethod UB
+
+: <<'END'
 
 ## pull out following strain for meta pathway (VC1265=TCA,DL2238=NI,UGT60(VC2512)=UGT
     PATHWAY="NInoN2"
@@ -43,8 +62,6 @@ do
         --model FE \
         --effectSize SMD \
         --cmMethod UB
-
-: <<'END'
 
 ## pull out following strain for meta pathway (VC1265=TCA,DL2238=NI,UGT60(VC2512)=UGT
 PATHWAY="COMBO"

@@ -17,7 +17,7 @@ DESIGN=$PROJ/design_files/dsgn_GT_${VARDIR}_pairs_slaw.tsv
     #b1_aos_122      aos_122 RB2011  1       strain  b1      strain_b1       RB2011  1       set1
     #b1_aos_127      aos_127 CX11314 1       strain  b1      strain_b1       CX11314 1       set1
 
-OUTD=$PROJ/SLAW_UGA_Output/meta_analysis_${VAR}
+OUTD=$PROJ/SLAW_UGA_Output/meta_analysis_${VAR}_rerun
     mkdir -p $OUTD
 
 ROZ=$PROJ/SLAW_UGA_Output/roz_MA/${VAR}
@@ -32,7 +32,6 @@ do
         ## pull out mutant and all pd1074 in the set from DESIGN, output to new design file for input into model
         awk -F "\t"  -v mut=$mut -v set=$set '($3==mut || $3=="PD1074" || NR==1) && ($10==set || NR==1)' ${DESIGN} > ${ROZ}/dsgn_${set}_${mut}.tsv
 
-: <<'END'
 	python $SCRIPTS/meta_analysis.py \
 	    --wide $READY/${VAR}_analysisReady_rank_sbys.tsv \
 	    --design ${ROZ}/dsgn_${set}_${mut}.tsv \
@@ -40,13 +39,12 @@ do
 	    --study "batch" \
 	    --treatment "strain" \
 	    --contrast "$mut,PD1074" \
+            --forest no \
             --report $OUTD/MA_FE_rank_byMut_${VAR}_${mut}_report.txt \
 	    -o $OUTD/MA_FE_rank_byMut_${VAR}_${mut}_SMD_summary.tsv \
             --model FE \
             --effectSize SMD \
             --cmMethod UB
-
-END
 
     done
 done
