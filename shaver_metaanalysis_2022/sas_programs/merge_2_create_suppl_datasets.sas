@@ -1,5 +1,5 @@
 libname sweet16 "/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/CID/sweet16/sasdata" ;
-libname manu "/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/CID/sweet16/sasdata/manuscript"  ;
+libname manu "/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/shaver_metaanalysis_2022/sasdata"  ;
 
 
 /*
@@ -11,19 +11,21 @@ rename NI = NS
 
     mass spec:
         for each tech:  (1) merge MA results (strain and path), all annotations and sirius output
-                        (2) PH analysis ready
+                        (2) PH analysis ready and rank analysis ready
+
                         (3) export design files with pair info
         
         inputs: work.ma_&tech._&strain 
                 work.ma_&tech._&path
                 work.ph_&tech.
+                work.an_&tech._anno
                 work.sr_&tech. 
                 dsgn_GT_RP_NEG_pairs_slaw.tsv
                 dsgn_GT_RP_POS_pairs_slaw.tsv
                 dsgn_GT_HILIC_POS_pairs_slaw.tsv
   nmr
         for each tech:  (1) merge MA results (strain and path)
-                        (2) ppm analysis ready
+                        (2) ppm analysis ready and rank analysis ready
                         (3) export design files with pair info
 
         inputs: work.ma_&tech._&strain.
@@ -41,7 +43,7 @@ rename NI = NS
 %macro byTech (tech) ;
 
 data &tech._ma ;
-merge ma_&tech._: (in=in1) an_&tech._: sr_&tech ph_&tech.;
+merge ma_&tech._: (in=in1) flag_&tech._: an_&tech._: sr_&tech ;
 by featureID ;
 if in1 ;
 run ;
@@ -64,8 +66,9 @@ run ;
 %macro byTech2 (tech) ;
 
 data &tech._ma ;
-merge ma_&tech._: ;
+merge ma_&tech._: (in=in1) flag_&tech._: ;
 by featureID ;
+if in1 ;
 run ;
 %mend ;
 
@@ -75,37 +78,57 @@ run ;
 
 
 /* save sas datasets and export tsv */
-%macro saving (tech, type) ;
+%macro saving (tech) ;
 
 data manu.suppl_&tech._meta_table ;
 set &tech._ma ;
-rename effect_NI = effect_NS ; rename pval_NI = pval_NS ; rename flag_sig_NI = flag_sig_NS;
-rename effect_TCA = effect_CM ; rename pval_TCA = pval_CM ; rename flag_sig_TCA = flag_sig_CM ;
+rename effect_NI = effect_NS ; rename pval_NI = pval_NS ; rename flag_sig05_NI_path = flag_sig05_NS_path;
+rename effect_TCA = effect_CM ; rename pval_TCA = pval_CM ; rename flag_sig05_TCA_path = flag_sig05_CM_path ;
 run;
 
 proc export data = manu.suppl_&tech._meta_table
-outfile = "/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/CID/sweet16/manuscript/supplemental_data/suppl_&tech._meta_table.tsv"
-dbms = tab replace ;
-run ;
-
-/* PH/ppm data */
-data manu.suppl_&tech._&type._table ;
-set ph_&tech. ;
-run ;
-
-proc export data = manu.suppl_&tech._&type._table
-outfile = "/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/CID/sweet16/manuscript/supplemental_data/suppl_&tech._&type._table.tsv"
+outfile = "/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/shaver_metaanalysis_2022/supplemental_data/suppl_&tech._meta_table.tsv"
 dbms = tab replace ;
 run ;
 
 %mend ;
 
-%saving (rp_neg, ph) ;
-%saving (rp_pos, ph) ;
-%saving (hilic_pos, ph) ;
+%saving (rp_neg) ;
+%saving (rp_pos) ;
+%saving (hilic_pos) ;
+%saving (cdcl3) ;
+%saving (d2o) ;
 
-%saving (cdcl3, ppm) ;
-%saving (d2o, ppm) ;
+
+
+/* PH/ppm and ranked data */
+%macro saving2 (tech, type) ;
+
+data manu.suppl_&tech._&type._table ;
+set &type._&tech. ;
+run ;
+
+proc export data = manu.suppl_&tech._&type._table
+outfile = "/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/shaver_metaanalysis_2022/supplemental_data/suppl_&tech._&type._table.tsv"
+dbms = tab replace ;
+run ;
+
+%mend ;
+
+%saving2 (rp_neg, ph) ;
+%saving2 (rp_neg, rank) ;
+
+%saving2 (rp_pos, ph) ;
+%saving2 (rp_pos, rank) ;
+
+%saving2 (hilic_pos, ph) ;
+%saving2 (hilic_pos, rank) ;
+
+%saving2 (cdcl3, ph) ;
+%saving2 (cdcl3, rank) ;
+
+%saving2 (d2o, ph) ;
+%saving2 (d2o, rank) ;
 
 
 /* export design files as well -- mass spec (all techs are ID!) */
@@ -121,7 +144,7 @@ set design_&tech.;
 run ;
 
 proc export data = manu.design_mass_spec
-outfile = "/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/CID/sweet16/manuscript/supplemental_data/design_mass_spec.tsv"
+outfile = "/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/shaver_metaanalysis_2022/supplemental_data/design_mass_spec.tsv"
 dbms = tab replace ;
 run ;
 
@@ -144,7 +167,7 @@ drop oldSampleID ;
 run ;
 
 proc export data = manu.design_nmr_&tech.
-outfile = "/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/CID/sweet16/manuscript/supplemental_data/design_nmr_&tech..tsv"
+outfile = "/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/shaver_metaanalysis_2022/supplemental_data/design_nmr_&tech..tsv"
 dbms = tab replace ;
 run ;
 
@@ -161,31 +184,30 @@ proc contents data = manu.suppl_rp_pos_meta_table out = column_name (keep=varnum
 data names ;
 set column_name ;
 length varName $52 ;
-if find(name, "aos") ge 1 then do ;
-    keep = substr(name,1,7);
-    varName = compress(keep||"num") ; end ;
+
+if find(name, "dir_pd_vs_strain") ge 1 then do ;
+    keep = substr(name,1,17) ;
+    varName = compress(keep||"study") ; end ;
 
 if find(name, "effect") ge 1 then do ;
     keep2 = substr(name,1,7) ;
-    varName = compress(keep2||"strain/pathway") ; end ;
+    varName = compress(keep2||"strain/study") ; end ;
 
 if find(name, "pval") ge 1 then do ;
     keep3 = substr(name,1,5);
-    varName = compress(keep3||"strain/pathway") ; end ;
+    varName = compress(keep3||"strain/study") ; end ;
 
-if find(name, "flag_sig") ge 1 then do ;
-    keep4 = substr(name,1,9) ;
-    varName = compress(keep4||"strain/pathway") ; end ;
+if find(name, "flag_sig05") ge 1 then do ;
+    keep4 = substr(name,1,11) ;
+    varName = compress(keep4||"strain/study") ; end ;
 
-if find(name, "pool_mutant") ge 1 then do ;
-    keep5 = substr(name,1,14) ;
-    varName = compress(keep5) ; end ;
-if find(name, "pool_pd1074") ge 1 then do ;
-    keep5 = substr(name,1,14) ;
-    varName = compress(keep5) ; end ;
-if find(name, "pool_natural") ge 1 then do ;
-    keep5 = substr(name,1,15) ;
-    varName = compress(keep5) ; end ;
+if find(name, "direction") ge 1 then do ;
+    keep5 = substr(name,1,10) ;
+    varName = compress(keep5||"strain") ; end ;
+
+if find(name, "sum") ge 1 then do ;
+    keep6 = substr(name,1,24) ;
+    varName = compress(keep6||"study") ; end ;
 
 if varName = "" then varName = name ;
 keep varName varNum ;
@@ -232,6 +254,11 @@ set meta_table_vars ;
 run ;
 
 proc export data = manu.meta_table_columns
-outfile = "/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/CID/sweet16/manuscript/supplemental_data/meta_table_columns.tsv"
-dbms = tab replace ;
+outfile = '/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/shaver_metaanalysis_2022/supplemental_data/meta_table_columns.csv'
+dbms = csv replace ;
 run ;
+
+
+
+
+
