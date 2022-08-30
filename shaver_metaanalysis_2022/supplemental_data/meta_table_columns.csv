@@ -46,7 +46,6 @@ medianAbsoluteMassErrorFragmentP,
 massErrorPrecursor_ppm_,
 ionMass,
 retentionTimeInSeconds,
-id,
 min_sn,see Sirius reference for column descriptors
 max_rt,see Sirius reference for column descriptors
 mean_rt_cor,see Sirius reference for column descriptors
