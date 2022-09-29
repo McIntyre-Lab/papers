@@ -18,7 +18,7 @@ Expression sex bias of orthologs
 	Fisher exact pval (two-sided) = 1.9882267397471354e-28
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 1.2625634356540566e-28
-	McNemar = 197.0, pval = 3.654854913650266e-12
+	McNemar = 197.0, pval = 3.654854913651731e-12
 	Kappa = 0.27463339817447263
 
 
@@ -40,8 +40,128 @@ Expression sex bias of orthologs
 	Fisher exact pval (two-sided) = 3.7467214985152166e-191
 	Fisher exact pval (less) = 0.9999999999821956
 	Fisher exact pval (greater) = 1.9085415746917144e-191
-	McNemar = 1012.0, pval = 6.098244116258562e-32
+	McNemar = 1012.0, pval = 6.09824411627692e-32
 	Kappa = 0.3245213998347946
+
+
+*** One-to-one orthologous pairs with male-bias on X or autosomes in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_M_sim     0     1
+        flag_M_mel            
+        0           6392   758
+        1           1204  1154
+
+	Expected Counts:
+        flag_M_sim            0            1
+        flag_M_mel                          
+        0           5712.179218  1437.820782
+        1           1883.820782   474.179218
+
+	Chi2 = 1619.9239821949805, pval = 0.0, Cramer's V = 0.41276487297913284
+	Odds Ratio = 8.082521761235634
+	Fisher exact pval (two-sided) = 2.36038074e-315
+	Fisher exact pval (less) = 1.0
+	Fisher exact pval (greater) = 2.36038074e-315
+	McNemar = 758.0, pval = 6.1261824602777835e-24
+	Kappa = 0.40932820064790987
+
+
+*** One-to-one orthologous pairs with male-bias or unbiased on X or autosomes in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_M_sim     0     1
+        flag_M_mel            
+        0           3816   657
+        1           1049  1154
+
+	Expected Counts:
+        flag_M_sim            0            1
+        flag_M_mel                          
+        0           3259.608298  1213.391702
+        1           1605.391702   597.608298
+
+	Chi2 = 1059.0456375668614, pval = 2.631693857196432e-232, Cramer's V = 0.39828979019711747
+	Odds Ratio = 6.389594786946472
+	Fisher exact pval (two-sided) = 2.832527993036611e-224
+	Fisher exact pval (less) = 1.0
+	Fisher exact pval (greater) = 2.634893476167955e-224
+	McNemar = 657.0, pval = 1.9394613221873844e-21
+	Kappa = 0.39477435618437
+
+
+*** One-to-one orthologous pairs with female-bias on X or autosomes in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_F_sim     0     1
+        flag_F_mel            
+        0           6839   673
+        1            958  1038
+
+	Expected Counts:
+        flag_F_sim            0            1
+        flag_F_mel                          
+        0           6160.187631  1351.812369
+        1           1636.812369   359.187631
+
+	Chi2 = 1977.1213758827514, pval = 0.0, Cramer's V = 0.45600759832599547
+	Odds Ratio = 11.010559393486306
+	Fisher exact pval (two-sided) = 0.0
+	Fisher exact pval (less) = 0.9999999999765513
+	Fisher exact pval (greater) = 0.0
+	McNemar = 673.0, pval = 1.7916962135773625e-12
+	Kappa = 0.4542640366409669
+
+
+*** One-to-one orthologous pairs with female-bias or unbiased on X or autosomes in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_F_sim     0     1
+        flag_F_mel            
+        0           3816   525
+        1            872  1038
+
+	Expected Counts:
+        flag_F_sim            0            1
+        flag_F_mel                          
+        0           3255.576388  1085.423612
+        1           1432.423612   477.576388
+
+	Chi2 = 1260.4810680700723, pval = 4.3786660998563474e-276, Cramer's V = 0.4490486696762095
+	Odds Ratio = 8.652267365661862
+	Fisher exact pval (two-sided) = 1.1120202454609656e-261
+	Fisher exact pval (less) = 1.0
+	Fisher exact pval (greater) = 7.810316344999364e-262
+	McNemar = 525.0, pval = 1.3399580012963109e-20
+	Kappa = 0.4451609349298622
+
+
+*** One-to-one orthologous pairs with D. melanogaster-specific sex-bias on X or autosomes in male vs. female transitions ***
+	Observed Counts:
+        flag_F_mel     0    1
+        flag_M_mel           
+        0           3869  872
+        1           1049    0
+
+	Expected Counts:
+        flag_F_mel            0           1
+        flag_M_mel                         
+        0           4026.984111  714.015889
+        1            891.015889  157.984111
+
+	McNemar = 872.0, pval = 5.8637139796834415e-05
+
+
+*** One-to-one orthologous pairs with D. simulans-specific sex-bias on X or autosomes in male vs. female transitions ***
+	Observed Counts:
+        flag_F_sim     0    1
+        flag_M_sim           
+        0           3843  525
+        1            657    0
+
+	Expected Counts:
+        flag_F_sim            0           1
+        flag_M_sim                         
+        0           3911.641791  456.358209
+        1            588.358209   68.641791
+
+	McNemar = 525.0, pval = 0.00013674794076330585
 
 
 *** One-to-one orthologous pairs with conserved male-biased vs. conserved female-biased expression on the X ***
@@ -57,13 +177,7 @@ Expression sex bias of orthologs
         0                           1112.044474  181.955526
         1                            201.955526   33.044474
 
-	Chi2 = 44.06979119181605, pval = 3.168737109186068e-11, Cramer's V = 0.16977226925691838
-	Odds Ratio = 0.0
-	Fisher exact pval (two-sided) = 1.7643110786892157e-17
-	Fisher exact pval (less) = 1.2434494251922089e-17
-	Fisher exact pval (greater) = 1.0
-	McNemar = 215.0, pval = 0.37044758913659737
-	Kappa = -0.17214650766609865
+	McNemar = 215.0, pval = 0.3704475891364876
 
 
 *** One-to-one orthologous pairs with conserved male-biased vs. conserved female-biased expression on the autosomes ***
@@ -79,13 +193,7 @@ Expression sex bias of orthologs
         0                           6331.790951  728.209049
         1                            824.209049   94.790951
 
-	Chi2 = 118.19389639323384, pval = 1.5724044784976295e-27, Cramer's V = 0.12170916766239734
-	Odds Ratio = 0.0
-	Fisher exact pval (two-sided) = 6.711305040342062e-47
-	Fisher exact pval (less) = 4.7297834885063175e-47
-	Fisher exact pval (greater) = 1.0
-	McNemar = 823.0, pval = 0.022810206673213238
-	Kappa = -0.12212038934525543
+	McNemar = 823.0, pval = 0.022810206673226235
 
 
 *** One-to-one orthologous pairs with conserved male-biased vs. conserved female-biased expression on the X or autosomes ***
@@ -101,13 +209,7 @@ Expression sex bias of orthologs
         0                           7441.983593  912.016407
         1                           1028.016407  125.983593
 
-	Chi2 = 159.6836183153771, pval = 1.326704915835865e-36, Cramer's V = 0.12959420919604958
-	Odds Ratio = 0.0
-	Fisher exact pval (two-sided) = 1.4459633686790962e-62
-	Fisher exact pval (less) = 9.646721966811251e-63
-	Fisher exact pval (greater) = 1.0
-	McNemar = 1038.0, pval = 0.014020071654352779
-	Kappa = -0.12987779569932073
+	McNemar = 1038.0, pval = 0.014020071654375525
 
 
 *** One-to-one orthologous pairs with unbiased D. melanogaster and sex-biased D. simulans, D. simulans-specific male-biased vs. female-biased expression on the X or autosomes ***
@@ -123,13 +225,7 @@ Expression sex bias of orthologs
         0           312.297767  239.702233
         1           371.702233  285.297767
 
-	Chi2 = 1100.6068439012358, pval = 2.437758773680071e-241, Cramer's V = 0.9541199002417966
-	Odds Ratio = 0.0
-	Fisher exact pval (two-sided) = 9.0965320411e-313
-	Fisher exact pval (less) = 9.0965320411e-313
-	Fisher exact pval (greater) = 1.0
-	McNemar = 525.0, pval = 0.00013674794076339234
-	Kappa = -0.9332537865874445
+	McNemar = 525.0, pval = 0.00013674794076330585
 
 
 *** One-to-one orthologous pairs with unbiased D. simulans and sex-biased D. melanogaster, D. melanogaster-specific male-biased vs. female-biased expression on the X or autosomes ***
@@ -145,13 +241,7 @@ Expression sex bias of orthologs
         0           516.388045  408.611955
         1           585.611955  463.388045
 
-	Chi2 = 1767.5759045222749, pval = 0.0, Cramer's V = 0.9462708507932227
-	Odds Ratio = 0.0
-	Fisher exact pval (two-sided) = 0.0
-	Fisher exact pval (less) = 0.0
-	Fisher exact pval (greater) = 1.0
-	McNemar = 872.0, pval = 5.8637139796876794e-05
-	Kappa = -0.9321603303376444
+	McNemar = 872.0, pval = 5.8637139796834415e-05
 
 
 *** D. melanogaster male-biased vs. female-biased expression on the X ***
@@ -167,13 +257,7 @@ Expression sex bias of orthologs
         0       1057.11308  322.88692
         1        412.88692  126.11308
 
-	Chi2 = 227.12405014152665, pval = 2.5267141641984828e-51, Cramer's V = 0.3440282249511914
-	Odds Ratio = 0.0
-	Fisher exact pval (two-sided) = 5.872559762368469e-76
-	Fisher exact pval (less) = 5.0602362998795425e-76
-	Fisher exact pval (greater) = 1.0
-	McNemar = 449.0, pval = 0.0046092062740719746
-	Kappa = -0.3428039236516871
+	McNemar = 449.0, pval = 0.004609206274071164
 
 
 *** D. melanogaster male-biased vs. female-biased expression on the autosomes ***
@@ -189,13 +273,7 @@ Expression sex bias of orthologs
         0       6263.998469  1349.001531
         1       1797.001531   386.998469
 
-	Chi2 = 603.70917196105, pval = 2.6123341264308575e-133, Cramer's V = 0.24823746808139596
-	Odds Ratio = 0.0
-	Fisher exact pval (two-sided) = 6.649251681039526e-213
-	Fisher exact pval (less) = 4.2884377800697076e-213
-	Fisher exact pval (greater) = 1.0
-	McNemar = 1736.0, pval = 8.865240102044083e-13
-	Kappa = -0.24602548775214295
+	McNemar = 1736.0, pval = 8.86524010207393e-13
 
 
 *** D. simulans male-biased vs. female-biased expression on the X ***
@@ -211,13 +289,7 @@ Expression sex bias of orthologs
         0       1153.037507  306.962493
         1        341.962493   91.037507
 
-	Chi2 = 147.82363750593763, pval = 5.184218145507132e-34, Cramer's V = 0.2794451879192205
-	Odds Ratio = 0.0
-	Fisher exact pval (two-sided) = 6.068882952291646e-52
-	Fisher exact pval (less) = 4.6909274290794434e-52
-	Fisher exact pval (greater) = 1.0
-	McNemar = 398.0, pval = 0.23820190695565746
-	Kappa = -0.2805794458713056
+	McNemar = 398.0, pval = 0.2382019069555975
 
 
 *** D. simulans male-biased vs. female-biased expression on the autosomes ***
@@ -233,13 +305,7 @@ Expression sex bias of orthologs
         0       6711.971503  1211.028497
         1       1463.028497   263.971503
 
-	Chi2 = 378.0832708042068, pval = 3.252865075014731e-84, Cramer's V = 0.19793840848819635
-	Odds Ratio = 0.0
-	Fisher exact pval (two-sided) = 9.510149678373107e-139
-	Fisher exact pval (less) = 4.342556888737681e-139
-	Fisher exact pval (greater) = 1.0
-	McNemar = 1475.0, pval = 9.085353225036826e-06
-	Kappa = -0.19743147068454753
+	McNemar = 1475.0, pval = 9.085353225055425e-06
 
 
 *** In orthologs of D. melanogaster male-biased vs. female-biased expression on the X ***
@@ -255,13 +321,7 @@ Expression sex bias of orthologs
         0       834.082552  282.917448
         1       359.917448  122.082552
 
-	Chi2 = 232.12843147661042, pval = 2.0472753734364418e-52, Cramer's V = 0.3810131251661149
-	Odds Ratio = 0.0
-	Fisher exact pval (two-sided) = 7.434226894003555e-76
-	Fisher exact pval (less) = 5.4133403143465134e-76
-	Fisher exact pval (greater) = 1.0
-	McNemar = 405.0, pval = 0.010675197612495477
-	Kappa = -0.379825526586911
+	McNemar = 405.0, pval = 0.010675197612493205
 
 
 *** In orthologs of D. melanogaster male-biased vs. female-biased expression on the autosomes ***
@@ -277,13 +337,7 @@ Expression sex bias of orthologs
         0       5060.952961  1241.047039
         1       1529.047039   374.952961
 
-	Chi2 = 606.341037913212, pval = 6.991732377159096e-134, Cramer's V = 0.2718270832479429
-	Odds Ratio = 0.0
-	Fisher exact pval (two-sided) = 1.3717700703154904e-210
-	Fisher exact pval (less) = 1.100953724246354e-210
-	Fisher exact pval (greater) = 1.0
-	McNemar = 1616.0, pval = 1.2986820126322609e-06
-	Kappa = -0.27071496545394125
+	McNemar = 1616.0, pval = 1.2986820126354853e-06
 
 
 *** In orthologs of D. simulans male-biased vs. female-biased expression on the X ***
@@ -299,13 +353,7 @@ Expression sex bias of orthologs
         0       939.336702  265.663298
         1       294.663298   83.336702
 
-	Chi2 = 138.7614776108975, pval = 4.966589646056813e-32, Cramer's V = 0.29606972511460233
-	Odds Ratio = 0.0
-	Fisher exact pval (two-sided) = 2.4727716036715226e-48
-	Fisher exact pval (less) = 2.0731741614888542e-48
-	Fisher exact pval (greater) = 1.0
-	McNemar = 349.0, pval = 0.299050529791412
-	Kappa = -0.2974576013222146
+	McNemar = 349.0, pval = 0.2990505297915264
 
 
 *** In orthologs of D. simulans male-biased vs. female-biased expression on the autosomes ***
@@ -321,12 +369,6 @@ Expression sex bias of orthologs
         0       5634.59229  1115.40771
         1       1316.40771   260.59229
 
-	Chi2 = 383.6360959629746, pval = 2.0106468518769014e-85, Cramer's V = 0.21464236706279138
-	Odds Ratio = 0.0
-	Fisher exact pval (two-sided) = 2.9121504425570356e-139
-	Fisher exact pval (less) = 2.2570278865241665e-139
-	Fisher exact pval (greater) = 1.0
-	McNemar = 1376.0, pval = 0.00023165422136872454
-	Kappa = -0.2143191362530463
+	McNemar = 1376.0, pval = 0.00023165422136910482
 
 

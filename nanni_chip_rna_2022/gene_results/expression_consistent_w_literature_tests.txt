@@ -18,7 +18,7 @@ Consistency of sex-biased expression with previous studies:
 	Fisher exact pval (two-sided) = 1.1573996923609326e-111
 	Fisher exact pval (less) = 0.9999999999837145
 	Fisher exact pval (greater) = 1.1573996923609325e-111
-	McNemar = 720.0, pval = 0.0011246594084805372
+	McNemar = 720.0, pval = 0.0011246594084814187
 	Kappa = 0.26163444762811866
 
 
@@ -40,7 +40,7 @@ Consistency of sex-biased expression with previous studies:
 	Fisher exact pval (two-sided) = 2.275257826501726e-134
 	Fisher exact pval (less) = 0.9999999999878644
 	Fisher exact pval (greater) = 2.275257826501726e-134
-	McNemar = 628.0, pval = 0.520324719673613
+	McNemar = 628.0, pval = 0.5203247196747999
 	Kappa = 0.3007759912008672
 
 
@@ -62,7 +62,7 @@ Consistency of sex-biased expression with previous studies:
 	Fisher exact pval (two-sided) = 3.3359099396399806e-57
 	Fisher exact pval (less) = 0.9999999999930914
 	Fisher exact pval (greater) = 2.699305384762365e-57
-	McNemar = 769.0, pval = 0.07280517086889148
+	McNemar = 769.0, pval = 0.07280517086884482
 	Kappa = 0.18330924075755714
 
 
@@ -84,7 +84,7 @@ Consistency of sex-biased expression with previous studies:
 	Fisher exact pval (two-sided) = 8.848073629889903e-36
 	Fisher exact pval (less) = 0.9999999999827065
 	Fisher exact pval (greater) = 8.848073629889903e-36
-	McNemar = 177.0, pval = 4.305208094436809e-123
+	McNemar = 177.0, pval = 4.305208094436176e-123
 	Kappa = 0.1259719627102049
 
 

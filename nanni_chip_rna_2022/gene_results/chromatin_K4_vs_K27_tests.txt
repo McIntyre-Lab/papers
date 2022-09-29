@@ -18,7 +18,7 @@ Chromatin K4 vs. K27 gene-level
 	Fisher exact pval (two-sided) = 2.007674852892509e-40
 	Fisher exact pval (less) = 1.7348360815531583e-40
 	Fisher exact pval (greater) = 0.999999999997838
-	McNemar = 247.0, pval = 9.801697090452598e-99
+	McNemar = 247.0, pval = 9.801697090451092e-99
 	Kappa = -0.21110967273956643
 
 
@@ -62,7 +62,7 @@ Chromatin K4 vs. K27 gene-level
 	Fisher exact pval (two-sided) = 9.614406225996718e-26
 	Fisher exact pval (less) = 6.561285636611565e-26
 	Fisher exact pval (greater) = 0.9999999999988419
-	McNemar = 187.0, pval = 4.072132992173871e-145
+	McNemar = 187.0, pval = 4.072132992174123e-145
 	Kappa = -0.1491216124889326
 
 
@@ -84,7 +84,7 @@ Chromatin K4 vs. K27 gene-level
 	Fisher exact pval (two-sided) = 9.614406225996718e-26
 	Fisher exact pval (less) = 6.561285636611565e-26
 	Fisher exact pval (greater) = 0.9999999999988419
-	McNemar = 187.0, pval = 4.072132992173871e-145
+	McNemar = 187.0, pval = 4.072132992174123e-145
 	Kappa = -0.1491216124889326
 
 
@@ -106,7 +106,7 @@ Chromatin K4 vs. K27 gene-level
 	Fisher exact pval (two-sided) = 0.5975648519279274
 	Fisher exact pval (less) = 0.7262429516046527
 	Fisher exact pval (greater) = 0.33456509673921275
-	McNemar = 167.0, pval = 2.380632750658313e-16
+	McNemar = 167.0, pval = 2.3806327506584367e-16
 	Kappa = 0.01088727446200361
 
 
@@ -128,7 +128,7 @@ Chromatin K4 vs. K27 gene-level
 	Fisher exact pval (two-sided) = 6.056670132129044e-09
 	Fisher exact pval (less) = 0.9999999978320259
 	Fisher exact pval (greater) = 3.4712047262809632e-09
-	McNemar = 754.0, pval = 8.603547075741194e-82
+	McNemar = 754.0, pval = 8.60354707579403e-82
 	Kappa = 0.05593365447824314
 
 
@@ -150,7 +150,7 @@ Chromatin K4 vs. K27 gene-level
 	Fisher exact pval (two-sided) = 0.00047541120713871733
 	Fisher exact pval (less) = 0.9998169122769547
 	Fisher exact pval (greater) = 0.0003355520037811613
-	McNemar = 163.0, pval = 1.7282589987912455e-11
+	McNemar = 163.0, pval = 1.728258998792184e-11
 	Kappa = 0.0806238983276796
 
 
@@ -172,7 +172,7 @@ Chromatin K4 vs. K27 gene-level
 	Fisher exact pval (two-sided) = 3.553391352811098e-15
 	Fisher exact pval (less) = 0.999999999995215
 	Fisher exact pval (greater) = 2.306165408843441e-15
-	McNemar = 847.0, pval = 1.5376401552477164e-54
+	McNemar = 847.0, pval = 1.5376401552465387e-54
 	Kappa = 0.07822107194275749
 
 

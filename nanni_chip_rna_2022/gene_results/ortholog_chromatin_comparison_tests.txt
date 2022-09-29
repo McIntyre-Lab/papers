@@ -18,7 +18,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 5.638901439825526e-176
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 5.638901439825527e-176
-	McNemar = 43.0, pval = 1.1295503496764734e-19
+	McNemar = 43.0, pval = 1.1295503496764315e-19
 	Kappa = 0.6701337440378332
 
 
@@ -40,7 +40,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 0.0
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 0.0
-	McNemar = 506.0, pval = 0.7078160617153662
+	McNemar = 506.0, pval = 0.7078160617154261
 	Kappa = 0.7434922694161409
 
 
@@ -62,7 +62,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 3.911177350193659e-168
 	Fisher exact pval (less) = 0.999999999998119
 	Fisher exact pval (greater) = 3.9111773501936584e-168
-	McNemar = 18.0, pval = 1.755961567767425e-43
+	McNemar = 18.0, pval = 1.7559615677673593e-43
 	Kappa = 0.6348040920531627
 
 
@@ -84,7 +84,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 0.0
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 0.0
-	McNemar = 245.0, pval = 6.922018367743985e-95
+	McNemar = 245.0, pval = 6.922018367742995e-95
 	Kappa = 0.6893840908533446
 
 
@@ -106,7 +106,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 1.458182758984009e-119
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 7.48327659246387e-120
-	McNemar = 166.0, pval = 0.0005621965498772603
+	McNemar = 166.0, pval = 0.0005621965498776347
 	Kappa = 0.5323298696321389
 
 
@@ -128,7 +128,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 0.0
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 0.0
-	McNemar = 938.0, pval = 0.0578157584419893
+	McNemar = 938.0, pval = 0.05781575844194435
 	Kappa = 0.5852302731429068
 
 
@@ -150,7 +150,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 8.615729790225873e-93
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 8.615729790225873e-93
-	McNemar = 185.0, pval = 0.7573567644911459
+	McNemar = 185.0, pval = 0.7573567644910354
 	Kappa = 0.4903149433407479
 
 
@@ -172,7 +172,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 0.0
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 0.0
-	McNemar = 931.0, pval = 0.06616496807512534
+	McNemar = 931.0, pval = 0.06616496807521265
 	Kappa = 0.5428905605615812
 
 
@@ -194,7 +194,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 3.581882590046271e-08
 	Fisher exact pval (less) = 1.9577663070900092e-08
 	Fisher exact pval (greater) = 0.9999999864356423
-	McNemar = 1572.0, pval = 2.0063125040679967e-26
+	McNemar = 1572.0, pval = 2.0063125040648055e-26
 
 
 *** In orthologs of D. simulans presence of any H3K4me3 X vs. A ***
@@ -215,7 +215,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 0.00012920107352641107
 	Fisher exact pval (less) = 6.921277292460893e-05
 	Fisher exact pval (greater) = 0.9999475687152561
-	McNemar = 1560.0, pval = 1.5172829174230422e-09
+	McNemar = 1560.0, pval = 1.5172829174244658e-09
 
 
 *** In orthologs of D. melanogaster presence of any H3K27me2me3 X vs. A ***
@@ -399,7 +399,7 @@ Chromatin of orthologs
         X                      1656.376025   184.623975
         A                      9091.623975  1013.376025
 
-	Chi2 = 0.00010938506904826031, pval = 0.991655291571837, Cramer's V = 9.569026723383697e-05
+	Chi2 = 0.0, pval = 1.0, Cramer's V = 0.0
 	Odds Ratio = 0.9973294015528947
 	Fisher exact pval (two-sided) = 0.9663655355444462
 	Fisher exact pval (less) = 0.501067601924175
@@ -446,7 +446,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 1.9216716604546677e-27
 	Fisher exact pval (less) = 0.9999999999982103
 	Fisher exact pval (greater) = 1.9216716604546677e-27
-	McNemar = 97.0, pval = 0.004327389353106703
+	McNemar = 97.0, pval = 0.004327389353107256
 	Kappa = 0.30138274617457117
 
 
@@ -468,7 +468,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 4.923288809280552e-43
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 4.923288809280552e-43
-	McNemar = 353.0, pval = 1.0156349275985478e-37
+	McNemar = 353.0, pval = 1.0156349275984404e-37
 	Kappa = 0.15667183908029084
 
 
@@ -490,7 +490,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 0.0617877626474352
 	Fisher exact pval (less) = 0.992888334220851
 	Fisher exact pval (greater) = 0.0617877626474352
-	McNemar = 16.0, pval = 0.0018415547884925447
+	McNemar = 16.0, pval = 0.001841554788492544
 	Kappa = 0.053706560869887336
 
 
@@ -512,7 +512,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 1.9449638693883073e-10
 	Fisher exact pval (less) = 0.9999999999747732
 	Fisher exact pval (greater) = 1.9449638693883073e-10
-	McNemar = 206.0, pval = 5.880995395261506e-26
+	McNemar = 206.0, pval = 5.880995395263831e-26
 	Kappa = 0.07164192166348751
 
 
@@ -534,7 +534,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 0.027850838873018688
 	Fisher exact pval (less) = 0.9909372988571808
 	Fisher exact pval (greater) = 0.01704110405973753
-	McNemar = 138.0, pval = 0.22373381343898616
+	McNemar = 138.0, pval = 0.22373381343897975
 	Kappa = 0.05463698901743019
 
 
@@ -556,7 +556,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 4.900953403047992e-16
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 3.6952894988819445e-16
-	McNemar = 765.0, pval = 0.061242945689929135
+	McNemar = 765.0, pval = 0.061242945689900116
 	Kappa = 0.08769364547802548
 
 
@@ -578,7 +578,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 2.635659101097635e-09
 	Fisher exact pval (less) = 0.9999999993869894
 	Fisher exact pval (greater) = 1.9837901795269795e-09
-	McNemar = 138.0, pval = 0.02134858027673568
+	McNemar = 138.0, pval = 0.021348580276738405
 	Kappa = 0.15341588126524666
 
 
@@ -600,7 +600,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 2.3848652900486355e-14
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 1.911609589485889e-14
-	McNemar = 764.0, pval = 0.0286090126198376
+	McNemar = 764.0, pval = 0.028609012619848342
 	Kappa = 0.08192125007865328
 
 
@@ -622,7 +622,7 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 0.0
 	Fisher exact pval (less) = 0.9999999999993968
 	Fisher exact pval (greater) = 0.0
-	McNemar = 454.0, pval = 1.3272254000509828e-20
+	McNemar = 454.0, pval = 1.327225400051236e-20
 	Kappa = 0.674516752017795
 
 
@@ -644,7 +644,271 @@ Chromatin of orthologs
 	Fisher exact pval (two-sided) = 0.0
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 0.0
-	McNemar = 743.0, pval = 1.3996365001671823e-71
+	McNemar = 743.0, pval = 1.39963650016762e-71
 	Kappa = 0.601753033917258
+
+
+*** One-to-one orthologous pairs on the X or autosomes male open chromatin in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_has_male_k4_sim     0     1
+        flag_has_male_k4_mel            
+        0                     2068  1015
+        1                      392  8462
+
+	Expected Counts:
+        flag_has_male_k4_sim            0            1
+        flag_has_male_k4_mel                          
+        0                      635.350591  2447.649409
+        1                     1824.649409  7029.350591
+
+	Chi2 = 5482.052722560206, pval = 0.0, Cramer's V = 0.6776789674991534
+	Odds Ratio = 43.98164270634362
+	Fisher exact pval (two-sided) = 0.0
+	Fisher exact pval (less) = 0.999999999983486
+	Fisher exact pval (greater) = 0.0
+	McNemar = 392.0, pval = 7.188496818071332e-64
+	Kappa = 0.6706691035259498
+
+
+*** One-to-one orthologous pairs on the X male open chromatin in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_has_male_k4_sim    0     1
+        flag_has_male_k4_mel           
+        0                     228   113
+        1                      71  1428
+
+	Expected Counts:
+        flag_has_male_k4_sim         0          1
+        flag_has_male_k4_mel                     
+        0                      55.4125   285.5875
+        1                     243.5875  1255.4125
+
+	Chi2 = 783.2894569446846, pval = 2.318898758108981e-172, Cramer's V = 0.6524575019246567
+	Odds Ratio = 40.58132868004487
+	Fisher exact pval (two-sided) = 3.299482596784136e-138
+	Fisher exact pval (less) = 0.9999999999951916
+	Fisher exact pval (greater) = 3.299482596784136e-138
+	McNemar = 71.0, pval = 0.002414157684001146
+	Kappa = 0.6522889403316483
+
+
+*** One-to-one orthologous pairs on the autosomes male open chromatin in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_has_male_k4_sim     0     1
+        flag_has_male_k4_mel            
+        0                     1840   902
+        1                      321  7034
+
+	Expected Counts:
+        flag_has_male_k4_sim            0            1
+        flag_has_male_k4_mel                          
+        0                      586.853719  2155.146281
+        1                     1574.146281  5780.853719
+
+	Chi2 = 4670.113354194279, pval = 0.0, Cramer's V = 0.6800917911785671
+	Odds Ratio = 44.7001125916102
+	Fisher exact pval (two-sided) = 0.0
+	Fisher exact pval (less) = 1.0
+	Fisher exact pval (greater) = 0.0
+	McNemar = 321.0, pval = 3.043313594633433e-64
+	Kappa = 0.672055764030525
+
+
+*** One-to-one orthologous pairs on the X or autosomes female open chromatin in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_has_female_k4_sim     0     1
+        flag_has_female_k4_mel            
+        0                       2624   572
+        1                        719  8022
+
+	Expected Counts:
+        flag_has_female_k4_sim            0            1
+        flag_has_female_k4_mel                          
+        0                        895.051353  2300.948647
+        1                       2447.948647  6293.051353
+
+	Chi2 = 6331.387971035402, pval = 0.0, Cramer's V = 0.7282858406200138
+	Odds Ratio = 51.182508729101215
+	Fisher exact pval (two-sided) = 0.0
+	Fisher exact pval (less) = 0.999999999979587
+	Fisher exact pval (greater) = 0.0
+	McNemar = 572.0, pval = 4.752248664520191e-05
+	Kappa = 0.7281474161177471
+
+
+*** One-to-one orthologous pairs on the X female open chromatin in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_has_female_k4_sim    0     1
+        flag_has_female_k4_mel           
+        0                       393    74
+        1                       101  1272
+
+	Expected Counts:
+        flag_has_female_k4_sim           0            1
+        flag_has_female_k4_mel                         
+        0                       125.379348   341.620652
+        1                       368.620652  1004.379348
+
+	Chi2 = 1042.5790052852146, pval = 9.984252102870319e-229, Cramer's V = 0.7527410076590285
+	Odds Ratio = 66.88466684506288
+	Fisher exact pval (two-sided) = 2.904120069838029e-221
+	Fisher exact pval (less) = 0.9999999999972659
+	Fisher exact pval (greater) = 2.904120069838029e-221
+	McNemar = 74.0, pval = 0.04905527867125781
+	Kappa = 0.7536048679107834
+
+
+*** One-to-one orthologous pairs on the autosomes female open chromatin in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_has_female_k4_sim     0     1
+        flag_has_female_k4_mel            
+        0                       2231   498
+        1                        618  6750
+
+	Expected Counts:
+        flag_has_female_k4_sim            0            1
+        flag_has_female_k4_mel                          
+        0                        770.022878  1958.977122
+        1                       2078.977122  5289.022878
+
+	Chi2 = 5288.138224401813, pval = 0.0, Cramer's V = 0.7236944151073319
+	Odds Ratio = 48.93116153936133
+	Fisher exact pval (two-sided) = 0.0
+	Fisher exact pval (less) = 1.0
+	Fisher exact pval (greater) = 0.0
+	McNemar = 498.0, pval = 0.000363448806080377
+	Kappa = 0.7236224254636064
+
+
+*** One-to-one orthologous pairs on the X or autosomes male closed chromatin in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_has_male_k27_sim     0     1
+        flag_has_male_k27_mel            
+        0                      6724   900
+        1                      1626  2687
+
+	Expected Counts:
+        flag_has_male_k27_sim           0           1
+        flag_has_male_k27_mel                        
+        0                      5333.03175  2290.96825
+        1                      3016.96825  1296.03175
+
+	Chi2 = 3339.085478668323, pval = 0.0, Cramer's V = 0.5288909935501047
+	Odds Ratio = 12.346171928385951
+	Fisher exact pval (two-sided) = 0.0
+	Fisher exact pval (less) = 0.9999999999950887
+	Fisher exact pval (greater) = 0.0
+	McNemar = 900.0, pval = 8.198815831662924e-48
+	Kappa = 0.5241088509593259
+
+
+*** One-to-one orthologous pairs on the X male closed chromatin in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_has_male_k27_sim     0    1
+        flag_has_male_k27_mel           
+        0                      1068  167
+        1                       263  342
+
+	Expected Counts:
+        flag_has_male_k27_sim           0           1
+        flag_has_male_k27_mel                        
+        0                      893.361413  341.638587
+        1                      437.638587  167.361413
+
+	Chi2 = 373.1859898539483, pval = 3.7889012303032564e-83, Cramer's V = 0.4503537195879601
+	Odds Ratio = 8.316204093713713
+	Fisher exact pval (two-sided) = 9.71585107786325e-81
+	Fisher exact pval (less) = 0.9999999999985305
+	Fisher exact pval (greater) = 7.6949523686083295e-81
+	McNemar = 167.0, pval = 4.237615970575052e-06
+	Kappa = 0.4482066017142418
+
+
+*** One-to-one orthologous pairs on the autosomes male closed chromatin in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_has_male_k27_sim     0     1
+        flag_has_male_k27_mel            
+        0                      5656   733
+        1                      1363  2345
+
+	Expected Counts:
+        flag_has_male_k27_sim            0            1
+        flag_has_male_k27_mel                          
+        0                      4441.357928  1947.642072
+        1                      2577.642072  1130.357928
+
+	Chi2 = 2964.8287541383306, pval = 0.0, Cramer's V = 0.5418806322463254
+	Odds Ratio = 13.275546778583076
+	Fisher exact pval (two-sided) = 0.0
+	Fisher exact pval (less) = 1.0
+	Fisher exact pval (greater) = 0.0
+	McNemar = 733.0, pval = 1.363118841618347e-43
+	Kappa = 0.5368246648402556
+
+
+*** One-to-one orthologous pairs on the X or autosomes female closed chromatin in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_has_female_k27_sim     0     1
+        flag_has_female_k27_mel            
+        0                        6722   749
+        1                        1704  2762
+
+	Expected Counts:
+        flag_has_female_k27_sim            0            1
+        flag_has_female_k27_mel                          
+        0                        5273.573427  2197.426573
+        1                        3152.426573  1313.573427
+
+	Chi2 = 3612.6752118451777, pval = 0.0, Cramer's V = 0.5501319430064245
+	Odds Ratio = 14.546910747976959
+	Fisher exact pval (two-sided) = 0.0
+	Fisher exact pval (less) = 1.0
+	Fisher exact pval (greater) = 0.0
+	McNemar = 749.0, pval = 7.672893276271978e-85
+	Kappa = 0.5414827410767137
+
+
+*** One-to-one orthologous pairs on the X female closed chromatin in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_has_female_k27_sim     0    1
+        flag_has_female_k27_mel           
+        0                        1061  104
+        1                         264  411
+
+	Expected Counts:
+        flag_has_female_k27_sim          0          1
+        flag_has_female_k27_mel                      
+        0                        838.92663  326.07337
+        1                        486.07337  188.92663
+
+	Chi2 = 569.9487270688456, pval = 5.760629255707006e-126, Cramer's V = 0.5565561453907402
+	Odds Ratio = 15.882539335664335
+	Fisher exact pval (two-sided) = 2.990197823528656e-127
+	Fisher exact pval (less) = 0.9999999999985107
+	Fisher exact pval (greater) = 2.9901978235286566e-127
+	McNemar = 104.0, pval = 3.6082611389567136e-17
+	Kappa = 0.5468799143440293
+
+
+*** One-to-one orthologous pairs on the autosomes female closed chromatin in D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_has_female_k27_sim     0     1
+        flag_has_female_k27_mel            
+        0                        5661   645
+        1                        1440  2351
+
+	Expected Counts:
+        flag_has_female_k27_sim            0            1
+        flag_has_female_k27_mel                          
+        0                        4434.872338  1871.127662
+        1                        2666.127662  1124.872338
+
+	Chi2 = 3040.3606610168576, pval = 0.0, Cramer's V = 0.5487396907407026
+	Odds Ratio = 14.329253875968993
+	Fisher exact pval (two-sided) = 0.0
+	Fisher exact pval (less) = 1.0
+	Fisher exact pval (greater) = 0.0
+	McNemar = 645.0, pval = 2.066202752180669e-69
+	Kappa = 0.5404710884873828
 
 

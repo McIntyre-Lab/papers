@@ -18,7 +18,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 0.0
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 0.0
-	McNemar = 1230.0, pval = 4.0424594850107507e-81
+	McNemar = 1230.0, pval = 4.0424594850304076e-81
 	Kappa = 0.47427111921892456
 
 
@@ -40,7 +40,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 0.0
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 0.0
-	McNemar = 1126.0, pval = 6.07112724761205e-38
+	McNemar = 1126.0, pval = 6.071127247605873e-38
 	Kappa = 0.3982233483477532
 
 
@@ -57,12 +57,12 @@ Chromatin and expression association
         0                   212.814259   72.185741
         1                   981.185741  332.814259
 
-	Chi2 = 25.617575721816586, pval = 4.1623090944446633e-07, Cramer's V = 0.1265740808769869
+	Chi2 = 25.617575721816586, pval = 4.162309094444663e-07, Cramer's V = 0.1265740808769869
 	Odds Ratio = 2.5190073917634637
 	Fisher exact pval (two-sided) = 7.856259261697449e-08
 	Fisher exact pval (less) = 0.9999999809854134
 	Fisher exact pval (greater) = 4.9232289040859966e-08
-	McNemar = 38.0, pval = 3.329034916883991e-228
+	McNemar = 38.0, pval = 3.3290349168861643e-228
 	Kappa = 0.06490728421382615
 
 
@@ -87,7 +87,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 0.00028581552897002536
 	Fisher exact pval (less) = 0.00014724952481835163
 	Fisher exact pval (greater) = 0.9999124445352294
-	McNemar = 317.0, pval = 0.0395861166390328
+	McNemar = 317.0, pval = 0.03958611663907417
 	Kappa = -0.09022547462482713
 
 
@@ -112,7 +112,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 2.810477351045286e-05
 	Fisher exact pval (less) = 0.9999905635523575
 	Fisher exact pval (greater) = 1.5759169839960204e-05
-	McNemar = 296.0, pval = 0.5699063270898518
+	McNemar = 296.0, pval = 0.569906327089499
 	Kappa = 0.10652546733768273
 
 
@@ -137,7 +137,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 0.0004046246306276718
 	Fisher exact pval (less) = 0.9998776649634777
 	Fisher exact pval (greater) = 0.00024558243843217874
-	McNemar = 37.0, pval = 7.185393269408482e-234
+	McNemar = 37.0, pval = 7.185393269401746e-234
 	Kappa = 0.03952311331464835
 
 
@@ -187,7 +187,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 1.579810543526007e-26
 	Fisher exact pval (less) = 9.636335881459992e-27
 	Fisher exact pval (greater) = 0.999999999992939
-	McNemar = 1290.0, pval = 1.9950065050905014e-54
+	McNemar = 1290.0, pval = 1.9950065050973915e-54
 	Kappa = -0.10936874881892594
 
 
@@ -212,7 +212,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 2.518964492359888e-48
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 1.487248154276725e-48
-	McNemar = 1053.0, pval = 2.5501846386563373e-33
+	McNemar = 1053.0, pval = 2.5501846386681115e-33
 	Kappa = 0.16178183810902594
 
 
@@ -262,7 +262,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 0.0019018222643341937
 	Fisher exact pval (less) = 0.9993784776680636
 	Fisher exact pval (greater) = 0.0010972748350949572
-	McNemar = 46.0, pval = 1.6992168675590287e-229
+	McNemar = 46.0, pval = 1.6992168675575813e-229
 	Kappa = 0.03691086896310092
 
 
@@ -287,7 +287,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 0.888420922159666
 	Fisher exact pval (less) = 0.46327222419292396
 	Fisher exact pval (greater) = 0.5921406721350617
-	McNemar = 264.0, pval = 0.08583477529188245
+	McNemar = 264.0, pval = 0.08583477529187293
 	Kappa = -0.00423816530180237
 
 
@@ -312,7 +312,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 0.780735344011739
 	Fisher exact pval (less) = 0.4006088507295785
 	Fisher exact pval (greater) = 0.6523374114855104
-	McNemar = 284.0, pval = 0.7705711001327976
+	McNemar = 284.0, pval = 0.7705711001327389
 	Kappa = -0.00823119894201874
 
 
@@ -337,7 +337,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 6.685217612491213e-05
 	Fisher exact pval (less) = 0.999985740573078
 	Fisher exact pval (greater) = 3.865005744303243e-05
-	McNemar = 18.0, pval = 2.8885525408514437e-288
+	McNemar = 18.0, pval = 0.0
 	Kappa = 0.03426927027955529
 
 
@@ -387,7 +387,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 0.013345938729463946
 	Fisher exact pval (less) = 0.006956700386097584
 	Fisher exact pval (greater) = 0.9942747209824395
-	McNemar = 1063.0, pval = 1.0253929673692785e-43
+	McNemar = 1063.0, pval = 1.0253929673675829e-43
 	Kappa = -0.026142027057676535
 
 
@@ -412,7 +412,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 6.223335401426254e-26
 	Fisher exact pval (less) = 0.9999999999901461
 	Fisher exact pval (greater) = 3.67286362632086e-26
-	McNemar = 1027.0, pval = 3.8279584388253263e-19
+	McNemar = 1027.0, pval = 3.827958438826289e-19
 	Kappa = 0.11761816276033835
 
 
@@ -487,7 +487,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 1.7942736589293607e-29
 	Fisher exact pval (less) = 1.0731445991705037e-29
 	Fisher exact pval (greater) = 0.9999999999923128
-	McNemar = 1607.0, pval = 4.35058267608652e-51
+	McNemar = 1607.0, pval = 4.350582676100868e-51
 	Kappa = -0.10708048027823883
 
 
@@ -512,7 +512,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 8.018420347741843e-51
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 5.040731198224558e-51
-	McNemar = 1349.0, pval = 9.418966624540891e-29
+	McNemar = 1349.0, pval = 9.418966624544269e-29
 	Kappa = 0.15234908018071028
 
 
@@ -587,7 +587,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 0.02052423464011711
 	Fisher exact pval (less) = 0.010352618515334127
 	Fisher exact pval (greater) = 0.9912319053809998
-	McNemar = 1327.0, pval = 9.489080117296684e-41
+	McNemar = 1327.0, pval = 9.489080117309087e-41
 	Kappa = -0.02275421071876138
 
 
@@ -612,7 +612,7 @@ Chromatin and expression association
 	Fisher exact pval (two-sided) = 4.811173995836634e-21
 	Fisher exact pval (less) = 1.0
 	Fisher exact pval (greater) = 2.9410451682453697e-21
-	McNemar = 1319.0, pval = 2.5889364327775888e-15
+	McNemar = 1319.0, pval = 2.5889364327900863e-15
 	Kappa = 0.09618161097040269
 
 
@@ -643,4 +643,444 @@ Chromatin and expression association
 
 	91.20% genes with male-biased expression have male open chromatin
 		 vs. 86.40% genes without male-biased expression have male open chromatin
+
+*** In one-to-one orthologs on the X or autosomes, male-biased expression OSCO (Mk4 or Fk27) D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_M_OSCO_sim     0     1
+        flag_M_OSCO_mel            
+        0                6506   730
+        1                1153  1119
+
+	Expected Counts:
+        flag_M_OSCO_sim            0            1
+        flag_M_OSCO_mel                          
+        0                5828.830879  1407.169121
+        1                1830.169121   441.830879
+
+	Chi2 = 1690.4579405141028, pval = 0.0, Cramer's V = 0.4216553337739377
+	Odds Ratio = 8.649519419263624
+	Fisher exact pval (two-sided) = 0.0
+	Fisher exact pval (less) = 0.9999999999978342
+	Fisher exact pval (greater) = 0.0
+	McNemar = 730.0, pval = 1.576002643811598e-22
+	Kappa = 0.41834931677121917
+
+
+*** In one-to-one orthologs on the X, male-biased expression OSCO (Mk4 or Fk27) D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_M_OSCO_sim    0    1
+        flag_M_OSCO_mel          
+        0                936  135
+        1                228  230
+
+	Expected Counts:
+        flag_M_OSCO_sim           0           1
+        flag_M_OSCO_mel                        
+        0                815.332897  255.667103
+        1                348.667103  109.332897
+
+	Chi2 = 247.68108580312668, pval = 8.317506244869754e-56, Cramer's V = 0.402478493511303
+	Odds Ratio = 6.994152046783626
+	Fisher exact pval (two-sided) = 1.5118281327654417e-52
+	Fisher exact pval (less) = 0.9999999999995359
+	Fisher exact pval (greater) = 8.625079322426229e-53
+	McNemar = 135.0, pval = 1.2094684635071528e-06
+	Kappa = 0.39933898035447035
+
+
+*** In one-to-one orthologs on the autosomes, male-biased expression OSCO (Mk4 or Fk27) D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_M_OSCO_sim     0    1
+        flag_M_OSCO_mel           
+        0                5570  595
+        1                 925  889
+
+	Expected Counts:
+        flag_M_OSCO_sim            0            1
+        flag_M_OSCO_mel                          
+        0                5018.382629  1146.617371
+        1                1476.617371   337.382629
+
+	Chi2 = 1431.3642784709664, pval = 0.0, Cramer's V = 0.4235462635083291
+	Odds Ratio = 8.997011128775835
+	Fisher exact pval (two-sided) = 3.6466285933712875e-271
+	Fisher exact pval (less) = 0.9999999999895387
+	Fisher exact pval (greater) = 3.6466285933712875e-271
+	McNemar = 595.0, pval = 2.4180391284526266e-17
+	Kappa = 0.42056272123508015
+
+
+*** In one-to-one orthologs on the X or autosomes, female-biased expression OSCO (Fk4 or Mk27) D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_F_OSCO_sim     0    1
+        flag_F_OSCO_mel           
+        0                6929  637
+        1                 945  997
+
+	Expected Counts:
+        flag_F_OSCO_sim            0            1
+        flag_F_OSCO_mel                          
+        0                6265.742953  1300.257047
+        1                1608.257047   333.742953
+
+	Chi2 = 1997.1615764299804, pval = 0.0, Cramer's V = 0.4583128294118437
+	Odds Ratio = 11.476104092430623
+	Fisher exact pval (two-sided) = 0.0
+	Fisher exact pval (less) = 1.0
+	Fisher exact pval (greater) = 0.0
+	McNemar = 637.0, pval = 9.733916954115899e-15
+	Kappa = 0.45607965125815453
+
+
+*** In one-to-one orthologs on the X, female-biased expression OSCO (Fk4 or Mk27) D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_F_OSCO_sim     0    1
+        flag_F_OSCO_mel           
+        0                1021  122
+        1                 184  202
+
+	Expected Counts:
+        flag_F_OSCO_sim           0           1
+        flag_F_OSCO_mel                        
+        0                900.794637  242.205363
+        1                304.205363   81.794637
+
+	Chi2 = 297.36104879017927, pval = 1.2379933009174498e-66, Cramer's V = 0.44099970323558935
+	Odds Ratio = 9.187544547398431
+	Fisher exact pval (two-sided) = 3.1694924175828836e-60
+	Fisher exact pval (less) = 0.9999999999996803
+	Fisher exact pval (greater) = 3.169492417582883e-60
+	McNemar = 122.0, pval = 0.00046895366436652683
+	Kappa = 0.4399817107181417
+
+
+*** In one-to-one orthologs on the autosomes, female-biased expression OSCO (Fk4 or Mk27) D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_F_OSCO_sim     0    1
+        flag_F_OSCO_mel           
+        0                5908  515
+        1                 761  795
+
+	Expected Counts:
+        flag_F_OSCO_sim            0            1
+        flag_F_OSCO_mel                          
+        0                5368.465597  1054.534403
+        1                1300.534403   255.465597
+
+	Chi2 = 1690.4363993446668, pval = 0.0, Cramer's V = 0.4602832651901929
+	Odds Ratio = 11.984384369059617
+	Fisher exact pval (two-sided) = 1.8031830023136923e-302
+	Fisher exact pval (less) = 0.9999999999861867
+	Fisher exact pval (greater) = 1.8031830023136923e-302
+	McNemar = 515.0, pval = 6.002679156505662e-12
+	Kappa = 0.45818992763273936
+
+
+*** In one-to-one orthologs on the X or autosomes, male-biased expression with male K4 D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_Mexp_Mk4_sim     0     1
+        flag_Mexp_Mk4_mel            
+        0                  6701   725
+        1                  1055  1027
+
+	Expected Counts:
+        flag_Mexp_Mk4_sim            0            1
+        flag_Mexp_Mk4_mel                          
+        0                  6057.641565  1368.358435
+        1                  1698.358435   383.641565
+
+	Chi2 = 1690.7937751376617, pval = 0.0, Cramer's V = 0.4216972157470223
+	Odds Ratio = 8.997453178623958
+	Fisher exact pval (two-sided) = 4.74631e-317
+	Fisher exact pval (less) = 0.9999999999956429
+	Fisher exact pval (greater) = 4.74631e-317
+	McNemar = 725.0, pval = 5.275776620825924e-15
+	Kappa = 0.41957471933248325
+
+
+*** In one-to-one orthologs on the X, male-biased expression with male K4 D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_Mexp_Mk4_sim    0    1
+        flag_Mexp_Mk4_mel          
+        0                  960  130
+        1                  216  223
+
+	Expected Counts:
+        flag_Mexp_Mk4_sim           0           1
+        flag_Mexp_Mk4_mel                        
+        0                  838.351864  251.648136
+        1                  337.648136  101.351864
+
+	Chi2 = 264.1088073315512, pval = 2.1823314000911454e-59, Cramer's V = 0.4156116371300901
+	Odds Ratio = 7.6239316239316235
+	Fisher exact pval (two-sided) = 1.5024075268034843e-55
+	Fisher exact pval (less) = 1.0
+	Fisher exact pval (greater) = 1.4541051665251071e-55
+	McNemar = 130.0, pval = 4.390145372917887e-06
+	Kappa = 0.4128590042107181
+
+
+*** In one-to-one orthologs on the autosomes, male-biased expression with male K4 D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_Mexp_Mk4_sim     0    1
+        flag_Mexp_Mk4_mel           
+        0                  5741  595
+        1                   839  804
+
+	Expected Counts:
+        flag_Mexp_Mk4_sim            0            1
+        flag_Mexp_Mk4_mel                          
+        0                  5225.075824  1110.924176
+        1                  1354.924176   288.075824
+
+	Chi2 = 1408.2463219869012, pval = 3.3922628844677504e-308, Cramer's V = 0.4201119936723235
+	Odds Ratio = 9.246229504912812
+	Fisher exact pval (two-sided) = 2.156078584213994e-259
+	Fisher exact pval (less) = 0.9999999999887264
+	Fisher exact pval (greater) = 2.1560785842139942e-259
+	McNemar = 595.0, pval = 1.2582387547428546e-10
+	Kappa = 0.41845572178790924
+
+
+*** In one-to-one orthologs on the X or autosomes, male-biased expression with female K27 D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_Mexp_Fk27_sim     0    1
+        flag_Mexp_Fk27_mel           
+        0                   8223  261
+        1                    664  360
+
+	Expected Counts:
+        flag_Mexp_Fk27_sim            0           1
+        flag_Mexp_Fk27_mel                         
+        0                   7929.880942  554.119058
+        1                    957.119058   66.880942
+
+	Chi2 = 1535.0599359792918, pval = 0.0, Cramer's V = 0.40180753989236623
+	Odds Ratio = 17.081429164935603
+	Fisher exact pval (two-sided) = 4.147518547997207e-204
+	Fisher exact pval (less) = 0.9999999999849569
+	Fisher exact pval (greater) = 4.147518547997206e-204
+	McNemar = 261.0, pval = 3.5198201535923e-41
+	Kappa = 0.38791909054390694
+
+
+*** In one-to-one orthologs on the X, male-biased expression with female K27 D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_Mexp_Fk27_sim     0   1
+        flag_Mexp_Fk27_mel          
+        0                   1313  34
+        1                    131  51
+
+	Expected Counts:
+        flag_Mexp_Fk27_sim            0          1
+        flag_Mexp_Fk27_mel                        
+        0                   1272.117724  74.882276
+        1                    171.882276  10.117724
+
+	Chi2 = 193.72199772042507, pval = 4.897107660525965e-44, Cramer's V = 0.3559473194982128
+	Odds Ratio = 15.034351145038167
+	Fisher exact pval (two-sided) = 1.9302205234024207e-28
+	Fisher exact pval (less) = 0.9999999999994136
+	Fisher exact pval (greater) = 1.9302205234024207e-28
+	McNemar = 34.0, pval = 1.2438483814035563e-14
+	Kappa = 0.3313464244917215
+
+
+*** In one-to-one orthologs on the autosomes, male-biased expression with female K27 D. melanogaster vs. D. simulans ***
+	Observed Counts:
+        flag_Mexp_Fk27_sim     0   1
+        flag_Mexp_Fk27_mel          
+        0                   1313  34
+        1                    131  51
+
+	Expected Counts:
+        flag_Mexp_Fk27_sim            0          1
+        flag_Mexp_Fk27_mel                        
+        0                   1272.117724  74.882276
+        1                    171.882276  10.117724
+
+	Chi2 = 193.72199772042507, pval = 4.897107660525965e-44, Cramer's V = 0.3559473194982128
+	Odds Ratio = 15.034351145038167
+	Fisher exact pval (two-sided) = 1.9302205234024207e-28
+	Fisher exact pval (less) = 0.9999999999994136
+	Fisher exact pval (greater) = 1.9302205234024207e-28
+	McNemar = 34.0, pval = 1.2438483814035563e-14
+	Kappa = 0.3313464244917215
+
+
+*** In one-to-one orthologs on the X, conserved male-biased genes with female H3K27me2me3 only in D. melanogaster (34) vs. FlyAtlas2 Male Head enriched. ***
+	Observed Counts:
+        flag_flyAtlas2_Adult_Male_Head_enrich_gt  0.0  1.0
+        flag_34_mbias_Fk27MelOnly_X                       
+        0                                         511  740
+        1                                           4   28
+
+	Expected Counts:
+        flag_flyAtlas2_Adult_Male_Head_enrich_gt         0.0         1.0
+        flag_34_mbias_Fk27MelOnly_X                                     
+        0                                         502.155105  748.844895
+        1                                          12.844895   19.155105
+
+	Chi2 = 9.288508052954759, pval = 0.0023059589217631184, Cramer's V = 0.08508630276903988
+	Odds Ratio = 4.833783783783784
+	Fisher exact pval (two-sided) = 0.000821468306900478
+	Fisher exact pval (less) = 0.9998900732042861
+	Fisher exact pval (greater) = 0.0005861088037727933
+	McNemar = 4.0, pval = 2.7519045119435615e-214
+	Kappa = 0.02322440158485868
+
+
+*** In one-to-one orthologs on the X, conserved male-biased genes with female H3K27me2me3 only in D. melanogaster (34) vs. FlyAtlas2 Female Head enriched. ***
+	Observed Counts:
+        flag_flyAtlas2_Adult_Female_Head_enrich_gt  0.0  1.0
+        flag_34_mbias_Fk27MelOnly_X                         
+        0                                           612  639
+        1                                             5   27
+
+	Expected Counts:
+        flag_flyAtlas2_Adult_Female_Head_enrich_gt         0.0         1.0
+        flag_34_mbias_Fk27MelOnly_X                                       
+        0                                           601.611068  649.388932
+        1                                            15.388932   16.611068
+
+	Chi2 = 12.554866112460804, pval = 0.00039517591058051566, Cramer's V = 0.09892196044139454
+	Odds Ratio = 5.171830985915493
+	Fisher exact pval (two-sided) = 0.00021020708848969535
+	Fisher exact pval (less) = 0.9999804908110308
+	Fisher exact pval (greater) = 0.00010992262111134552
+	McNemar = 5.0, pval = 2.5095870292701602e-182
+	Kappa = 0.031255349333458526
+
+
+*** In one-to-one orthologs on the X or autosomes, D. melanogaster male OSCO and D. simuland female OSCO vs. Graze 2012 hybrid bias towards D. melanogaster alleles ***
+	Observed Counts:
+        flag_graze2012_AI_hybrid_any_mel_bias   0.0   1.0
+        flag_mel_MOSCO_sim_FOSCO                         
+        0                                      7027  2375
+        1                                        71    35
+
+	Expected Counts:
+        flag_graze2012_AI_hybrid_any_mel_bias          0.0          1.0
+        flag_mel_MOSCO_sim_FOSCO                                       
+        0                                      7018.867901  2383.132099
+        1                                        79.132099    26.867901
+
+	Chi2 = 2.936813664985453, pval = 0.08658137213031714, Cramer's V = 0.017574930230017185
+	Odds Ratio = 1.4585322461082284
+	Fisher exact pval (two-sided) = 0.07258808884592283
+	Fisher exact pval (less) = 0.9710618787026236
+	Fisher exact pval (greater) = 0.04607935038323161
+	McNemar = 71.0, pval = 0.0
+	Kappa = 0.00660538319936327
+
+
+*** In one-to-one orthologs on the X or autosomes, D. melanogaster male OSCO and D. simuland female OSCO vs. Graze 2012 hybrid bias towards D. simulans alleles ***
+	Observed Counts:
+        flag_graze2012_AI_hybrid_any_sim_bias   0.0  1.0
+        flag_mel_MOSCO_sim_FOSCO                        
+        0                                      8403  999
+        1                                        80   26
+
+	Expected Counts:
+        flag_graze2012_AI_hybrid_any_sim_bias          0.0          1.0
+        flag_mel_MOSCO_sim_FOSCO                                       
+        0                                      8388.427219  1013.572781
+        1                                        94.572781    11.427219
+
+	Chi2 = 19.643909371003307, pval = 9.330023364864804e-06, Cramer's V = 0.045453713935594324
+	Odds Ratio = 2.7337087087087086
+	Fisher exact pval (two-sided) = 4.7024814549403367e-05
+	Fisher exact pval (less) = 0.9999856293219134
+	Fisher exact pval (greater) = 4.180284659164123e-05
+	McNemar = 80.0, pval = 1.0197360512879159e-202
+	Kappa = 0.02630120323667431
+
+
+*** In one-to-one orthologs on the X or autosomes, D. melanogaster female OSCO and D. simuland male OSCO vs. Graze 2012 hybrid bias towards D. melanogaster alleles ***
+	Observed Counts:
+        flag_graze2012_AI_hybrid_any_mel_bias   0.0   1.0
+        flag_mel_FOSCO_sim_MOSCO                         
+        0                                      7055  2387
+        1                                        43    23
+
+	Expected Counts:
+        flag_graze2012_AI_hybrid_any_mel_bias         0.0         1.0
+        flag_mel_FOSCO_sim_MOSCO                                     
+        0                                      7048.72907  2393.27093
+        1                                        49.27093    16.72907
+
+	Chi2 = 2.685332847326108, pval = 0.10127606194425699, Cramer's V = 0.01680561753537425
+	Odds Ratio = 1.5808984713710896
+	Fisher exact pval (two-sided) = 0.0875212804722302
+	Fisher exact pval (less) = 0.9694616974809696
+	Fisher exact pval (greater) = 0.05401809570118273
+	McNemar = 43.0, pval = 0.0
+	Kappa = 0.005134757235801801
+
+
+*** In one-to-one orthologs on the X or autosomes, D. melanogaster female OSCO and D. simuland male OSCO vs. Graze 2012 hybrid bias towards D. simulans alleles ***
+	Observed Counts:
+        flag_graze2012_AI_hybrid_any_sim_bias   0.0   1.0
+        flag_mel_FOSCO_sim_MOSCO                         
+        0                                      8424  1018
+        1                                        59     7
+
+	Expected Counts:
+        flag_graze2012_AI_hybrid_any_sim_bias          0.0          1.0
+        flag_mel_FOSCO_sim_MOSCO                                       
+        0                                      8424.115061  1017.884939
+        1                                        58.884939     7.115061
+
+	Chi2 = 0.0, pval = 1.0, Cramer's V = 0.0
+	Odds Ratio = 0.981785488328727
+	Fisher exact pval (two-sided) = 1.0
+	Fisher exact pval (less) = 0.5807248758658001
+	Fisher exact pval (greater) = 0.5772208366444467
+	McNemar = 59.0, pval = 1.4910998833453592e-226
+	Kappa = -0.00021371511891761215
+
+
+*** In one-to-one orthologs on the X or autosomes, OSCO switch (male in one species, female in the other) vs. Graze 2012 hybrid bias towards D. melanogaster alleles ***
+	Observed Counts:
+        flag_graze2012_AI_hybrid_any_mel_bias   0.0   1.0
+        flag_OSCO_switch                                 
+        0                                      6984  2352
+        1                                       114    58
+
+	Expected Counts:
+        flag_graze2012_AI_hybrid_any_mel_bias          0.0          1.0
+        flag_OSCO_switch                                               
+        0                                      6969.596971  2366.403029
+        1                                       128.403029    43.596971
+
+	Chi2 = 6.048449384780417, pval = 0.013918514661640779, Cramer's V = 0.02522187905541271
+	Odds Ratio = 1.5107411385606875
+	Fisher exact pval (two-sided) = 0.013103769691550948
+	Fisher exact pval (less) = 0.9948633106484903
+	Fisher exact pval (greater) = 0.00820680595359208
+	McNemar = 114.0, pval = 0.0
+	Kappa = 0.011546411779525142
+
+
+*** In one-to-one orthologs on the X or autosomes, OSCO switch (male in one species, female in the other) vs. Graze 2012 hybrid bias towards D. simulans alleles ***
+	Observed Counts:
+        flag_graze2012_AI_hybrid_any_sim_bias   0.0  1.0
+        flag_OSCO_switch                                
+        0                                      8344  992
+        1                                       139   33
+
+	Expected Counts:
+        flag_graze2012_AI_hybrid_any_sim_bias         0.0         1.0
+        flag_OSCO_switch                                             
+        0                                      8329.54228  1006.45772
+        1                                       153.45772    18.54228
+
+	Chi2 = 11.99316611538992, pval = 0.0005339599537859168, Cramer's V = 0.035515860215099115
+	Odds Ratio = 1.996925040612671
+	Fisher exact pval (two-sided) = 0.0010703972852064599
+	Fisher exact pval (less) = 0.9996801374982865
+	Fisher exact pval (greater) = 0.0006783972893849495
+	McNemar = 139.0, pval = 3.21133626693825e-159
+	Kappa = 0.024928920369414
+
 

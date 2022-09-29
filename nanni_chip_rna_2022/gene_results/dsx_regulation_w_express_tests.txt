@@ -18,7 +18,7 @@ Consitency of conserved expression with previous studies:
 	Fisher exact pval (two-sided) = 3.500682005873126e-05
 	Fisher exact pval (less) = 0.9999879506526567
 	Fisher exact pval (greater) = 1.9317675481048233e-05
-	McNemar = 607.0, pval = 1.5448033451968904e-25
+	McNemar = 607.0, pval = 1.5448033451997515e-25
 	Kappa = 0.0433390326743072
 
 
@@ -40,7 +40,7 @@ Consitency of conserved expression with previous studies:
 	Fisher exact pval (two-sided) = 0.6661591664573394
 	Fisher exact pval (less) = 0.336098502459371
 	Fisher exact pval (greater) = 0.7081875385468026
-	McNemar = 657.0, pval = 3.526448529866634e-14
+	McNemar = 657.0, pval = 3.526448529862049e-14
 	Kappa = -0.004993941356509509
 
 
