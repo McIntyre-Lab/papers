@@ -1,0 +1,12 @@
+# ChIP-seq MACS2 Peak Calling
+
+## Supplementary Figure 5 – MACS2 Genomic Location.
+![Supplementary Figure 5](https://github.com/McIntyre-Lab/papers/blob/master/nanni_chip_rna_2022/chipseq_peaks/supp_figure_MACS2_pies.png)
+**Supplementary Figure 5 – MACS2 Genomic Location.** Genomic features overlapping (minimum overlap of 1 bp) with ASAW MACS2 consensus peaks. Genic peaks (red) overlap with TSS, 5’ UTR, 3’ UTR, exons, and introns. Intergenic peaks (blue) overlap with any genomic region outside of genic regions. Border peaks (purple) overlap with both genic and intergenic regions. A. Female _D. melanogaster_ H3K4me3 (N=4599 consensus peaks), B. Male _D. melanogaster_ H3K4me3 (N=4169 consensus peaks), C. Female _D. melanogaster_ H3K27me2me3 (N=69 consensus peaks), D. Male _D. melanogaster_ H3K27me2me3 (N=18 consensus peaks), E. Female _D. simulans_ H3K4me3 (N=4741 consensus peaks), F. Male _D. simulans_ H3K4me3 (N=4052 consensus peaks), G. Female _D. simulans_ H3K27me2me3 (N=279 consensus peaks), H. Male _D. simulans_ H3K27me2me3 (N=323 consensus peaks).
+
+&nbsp;
+&nbsp;
+
+## Supplementary Figure 8 – MACS2 Consensus Peak FRiP.
+![Supplementary Figure 8](https://github.com/McIntyre-Lab/papers/blob/master/nanni_chip_rna_2022/chipseq_peaks/macs2_summary_frip_replicates_combined.png)
+**Supplementary Figure 8 – MACS2 Consensus Peak FRiP.** FRiP for each sample within group ASAW consensus peaks separated by species. (A) H3K4me3 and (B) H3K27me2me3 FRiP scores on the Y-axis and individual samples separated by antibody or input on the X-axis. H3K4me3 and H3K27me2me3 consensus peaks were used to quantify reads in those regions for input samples. Each set contains 6 replicates of both male and female samples (N=12).
