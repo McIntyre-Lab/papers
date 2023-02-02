@@ -21,7 +21,7 @@ OUTPUT=${PROJ}/figures/exp_chrom_barplots
     mkdir -p ${OUTPUT}
 
 ## Plot
-python ${SCRIPTS}/exp_chrom_barplot_XA_02avn.py \
+python ${SCRIPTS}/exp_chrom_barplot_XA_03avn.py \
     -m ${INPUT}/dmel_chip_rna_flags.csv \
     -s ${INPUT}/dsim_chip_rna_flags.csv \
     -o ${INPUT}/dmel_dsim_ortholog_chip_rna_flags.csv \

@@ -132,8 +132,30 @@ flag_palmateer2021_1-dayFemaleElavPool_H3K4me3	"1 if H3K4me3 detected in gene in
 flag_palmateer2021_1-dayFemaleElavPool_H3K27me3	"1 if H3K27me3 detected in gene in 1 day old female elav-expressing neurons (using pool peak method) in Palmateer, et al. 2021"
 flag_palmateer2021_1-dayFemaleFruP1Pool_H3K4me3	"1 if H3K4me3 detected in gene in 1 day old female fru-P1 expressing neurons (using pool peak method) in Palmateer, et al. 2021"
 flag_palmateer2021_1-dayFemaleFruP1Pool_H3K27me3	"1 if H3K27me3 detected in gene in 1 day old female fru-P1 expressing neurons (using pool peak method) in Palmateer, et al. 2021"
-flag_dmel617_miRNA_gene_id	1 in gene is annotated as a miRNA gene in D. melanogaster r6.17 reference
+flag_flydivas_melsubgroup_pos12	1 if gene has evidence for positive selection in the D. melanogaster subgroup according to the PAML M1a vs. M2a models in flyDIVas
+flag_flydivas_melsubgroup_pos78	1 if gene has evidence for positive selection in the D. melanogaster subgroup according to the PAML M7 vs. M8 models in flyDIVas
+flag_flydivas_melsubgroup_pos88a	1 if gene has evidence for positive selection in the D. melanogaster subgroup according to the PAML M8 vs. M8a models in flyDIVas
+flag_flydivas_melgroup_pos12	1 if gene has evidence for positive selection in the D. melanogaster group according to the PAML M1a vs. M2a models in flyDIVas
+flag_flydivas_melgroup_pos78	1 if gene has evidence for positive selection in the D. melanogaster group according to the PAML M7 vs. M8 models in flyDIVas
+flag_flydivas_melgroup_pos88a	1 if gene has evidence for positive selection in the D. melanogaster group according to the PAML M8 vs. M8a models in flyDIVas
+flag_flydivas_12spp_pos12	1 if gene has evidence for positive selection in the 12 Drosophila species according to the PAML M1a vs. M2a models in flyDIVas
+flag_flydivas_12spp_pos78	1 if gene has evidence for positive selection in the 12 Drosophila species according to the PAML M7 vs. M8 models in flyDIVas
+flag_flydivas_12spp_pos88a	1 if gene has evidence for positive selection in the 12 Drosophila species according to the PAML M8 vs. M8a models in flyDIVas
+flag_flyAtlas2_Adult_Male_Head_enrich_gt	1 if gene has an enrichment in the Adult Male Head compared to the Whole Body in the flyAtlas2 RNA-seq database
+flag_flyAtlas2_Adult_Male_Head_enrich_gt2	1 if gene has an enrichment >2 in the Adult Male Head compared to the Whole Body in the flyAtlas2 RNA-seq database
+flag_flyAtlas2_Adult_Male_Head_enrich_gt5	1 if gene has an enrichment >5 in the Adult Male Head compared to the Whole Body in the flyAtlas2 RNA-seq database
+flag_flyAtlas2_Adult_Female_Head_enrich_gt	1 if gene has an enrichment in the Adult Female Head compared to the Whole Body in the flyAtlas2 RNA-seq database
+flag_flyAtlas2_Adult_Female_Head_enrich_gt2	1 if gene has an enrichment >2 in the Adult Female Head compared to the Whole Body in the flyAtlas2 RNA-seq database
+flag_flyAtlas2_Adult_Female_Head_enrich_gt5	1 if gene has an enrichment >5 in the Adult Female Head compared to the Whole Body in the flyAtlas2 RNA-seq database
+flag_flyAtlas2_Adult_Male_Head_expressed	1 if gene is expressed in the Adult Male Head in the flyAtlas2 RNA-seq database
+flag_garud_2015_h12_top50	"1 if gene is present in the top 50 H12 peaks described in Garud, et al. 2015"
+flag_flyAtlas2_Adult_Female_Head_expressed	1 if gene is expressed in the Adult Female Head in the flyAtlas2 RNA-seq database
+flag_innocenti_morrow_f_fitness	1 if gene has evidence for affecting female fitness in Innocenti and Morrow 2010
+flag_innocenti_morrow_m_fitness	1 if gene has evidence for affecting male fitness in Innocenti and Morrow 2010
+flag_innocenti_morrow_mf_fitness	1 if gene has evidence for affecting fitness of both sexes in Innocenti and Morrow 2010
+flag_innocenti_morrow_antagonistic	1 if gene has evidence for sexually antagonism in Innocenti and Morrow 2010
 flag_dmel617_gene_id	1 if gene is in D. melanogaster r6.17 reference
+flag_dmel617_miRNA_gene_id	1 in gene is annotated as a miRNA gene in D. melanogaster r6.17 reference
 flag_dalton2013_fruM_male_regulation	"1 if gene upregulated or downregulated in males with overexpression of FRU-MA, FRU-MB, or FRU-MC isoforms in Dalton, et al. 2013"
 flag_dalton2013_fruM_female_regulation	"1 if gene upregulated or downregulated in females with ectopic expression of FRU-MA, FRU-MB, or FRU-MC isoforms in Dalton, et al. 2013"
 flag_arbeitman2016_dsx_regulated	"1 if gene determined to be regulated by dsx in Arbeitman, et al. 2016"
@@ -149,6 +171,7 @@ flag_euchromatin_all_genes	"1 if D. melanogaster gene related to ""euchromatin""
 flag_silencing_genes	"1 if D. melanogaster gene related to ""silencing"" in GO term and excluding terms with ""negative regulation of chromatin silencing"", ""negative regulation of posttranscriptional gene silencing"", ""negative regulation of gene silencing"", ""negative regulation of methylation-dependent chromatin silencing"", and ""negative regulation of production of miRNAs involved in gene silencing"""
 flag_dosage_compensation_genes	"1 if D. melanogaster gene related to ""dosage compensation"" in GO term"
 flag_any_k4	"1 if H3K4me3 detected in gene in any sex (gene_k4 != ""none"") "
+flag_both_k4	"1 if H3K4me3 detected in gene in both sexes (gene_k4 != ""none"", ""male"", or ""fem"")"
 flag_has_male_k4	"1 if H3K4me3 detected in gene in males (gene_k4 != ""none"" or ""fem"")"
 flag_has_female_k4	"1 if H3K4me3 detected in gene in females (gene_k4 != ""none"" or ""male"")"
 flag_male_limited_k4	"1 if H3K4me3 detected in gene only in males (gene_k4 == ""male"")"
@@ -175,3 +198,20 @@ flag_F	1 if gene is detected in both sexes with statistical significance with a 
 flag_FP	1 if gene is detected in both sexes with flag_F_mel==1 and at least 2-fold change towards female
 flag_MF	1 if gene is detected in both sexes with at least one exonic feature statistically significant in males and at least one in females
 flag_MFP	1 if gene is detected in both sexes with flag_MF_mel + at least 2-fold change in each of the sex-biased exonic regions
+flag_one2one_XA_match	"1 if gene is flag_one2one_ortholog==1 AND (in Supplementrary File 8) xsome is in [""X"", ""A""] AND xsome == sim_xsome"
+flag_Mexp_Mk4	1 if gene is _flag_M==1 AND _flag_has_male_k4==1
+flag_Mexp_Fk27	1 if gene is _flag_M==1 AND _flag_has_female_k27==1
+flag_Fexp_Fk4	1 if gene is _flag_F==1 AND _flag_has_female_k4==1
+flag_Fexp_Mk27	1 if gene is _flag_F==1 AND _flag_has_male_k27==1
+flag_M_OSCO	1 if gene is _flag_Mexp_Mk4==1 OR _flag_Mexp_Fk27==1
+flag_F_OSCO	1 if gene is _flag_Fexp_Fk4==1 OR _flag_Fexp_Mk27==1
+flag_map_better_f_mel2mel	1 if the female melanogaster reads in the given gene map better to the melanogaster genome compared to the simulans
+flag_map_better_m_mel2mel	1 if the male melanogaster reads in the given gene map better to the melanogaster genome compared to the simulans
+flag_map_better_f_sim2sim	1 if the female simulans reads in the given gene map better to the simulans genome compared to the melanogaster
+flag_map_better_m_sim2sim	1 if the male simulans reads in the given gene map better to the simulans genome compared to the melanogaster
+flag_map_better_f_mel2sim	1 if the female melanogaster reads in the given gene map better to the simulans genome compared to the melanogaster
+flag_map_better_m_mel2sim	1 if the male melanogaster reads in the given gene map better to the simulans genome compared to the melanogaster
+flag_map_better_f_sim2mel	1 if the female simulans reads in the given gene map better to the melangoaster genome compared to the simulans
+flag_map_better_m_sim2mel	1 if the male simulans reads in the given gene map better tho the melangoaster genome compared to the melanogaster
+flag_map_better_2_mel	1 if gene is flag_map_better_f_mel2mel + flag_map_better_m_mel2mel + flag_map_better_f_sim2mel + flag_map_better_m_sim2mel==4
+flag_map_better_2_sim	1 if gene is flag_map_better_f_mel2sim + flag_map_better_m_mel2sim + flag_map_better_f_sim2sim + flag_map_better_m_sim2sim==4
