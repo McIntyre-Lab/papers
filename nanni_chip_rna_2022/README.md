@@ -1,4 +1,7 @@
-# Nanni, et al. 2022 Supplementary Information
+# Nanni, et al. 2023 Supplementary Information
+
+A preprint is available [here](https://www.biorxiv.org/content/10.1101/2023.01.13.523946v1.full).
+
 ### Feature Annotation
 - [BED files used for _D. melanogaster_ FlyBase r6.17 and _D. simulans_ FlyBase r2.02 feature annotations](https://github.com/McIntyre-Lab/papers/blob/master/nanni_chip_rna_2022/analysis_output/feature_bed_files)
 
