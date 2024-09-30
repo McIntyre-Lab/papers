@@ -46,7 +46,7 @@ def plotSharedJxnHashPerGenome(flagFile, outdir):
     plt.ylabel('Number of UJCs')
     plt.suptitle("Number of UJCs when aligned to {}".format(genome))
     plt.savefig(
-        outdir + f"/upst_num_shared_jxnHash_fiveSpecies_2_{genome}",
+        outdir + f"/upst_num_shared_jxnHash_fiveSpecies_2_{genome}.png",
         dpi=600, format="png")
 
 
