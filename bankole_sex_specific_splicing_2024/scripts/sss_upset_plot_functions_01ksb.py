@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import glob
 import seaborn as sns
 
+import matplotlib.pyplot as plt
+
 
 def plotSharedJxnHashPerGenome(flagFile, outdir):
 

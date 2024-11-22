@@ -4,6 +4,8 @@ import pandas as pd
 import time
 import os.path
 
+import matplotlib.pyplot as plt
+
 
 # DESCRIPTION: Create gene model info table for each species. Unique on gene. Columns:
 # num transcripts per gene in the self-mapped GTF (or both in the case of dsim2)
@@ -160,6 +162,8 @@ genomeRefDct = {
     'dser1': ['dser1.1/dser11_2_dser1.gtf']
 }
 
+# genome = 'dmel6'
+# referenceLst= ['dmel_fb650/dmel650_2_dmel6.gtf']
 
 # SM == SELF-MAPPED
 # FS == FIVESPECIES
@@ -249,42 +253,68 @@ for genome, referenceLst in genomeRefDct.items():
     # It is ok for there to be left_only and right_only here -> no merge_check
     # left_only: most likely a gene that had all of its transcripts switched to a different gene due to GFFCompare
     # right_only: genes that have no self-mapped transcripts, but have UJCs from other species when mapped to mel
-    mergeDf = pd.merge(smTrPerGeneDfr, fsTrPerGeneDfr,
-                       on='geneID', how='outer').fillna(0)
+    mergeDfr = pd.merge(smTrPerGeneDfr, fsTrPerGeneDfr,
+                        on='geneID', how='outer').fillna(0)
 
     # MERGE IN NUM UNIQ ERP PER GENE
-    mergeDf = pd.merge(mergeDf, erpPerGeneDfr, on='geneID',
-                       how='outer', indicator='merge_check')
+    mergeDfr = pd.merge(mergeDfr, erpPerGeneDfr, on='geneID',
+                        how='outer', indicator='merge_check')
 
     # Check for no right_only
-    if (mergeDf['merge_check'] == 'right_only').any():
+    if (mergeDfr['merge_check'] == 'right_only').any():
         raise Exception(
             "There was an issue when merging in the number of ERPs per gene. There are genes that are only in the ERP output.")
     else:
-        mergeDf.drop('merge_check', axis=1, inplace=True)
+        mergeDfr.drop('merge_check', axis=1, inplace=True)
 
     # MERGE IN NUM ER
-    mergeDf = pd.merge(mergeDf, erPerGeneDfr, on='geneID',
-                       how='outer', indicator='merge_check')
+    mergeDfr = pd.merge(mergeDfr, erPerGeneDfr, on='geneID',
+                        how='outer', indicator='merge_check')
 
     # Check for no right_only
-    if (mergeDf['merge_check'] == 'right_only').any():
+    if (mergeDfr['merge_check'] == 'right_only').any():
         raise Exception(
             "There was an issue when merging in the number of ERPs per gene. There are genes that are only in the ERP output.")
     else:
-        mergeDf.drop('merge_check', axis=1, inplace=True)
+        mergeDfr.drop('merge_check', axis=1, inplace=True)
 
     # MERGE IN NUM ES
-    mergeDf = pd.merge(mergeDf, esPerGeneDfr, on='geneID',
-                       how='outer', indicator='merge_check')
+    mergeDfr = pd.merge(mergeDfr, esPerGeneDfr, on='geneID',
+                        how='outer', indicator='merge_check')
 
     # Check for no right_only
-    if (mergeDf['merge_check'] == 'right_only').any():
+    if (mergeDfr['merge_check'] == 'right_only').any():
         raise Exception(
             "There was an issue when merging in the number of ERPs per gene. There are genes that are only in the ERP output.")
     else:
-        mergeDf.drop('merge_check', axis=1, inplace=True)
+        mergeDfr.drop('merge_check', axis=1, inplace=True)
 
-    mergeDf = mergeDf.fillna(0)
+    geneTableInfoDfr = mergeDfr.fillna(0)
     outfile = f"/nfshome/k.bankole/mclab/SHARE/McIntyre_Lab/sex_specific_splicing/Tables/table_{genome}_gene_model_info.csv"
-    mergeDf.to_csv(outfile, index=False)
+    geneTableInfoDfr.to_csv(outfile, index=False)
+
+    # CREATE SCATTER PLOT OF NUM SM TRANSCRIPT VS NUM FS UJC
+    selfMapTrColLst = geneTableInfoDfr.filter(
+        regex='num_.*_transcript').columns.tolist()
+
+    plt.figure(figsize=(8, 6))
+
+    for col in selfMapTrColLst:
+
+        annoName = col.split('_2_')[0].split('num_')[1]
+
+        plt.scatter(
+            geneTableInfoDfr[col], geneTableInfoDfr['num_fiveSpecies_UJC'], label=f'{annoName}', alpha=0.7)
+
+    plt.xlabel('Number of Self-Mapping Transcripts')
+    plt.ylabel(f'Number of {genome} fiveSpecies UJC')
+    plt.title(
+        f'{genome}: Number of Self-Mapping Transcript vs. Number of fiveSpecies UJC per Gene')
+    plt.legend()
+    plt.grid(True)
+
+    # Show plot (for testing)
+    # plt.show()
+
+    outscatter = f"/nfshome/k.bankole/mclab/SHARE/McIntyre_Lab/sex_specific_splicing/Figures/plot_{genome}_gene_model_info_scatter.png"
+    plt.savefig(outscatter, dpi=600, format="png")
