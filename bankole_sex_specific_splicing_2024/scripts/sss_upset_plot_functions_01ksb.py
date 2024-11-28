@@ -3,22 +3,34 @@
 from upsetplot import UpSet
 import pandas as pd
 import matplotlib.pyplot as plt
-import glob
 import seaborn as sns
 
-import matplotlib.pyplot as plt
+# TODO: CHANGE OUTPUT FILE NAMES
 
 
 def plotSharedJxnHashPerGenome(flagFile, outdir):
+    """
+    Plot, for an entire fiveSpecies UJC GTF, an upset plot of the 
+    num jxnHash against where they came from (aka a venn diagram 
+    for every annotation used to create the fiveSpecies). Uses the 
+    fiveSpecies flag file.
+
+    Parameters
+    ----------
+    flagFile : String
+        Input the path to a flag_fiveSpecies_2_*_ujc.csv file.
+    outdir : TYPE
+        Output directory for plot.
+    """
 
     genome = flagFile.split("flag_fiveSpecies_2_")[1].split('_ujc.csv')[0]
 
-    flagDf = pd.read_csv(flagFile, low_memory=False)
+    flagDfr = pd.read_csv(flagFile, low_memory=False)
 
-    upsetDf = flagDf[[genome+'_jxnHash',] +
-                     [col for col in flagDf.columns if 'flag' in col]].copy(deep=True)
+    upsetDfr = flagDfr[[genome+'_jxnHash',] +
+                       [col for col in flagDfr.columns if 'flag' in col]].copy(deep=True)
 
-    upsetDf = upsetDf.rename(columns={
+    upsetDfr = upsetDfr.rename(columns={
         'flag_dmel650_2_dmel6_ujc': 'dmel650',
         'flag_dsimWXD_2_dsim2_ujc': 'dsimWXD',
         'flag_dsim202_2_dsim2_ujc': 'dsim202',
@@ -27,17 +39,19 @@ def plotSharedJxnHashPerGenome(flagFile, outdir):
         'flag_dser11_2_dser1_ujc': 'dser11',
     })
 
-    # upsetDf = upsetDf[['dmel650','dsimWXD','dsim202','dsan11','dyak21','dser11',genome+'_jxnHash']]
-    upsetDf = upsetDf[['dser11', 'dyak21', 'dsan11',
-                       'dsim202', 'dsimWXD', 'dmel650', genome+'_jxnHash']]
+    # Need to order the columns in the opposite direction of the way you
+    # want them to appear in the upset plot
+    upsetDfr = upsetDfr[['dser11', 'dyak21', 'dsan11',
+                         'dsim202', 'dsimWXD', 'dmel650', genome+'_jxnHash']]
 
-    upsetDf.replace({1: True, 0: False}, inplace=True)
+    upsetDfr.replace({1: True, 0: False}, inplace=True)
 
-    upsetDf.set_index(
-        [col for col in upsetDf.columns if 'jxnHash' not in col], inplace=True)
+    # Set index to flag columns (necessary for upset function)
+    upsetDfr.set_index(
+        [col for col in upsetDfr.columns if 'jxnHash' not in col], inplace=True)
 
     upset = UpSet(
-        upsetDf,
+        upsetDfr,
         subset_size="count",
         show_counts=True,
         sort_by="degree",
@@ -45,8 +59,8 @@ def plotSharedJxnHashPerGenome(flagFile, outdir):
     )
 
     upset.plot()['totals'].set_title("Number of UJCs")
-    plt.ylabel('Number of UJCs')
-    plt.suptitle("Number of UJCs when aligned to {}".format(genome))
+    plt.ylabel('Shared Number of UJCs')
+    plt.suptitle("Number and Origin of UJCs Aligned to dmel6".format(genome))
     plt.savefig(
         outdir + f"/upst_num_shared_jxnHash_fiveSpecies_2_{genome}.png",
         dpi=600, format="png")
@@ -54,36 +68,37 @@ def plotSharedJxnHashPerGenome(flagFile, outdir):
 
 def plotGeneJxnHash(geneKey, flagFile, geneDct, genome, outdir):
 
-    geneKeyDf = pd.read_csv(geneKey, low_memory=False)
-    geneKeyDf = geneKeyDf[['transcript_id', 'output_gene_id']]
-    geneKeyDf = geneKeyDf.rename(columns={
+    geneKeyDfr = pd.read_csv(geneKey, low_memory=False)
+    geneKeyDfr = geneKeyDfr[['transcript_id', 'output_gene_id']]
+    geneKeyDfr = geneKeyDfr.rename(columns={
         'output_gene_id': 'geneID',
         'transcript_id': 'jxnHash'
     })
 
-    flagDf = pd.read_csv(flagFile, low_memory=False)
-    flagDf['jxnHash'] = flagDf[[col for col in flagDf.columns if '_jxnHash' in col]]
+    flagDfr = pd.read_csv(flagFile, low_memory=False)
+    flagDfr['jxnHash'] = flagDfr[[
+        col for col in flagDfr.columns if '_jxnHash' in col]]
 
     # merge_check is all "both!"
-    mergeDf = pd.merge(geneKeyDf, flagDf, on='jxnHash',
-                       how='outer', indicator='merge_check')
+    mergeDfr = pd.merge(geneKeyDfr, flagDfr, on='jxnHash',
+                        how='outer', indicator='merge_check')
 
-    if (mergeDf['merge_check'] != "both").any():
+    if (mergeDfr['merge_check'] != "both").any():
         raise Exception("Merge error.")
     else:
-        mergeDf = mergeDf.drop(columns='merge_check')
+        mergeDfr = mergeDfr.drop(columns='merge_check')
 
-    if (mergeDf['geneID_x'] != mergeDf['geneID_y']).any():
+    if (mergeDfr['geneID_x'] != mergeDfr['geneID_y']).any():
         raise Exception("Merge error.")
     else:
-        mergeDf['geneID'] = mergeDf['geneID_x']
-        mergeDf.drop(['geneID_x', 'geneID_y'], axis=1, inplace=True)
+        mergeDfr['geneID'] = mergeDfr['geneID_x']
+        mergeDfr.drop(['geneID_x', 'geneID_y'], axis=1, inplace=True)
 
     for geneName, geneID in geneDct.items():
 
-        df = mergeDf[mergeDf['geneID'].isin([geneID])]
+        Dfr = mergeDfr[mergeDfr['geneID'].isin([geneID])]
 
-        df = df.rename(columns={
+        Dfr = Dfr.rename(columns={
             'flag_dmel650_2_dmel6_ujc': 'dmel650',
             'flag_dsimWXD_2_dsim2_ujc': 'dsimWXD',
             'flag_dsim202_2_dsim2_ujc': 'dsim202',
@@ -92,16 +107,16 @@ def plotGeneJxnHash(geneKey, flagFile, geneDct, genome, outdir):
             'flag_dser11_2_dser1_ujc': 'dser11',
         })
 
-        df = df[['dser11', 'dyak21', 'dsan11',
-                 'dsim202', 'dsimWXD', 'dmel650', 'jxnHash']]
+        Dfr = Dfr[['dser11', 'dyak21', 'dsan11',
+                   'dsim202', 'dsimWXD', 'dmel650', 'jxnHash']]
 
-        df.replace({1: True, 0: False}, inplace=True)
+        Dfr.replace({1: True, 0: False}, inplace=True)
 
-        df.set_index(
-            [col for col in df.columns if 'jxnHash' not in col], inplace=True)
+        Dfr.set_index(
+            [col for col in Dfr.columns if 'jxnHash' not in col], inplace=True)
 
         upset = UpSet(
-            df,
+            Dfr,
             subset_size="count",
             show_counts=True,
             sort_by="degree",
@@ -119,42 +134,42 @@ def plotGeneJxnHash(geneKey, flagFile, geneDct, genome, outdir):
 
 def plotSharedERPPerGenome(flagFile, erpFile, genome, outdir):
 
-    flagDf = pd.read_csv(flagFile, low_memory=False)
-    erpDf = pd.read_csv(erpFile, low_memory=False)
+    flagDfr = pd.read_csv(flagFile, low_memory=False)
+    erpDfr = pd.read_csv(erpFile, low_memory=False)
 
-    erpDf = erpDf[['jxnHash', 'ERP', 'geneID']].copy().rename(
+    erpDfr = erpDfr[['jxnHash', 'ERP', 'geneID']].copy().rename(
         columns={'jxnHash': f'{genome}_jxnHash'})
 
-    mergeDf = pd.merge(flagDf, erpDf,
-                       on=f'{genome}_jxnHash', how='outer',
-                       indicator='merge_check')
+    mergeDfr = pd.merge(flagDfr, erpDfr,
+                        on=f'{genome}_jxnHash', how='outer',
+                        indicator='merge_check')
 
-    if (mergeDf['merge_check'] != "both").any():
+    if (mergeDfr['merge_check'] != "both").any():
 
-        numMssngJxnHash = len(mergeDf[mergeDf['merge_check'] != "both"])
+        numMssngJxnHash = len(mergeDfr[mergeDfr['merge_check'] != "both"])
 
         print(
             f"There are {numMssngJxnHash} jxnHashes without ERPs in {genome} (due to being removed by TranD)")
         print("WARNING THESE JXNHASHES ARE NOT INCLUDED IN THE PLOT")
 
-        workingDf = mergeDf[mergeDf['merge_check'] == "both"]
-        workingDf = mergeDf.drop('merge_check', axis=1)
+        workingDfr = mergeDfr[mergeDfr['merge_check'] == "both"]
+        workingDfr = mergeDfr.drop('merge_check', axis=1)
 
     else:
-        workingDf = mergeDf.drop('merge_check', axis=1)
+        workingDfr = mergeDfr.drop('merge_check', axis=1)
 
-    flagCol = [col for col in workingDf.columns if 'flag' in col]
+    flagCol = [col for col in workingDfr.columns if 'flag' in col]
     aggregations = {
         f'{genome}_jxnHash': 'count',
     }
     for col in flagCol:
         aggregations[col] = 'max'
 
-    uniqOnERPDf = workingDf.groupby('ERP').agg(aggregations).reset_index()
-    flagCol = [col for col in uniqOnERPDf.columns if 'flag' in col]
-    uniqOnERPDf[flagCol] = uniqOnERPDf[flagCol].astype(bool)
+    uniqOnERPDfr = workingDfr.groupby('ERP').agg(aggregations).reset_index()
+    flagCol = [col for col in uniqOnERPDfr.columns if 'flag' in col]
+    uniqOnERPDfr[flagCol] = uniqOnERPDfr[flagCol].astype(bool)
 
-    upsetDf = uniqOnERPDf.rename(columns={
+    upsetDfr = uniqOnERPDfr.rename(columns={
         'flag_dmel650_2_dmel6_ujc': 'dmel650',
         'flag_dsimWXD_2_dsim2_ujc': 'dsimWXD',
         'flag_dsim202_2_dsim2_ujc': 'dsim202',
@@ -163,12 +178,12 @@ def plotSharedERPPerGenome(flagFile, erpFile, genome, outdir):
         'flag_dser11_2_dser1_ujc': 'dser11',
     }).copy()
 
-    upsetDf = upsetDf[['dser11', 'dyak21', 'dsan11', 'dsim202',
-                       'dsimWXD', 'dmel650', 'ERP', f'{genome}_jxnHash']]
+    upsetDfr = upsetDfr[['dser11', 'dyak21', 'dsan11', 'dsim202',
+                         'dsimWXD', 'dmel650', 'ERP', f'{genome}_jxnHash']]
 
     upset = UpSet(
-        upsetDf.set_index(['dser11', 'dyak21', 'dsan11',
-                          'dsim202', 'dsimWXD', 'dmel650']),
+        upsetDfr.set_index(['dser11', 'dyak21', 'dsan11',
+                            'dsim202', 'dsimWXD', 'dmel650']),
         subset_size="count",
         show_counts=True,
         sort_by="degree",

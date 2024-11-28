@@ -12,8 +12,8 @@ def main():
     outdir = "/nfshome/k.bankole/mclab/SHARE/McIntyre_Lab/sex_specific_splicing/Figures/Upset"
 
     # Create jxnHash upset plot for all 5 genomes
-    mergeFlagFiles = glob.glob(f"{indir}/flag_fiveSpecies_2_*_ujc.csv")
-    for flagFile in mergeFlagFiles:
+    flagFileLst = glob.glob(f"{indir}/flag_fiveSpecies_2_*_ujc.csv")
+    for flagFile in flagFileLst:
         plotter.plotSharedJxnHashPerGenome(flagFile=flagFile, outdir=outdir)
 
     # Create jxnHash upset plot for below 4 genes on *ALL GENOME*
