@@ -644,7 +644,7 @@ def main():
     print(f"Saved plot: {plotFile}")
 
     fig2.savefig(upsetFile, dpi=600, format="svg", bbox_inches='tight')
-    print(f"Saved plot: {plotFile}")
+    print(f"Saved plot: {upsetFile}")
 
     # fig.show()
     # fig2.show()
