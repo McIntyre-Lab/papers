@@ -1,0 +1,12 @@
+[workspace]
+restore_data_on_startup = True
+save_data_on_exit = True
+save_history = True
+save_non_project_files = False
+project_type = 'empty-project-type'
+recent_files = ['scripts/create_manuscript_upset_plots_01ksb.py', 'scripts/sss_upset_plot_functions_01ksb.py', 'scripts/create_gene_model_info_table_and_scatter_per_species_01ksb.py', 'scripts/create_fiveSpecies_ujc_plot_w_data_and_ERP_label_01ksb.py']
+
+[main]
+version = 0.2.0
+recent_files = []
+
