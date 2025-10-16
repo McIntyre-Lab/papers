@@ -4,10 +4,10 @@ Content of the folders is briefly described below:
 
 [**VCFs**](./VCFs): VCF files used to update the *D. melanogaster* reference
 
-**design_files**: design files to launch pipelines on slurm workload manager
+[**design_files**](./design_files): design files to launch pipelines on slurm workload manager
 
-**documentation**: mix documentation files
+[**documentation**](./documentation): mix documentation files
 
-**sas_programs**: scripts in SAS used for analyses
+[**sas_programs**](./sas_programs): scripts in SAS used for analyses
 
-**scripts**: shell or python scripts used for analyses
+[**scripts**](./scripts): shell or python scripts used for analyses
