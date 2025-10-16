@@ -2,7 +2,7 @@ This folder contains scripts and intermediate files for the paper **Multiparent 
 
 Content of the folders is briefly described below:
 
-**VCFs**: VCF files used to update the *D. melanogaster* reference
+[**VCFs**](./VCFs): VCF files used to update the *D. melanogaster* reference
 
 **design_files**: design files to launch pipelines on slurm workload manager
 
