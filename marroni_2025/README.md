@@ -4,6 +4,8 @@ Content of the folders is briefly described below:
 
 [**VCFs**](./VCFs): VCF files used to update the *D. melanogaster* reference
 
+[**bayesian_out**](./bayesian_out): output of the bayesian model. The folder also includes a Readme file with explanations on the specific experiment originating them.
+
 [**design_files**](./design_files): design files to launch pipelines on slurm workload manager
 
 [**documentation**](./documentation): mix documentation files
