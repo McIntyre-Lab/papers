@@ -1,0 +1,4 @@
+mode,processing_dir,refine_dir
+symmetric,isoseq3_library_processing,isoseq3_refine_by_sample
+asymmetric,isoseq3_library_processing_asymm_demult,isoseq3_refine_by_sample_asym
+isoseq,isoseq3_library_processing_isoseq_demult,isoseq3_refine_by_sample_isoseq

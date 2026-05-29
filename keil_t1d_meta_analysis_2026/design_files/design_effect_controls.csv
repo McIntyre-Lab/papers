@@ -1,0 +1,5 @@
+flag,effect
+flag_female,sex
+population,cellType
+flag_fema*population,sexBycellType
+Enrollment_Age,age

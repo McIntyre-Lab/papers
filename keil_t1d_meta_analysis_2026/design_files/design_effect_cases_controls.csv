@@ -1,0 +1,5 @@
+flag,effect
+flag_female,sex
+flag_case,T1D
+flag_femal*flag_case,sexByT1D
+Enrollment_Age,age
