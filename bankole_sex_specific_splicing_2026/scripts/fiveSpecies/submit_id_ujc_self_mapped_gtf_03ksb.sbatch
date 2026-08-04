@@ -20,7 +20,7 @@ export PATH=/blue/mcintyre/ammorse/conda_envs/trand_dev/bin:$PATH
 PROJ=/blue/mcintyre/share/sex_specific_splicing
 UTIL=/blue/mcintyre/k.bankole/github/TranD/utilities
 
-DESIGN_FILE=$PROJ/design_files/df_gffcomp_and_id_ujc_03ksb.csv
+DESIGN_FILE=$PROJ/design_files/df_gffcomp_and_id_ujc_04ksb.csv
 
 DESIGN=$(cat $DESIGN_FILE | head -n $SLURM_ARRAY_TASK_ID | tail -n 1)
 IFS=',' read -ra ARRAY <<< "$DESIGN"
