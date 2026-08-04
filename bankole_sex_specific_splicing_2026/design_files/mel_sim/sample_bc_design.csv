@@ -1,0 +1,13 @@
+rep,sex,species,sample,barcode
+1,F,mel,mel_F_rep1,BC01
+1,M,mel,mel_M_rep1,BC02
+2,F,mel,mel_F_rep2,BC03
+2,M,mel,mel_M_rep2,BC04
+3,F,mel,mel_F_rep3,BC05
+3,M,mel,mel_M_rep3,BC06
+1,F,sim,sim_F_rep1,BC07
+1,M,sim,sim_M_rep1,BC08
+2,F,sim,sim_F_rep2,BC09
+2,M,sim,sim_M_rep2,BC10
+3,F,sim,sim_F_rep3,BC11
+3,M,sim,sim_M_rep3,BC12
