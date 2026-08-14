@@ -1,0 +1,90 @@
+Project title:   Sex bias in D. santomea and D. yakuba head transcription
+                 
+Public Description:   Here we evaluate sex bias in splicing for adult head tissue in Drosophilia santomea and Drosophilia yakuba.  
+              
+grant  GM128193 (ASE-GRN)
+
+
+submission:   SUB15063151
+
+
+SubmissionID:       SUB15202146
+BioProject ID:      PRJNA1242287
+
+projected release date Feb 1 2026 or upon publication
+
+
+ONT data
+    packed original fq files into 4 (2 species * 2 sexes * 1 rep) for upload 
+    design file with ALL fq files:  /McIntyre_Lab/lmm_rlr_head_data/design_files/sample_bc_dsgn_w_origDataPath_04amm.csv
+    design file with ALL fq files and renaming for SRA submission:  /McIntyre_Lab/lmm_rmg_dros_data/design_files/dsgn_4_sra_rename_fq_rmg.csv
+        
+   
+    2 species (san and yak)
+    2 sexes
+    1 rep each
+
+    D. san:  STO-CAGO 1402-3, Drosophila Species Stock Center 14021-0271.01
+    D. yak:  Tai18E2, Drosophila Species Stock Center 14021-0261.01
+
+    geo_loc_name = USA:Charlotte, NC
+
+    collection date: oct 2021
+
+sample list:
+Sample name	Files
+dsan_F_rep1	FAQ48544_pass_barcode03_d7b280cb.fastq (fastq)
+dsan_F_rep1	PAH88311_pass_barcode03_727da6d6.fastq (fastq)
+dsan_M_rep1	FAQ48544_pass_barcode04_d7b280cb.fastq (fastq)
+dsan_M_rep1	PAH88311_pass_barcode04_727da6d6.fastq (fastq)
+dyak_F_rep1	FAQ48544_pass_barcode01_d7b280cb.fastq (fastq)
+dyak_F_rep1	PAH88311_pass_barcode01_727da6d6.fastq (fastq)
+dyak_M_rep1	FAQ48544_pass_barcode02_d7b280cb.fastq (fastq)
+dyak_M_rep1	PAH88311_pass_barcode02_727da6d6.fastq (fastq)
+
+
+
+***
+ Module load ufrc
+ cd to /blue/mcintyre/share/rmg_lmm_dros_data/sra_submission
+     ** note that file names match MetaData file 
+
+ Login username password (from website)
+
+lftp ftp://subftp:WaDroick9grimtIacd u@ftp-private.ncbi.nlm.nih.gov
+
+
+Cd to dir given on SRA website
+$ mkdir new directory 
+$ mput *.fastq
+
+**** following email from SRA:
+
+Dear Alison Morse,
+
+This is an automatic acknowledgment that your submission:
+
+SubmissionID:       SUB15202146
+BioProject ID:      PRJNA1242287
+Title:
+
+has been successfully registered with the BioProject database. After review by the database staff, your project information will be accessible with the following link, usually within a few days of the
+release date that you set (or the release of linked data, whichever is first):
+
+https://nam10.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.ncbi.nlm.nih.gov%2Fbioproject%2F1242287&data=05%7C02%7Cammorse%40ufl.edu%7C88df23979a344647fe9908dd6c830746%7C0d4da0f84a314d76ace60a62331e1b84%7C0%7C0%7C638786032215245386%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=NeaAJoF3yfs0jJkaWwWPZtYdREAfSf19rOFl52r6VN8%3D&reserved=0
+
+
+Please use the BioProject ID PRJNA1242287 with your correspondence and your data submissions.
+
+Send questions to bioprojecthelp@ncbi.nlm.nih.gov, and include the BioProject ID and organism name.
+
+Regards,
+
+NCBI BioProject Submissions Staff
+Bethesda, Maryland  USA
+***********************************************************
+(301) 496-2475
+(301) 480-2918 (Fax)
+bioprojecthelp@ncbi.nlm.nih.gov (for BioProject questions/replies)
+info@ncbi.nlm.nih.gov (for general questions regarding NCBI)
+***********************************************************

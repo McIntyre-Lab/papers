@@ -1,0 +1,78 @@
+Project title:   Sex bias in D. serrata head transcription
+                 
+Public Description:   Here we evaluate sex bias in splicing for adult head tissue in Drosophilia serrata.  
+              
+grant  GM128193 (ASE-GRN)
+
+
+SubmissionID:       SUB15072266
+BioProject ID:      PRJNA1220163
+
+projected release date Feb 1 2026 or upon publication
+
+
+ONT data
+    design file with ALL fq files:  /McIntyre_Lab/lmm_axk_head_data/design_files/design_file_sample2BC_w_origDataPath_04amm.csv
+    list of all dorado demux fq files:   /McIntyre_Lab/lmm_axk_head_data/design_files/list_dorado_fq_files_kopp.txt
+    design file with ALL fq files and renaming for SRA submission:  McIntyre_Lab/lmm_rmg_dros_data/design_files/dsgn_4_sra_rename_fq_axk.csv
+        
+   
+    1 species serrata
+    2 sexes
+    6 reps each
+
+    D.ser F1 of dark 681.5 and serrata light 104
+
+    total of 12 samples (= 1 species * 2 sexes * 6 reps)
+
+    See README_serrata_12dec2022.txt 
+
+    We received samples:  dec22 --> using this as collection date
+
+    goe_loc_name = USA:Davis, CA
+
+
+sample list:
+ dser_F_rep1
+ dser_F_rep2
+ dser_F_rep3
+ dser_F_rep4
+ dser_F_rep5
+ dser_F_rep6
+ dser_M_rep1
+ dser_M_rep2
+ dser_M_rep3
+ dser_M_rep4
+ dser_M_rep5
+ dser_M_rep6
+
+
+
+***
+ Module load ufrc
+ cd to /blue/mcintyre/share/kopp_lmm_head_data/sra_submission
+     ** note that file names match MetaData file 
+
+ Login username password (from website)
+
+lftp ftp://subftp:WaDroick9grimtIa@ftp-private.ncbi.nlm.nih.gov
+
+
+Cd to dir given on SRA website
+$ mkdir new directory 
+$ mput *.fastq
+
+**** following email from SRA:
+Dear Alison Morse,
+
+This is an automatic acknowledgment that your recent submission to the SRA database has been successfully processed and will be released on the date specified.
+
+Please reference PRJNA1220163 in your publication. This BioProject accession number is provided instead of SRP and should be used in your publication as it will allow better searching in Entrez.
+
+Accession to cite for these SRA data: PRJNA1220163
+Temporary Submission ID: SUB15072266
+Release date: 2026-02-01
+
+Your SRA records will be accessible with the following link after the indicated release date:
+https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.ncbi.nlm.nih.gov%2Fsra%2FPRJNA1220163&data=05%7C02%7Cammorse%40ufl.edu%7C8c2d53447ef24504e98408dd47652cab%7C0d4da0f84a314d76ace60a62331e1b84%7C0%7C0%7C638745222071235697%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=tyAMB5oUEBrgUJXVGcoDlJEnrr%2F5IH7q3PJkbaGswXw%3D&reserved=0
+

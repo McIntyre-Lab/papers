@@ -1,0 +1,109 @@
+Project title:   Sex bias in D. melanogaster and D. simulans head transcription
+                 
+Public Description:   Here we evaluate sex bias in splicing for adult head tissue in Drosophilia melanogaster and Drosophilia simulans.  
+              
+grant  GM128193 (ASE-GRN)
+
+
+submission:   SUB15063151
+
+
+SubmissionID:       SUB15063151
+BioProject ID:      PRJNA1219500
+
+projected release date Feb 1 2026 or upon publication
+
+
+ONT data
+    design file with ALL fq files:  /McIntyre_Lab/lmm_rmg_dros_data/design_files/sample_bc_dsgn_w_origDataPath_04amm.csv
+    list of all dorado demux fq files:   /McIntyre_Lab/lmm_rmg_dros_data/design_files/list_dorado_fq_files.txt
+    design file with ALL fq files and renaming for SRA submission:  /McIntyre_Lab/lmm_rmg_dros_data/design_files/dsgn_4_sra_rename_fq_rmg.csv
+        
+   
+    2 species (mel and sim)
+    2 sexes
+    6 reps each
+
+    D.mel F1 of A7TAIW x B2 CAI
+    D.sim F1 of MD106ts x W501
+
+    total of 24 samples (= 2 species * 2 sexes * 6 reps)
+
+    See sample_info_from_Rita_2may23.txt 
+    We received samples in 2 batches:  may23 and sept23 
+    AMM == samples/batches were all collected at the same time - using may 2023
+
+
+    goe_loc_name = USA:Auburn, AL
+
+
+sample list:
+
+ mel_F_rep1
+ mel_F_rep2
+ mel_F_rep3
+ mel_F_rep4
+ mel_F_rep5
+ mel_F_rep6
+ mel_M_rep1
+ mel_M_rep2
+ mel_M_rep3
+ mel_M_rep4
+ mel_M_rep5
+ mel_M_rep6
+ sim_F_rep1
+ sim_F_rep2
+ sim_F_rep3
+ sim_F_rep4
+ sim_F_rep5
+ sim_F_rep6
+ sim_M_rep1
+ sim_M_rep2
+ sim_M_rep3
+ sim_M_rep4
+ sim_M_rep5
+ sim_M_rep6
+
+
+***
+ Module load ufrc
+ cd to /blue/mcintyre/share/rmg_lmm_dros_data/sra_submission
+     ** note that file names match MetaData file 
+
+ Login username password (from website)
+
+lftp ftp://subftp:WaDroick9grimtIa@ftp-private.ncbi.nlm.nih.gov
+
+
+Cd to dir given on SRA website
+$ mkdir new directory 
+$ mput *.fastq
+
+**** following email from SRA:
+Dear Alison Morse,
+
+This is an automatic acknowledgment that your recent submission to the BioSample database has been successfully processed and will be released on the date specified.
+
+BioSample accessions:                   SAMN46558748, SAMN46558749, SAMN46558750, SAMN46558751, SAMN46558752, SAMN46558753, SAMN46558754, SAMN46558755, SAMN46558756, SAMN46558757 ... (see attached file)
+Temporary SubmissionID: SUB15063151
+Release date:                   2026-02-01, or with the release of linked data, whichever is first
+
+A submission summary and the links by which your BioSample records will be accessible are appended and attached.
+
+
+
+Please reference BioSample accessions SAMN46558748, SAMN46558749, SAMN46558750, SAMN46558751, SAMN46558752, SAMN46558753, SAMN46558754, SAMN46558755, SAMN46558756, SAMN46558757 ... (see attached file) when making corresponding sequence data submissions.
+
+Send questions and update requests to biosamplehelp@ncbi.nlm.nih.gov; include the BioSample accessions SAMN46558748, SAMN46558749, SAMN46558750, SAMN46558751, SAMN46558752, SAMN46558753, SAMN46558754, SAMN46558755, SAMN46558756, SAMN46558757 ... (see attached file) in any correspondence.
+
+Regards,
+
+NCBI BioSample Submissions Staff
+Bethesda, Maryland USA
+***********************************************************
+(301) 496-2475
+(301) 480-2918 (Fax)
+biosamplehelp@ncbi.nlm.nih.gov (for BioSample questions/replies)
+info@ncbi.nlm.nih.gov (for general questions regarding NCBI)
+***********************************************************
+
