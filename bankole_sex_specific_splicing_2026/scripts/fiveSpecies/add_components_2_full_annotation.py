@@ -23,14 +23,14 @@ species_dct = {"dmel650":"dmel6", "dsan11":"dsan1", "dser11": "dser1", "dsim202"
 for species_full,species in species_dct.items():
     
     # import component
-    component = pd.read_csv(f"{proj}/submission/supplementary/fiveSpecies_annotations/link_files/component_map_by_node.csv", low_memory=False)
+    component = pd.read_csv(f"{proj}/submission/supplementary_files/fiveSpecies_annotations/link_files/component_map_by_node.csv", low_memory=False)
     #print(component.columns)
     #print(component["source"].value_counts())
     # rename jxnHash to {species}_jxnHash and merge to each anno
     component = component.rename(columns={"jxnhash": f"{species}_jxnHash"})
     
     # import anno file
-    anno = pd.read_csv(f"{proj}/submission/supplementary/fiveSpecies_{species}_full_annotation_w_dataFlag_gffCompMM.csv", low_memory=False)
+    anno = pd.read_csv(f"{proj}/anno_testing/fiveSpecies_{species}_full_annotation_w_dataFlag_gffCompMM.csv", low_memory=False)
     #print(anno.columns)
     
     add_comp = pd.merge(
@@ -69,5 +69,5 @@ for species_full,species in species_dct.items():
     add_comp = add_comp.drop(columns=[f"cat_{species}_transcriptID_y"])
        
     # save to csv
-    add_comp.to_csv(f"{proj}/submission/supplementary/fiveSpecies_{species}_full_annotation_w_component.csv", index=False)    
+    add_comp.to_csv(f"{proj}/anno_testing/fiveSpecies_{species}_full_annotation_w_component.csv", index=False)    
     

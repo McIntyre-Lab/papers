@@ -18,8 +18,6 @@ parser.add_argument('--genome', required=True, help="Name of the genome")
 parser.add_argument('--erp_file', required=True, help="Path to the ERP file")
 parser.add_argument('--esp_file', required=True, help="Path to the ESP file")
 parser.add_argument('--flag_file', required=True, help="Path to the flag file")
-parser.add_argument('--dmel6_file', required=True, 
-                    help="Path to the dmel6 full annotation file")
 parser.add_argument('--cross_file', required=True, 
                     help="Path to the cross species link file")
 parser.add_argument('--output_file', required=True, 
@@ -36,7 +34,7 @@ genome = args.genome
 erp_file = args.erp_file
 esp_file = args.esp_file
 flag_file = args.flag_file
-dmel6_file = args.dmel6_file
+#dmel6_file = args.dmel6_file
 cross_file = args.cross_file
 output_file = args.output_file
 output_mismatch = args.mismatch
@@ -91,7 +89,7 @@ print(f"num uniq ujc in {genome} xscript link file: ",len(link_jxnhash2fbtr_sort
 link_jxnhash2ERP = pd.read_csv(erp_file)
 link_jxnhash2ESP = pd.read_csv(esp_file)
 flag_fivespecies = pd.read_csv(flag_file)
-dmel6_file = pd.read_csv(dmel6_file)
+#dmel6_file = pd.read_csv(dmel6_file)
 cross_file = pd.read_csv(cross_file)
 
 # Sort the ERP and ESP dataframes by jxnHash
@@ -142,48 +140,49 @@ mismatch_geneID=mismatch.loc[:, mismatch.columns.str.contains('geneID')]
 merged_df.drop(columns=['merge1', 'merge2', 'merge3'], inplace = True)
 
 ## merge in dmel6 jxnHash from cross species file
-cross_file.rename(columns={
-    'dmel6_jxnhash': 'dmel6_jxnHash',
-}, inplace=True)
-cols_keep = [f"{genome}_jxnHash", 'dmel6_jxnHash', f"num_{genome}_geneID", 'num_dmel6_geneID']
-cross_file2 =  cross_file.loc[:, cols_keep]
+#cross_file.rename(columns={
+#    'dmel6_jxnhash': 'dmel6_jxnHash',
+#}, inplace=True)
+#cols_keep = [f"{genome}_jxnHash", 'dmel6_jxnHash', f"num_{genome}_geneID", 'num_dmel6_geneID']
+#cross_file2 =  cross_file.loc[:, cols_keep]
 
-merged_cross = pd.merge(merged_df, cross_file2, on=f"{genome}_jxnHash", 
-        how='outer', indicator='merge_cross')
-print(merged_cross['merge_cross'].value_counts(dropna=False).sort_index())
+#merged_cross = pd.merge(merged_df, cross_file2, on=f"{genome}_jxnHash", 
+#        how='outer', indicator='merge_cross')
+#print(merged_cross['merge_cross'].value_counts(dropna=False).sort_index())
 
 # count where have nodmel6_jxnHash   11651
-count_not_missing = merged_cross['dmel6_jxnHash'].isna().sum()
-print("Number of rows where don't have 'dmel6_jxnHash':", count_not_missing)
+#count_not_missing = merged_cross['dmel6_jxnHash'].isna().sum()
+#print("Number of rows where don't have 'dmel6_jxnHash':", count_not_missing)
 
 # merge in dmel6 ERP and dmel6 ESP and cat_dmel6_transcriptID and dmel6_geneID 
     # from dmel full anno on dmel6_jxnHash
-cols_want = ['dmel6_jxnHash', 'ERP', 'ERP_plus', 'ESP', 'cat_dmel6_transcriptID', 'geneID']
-dmel6_subset=dmel6_file.loc[:, cols_want]
-dmel6_subset.rename(columns={
-    'ERP': 'dmel6_ERP',
-    'ERP_plus': 'dmel6_ERP_plus',
-    'ESP': 'dmel6_ESP',
-    'geneID': 'dmel6_geneID'
-}, inplace=True)
+#cols_want = ['dmel6_jxnHash', 'ERP', 'ERP_plus', 'ESP', 'cat_dmel6_transcriptID', 'geneID']
+#dmel6_subset=dmel6_file.loc[:, cols_want]
+#dmel6_subset.rename(columns={
+#    'ERP': 'dmel6_ERP',
+#    'ERP_plus': 'dmel6_ERP_plus',
+#    'ESP': 'dmel6_ESP',
+#    'geneID': 'dmel6_geneID'
+#}, inplace=True)
 
-merged_cross_anno = pd.merge(merged_cross, dmel6_subset, on='dmel6_jxnHash',
-        how = 'outer',     suffixes=('_left', '_right_dmel6'), indicator='merge_dmel6')
+#merged_cross_anno = pd.merge(merged_cross, dmel6_subset, on='dmel6_jxnHash',
+#        how = 'outer',     suffixes=('_left', '_right_dmel6'), indicator='merge_dmel6')
 
 # keep if in merged_cross (left + both) ( discard right only)
-print(merged_cross_anno['merge_dmel6'].value_counts(dropna=False).sort_index())
-almost = merged_cross_anno[~merged_cross_anno['merge_dmel6'].str.contains('right', na=False)].copy()
+#print(merged_cross_anno['merge_dmel6'].value_counts(dropna=False).sort_index())
+#almost = merged_cross_anno[~merged_cross_anno['merge_dmel6'].str.contains('right', na=False)].copy()
 
 ## count rows
-print(f"number of rows in full {genome} anno:  {len(almost)}")
+print(f"number of rows in full {genome} anno:  {len(merged_df)}")
 print(f"number of rows in mismatch {genome}:  {len(mismatch_geneID)}")
 
+print(merged_df.columns)
 # Drop extra geneID columns
-almost.drop(columns=['geneID_ERP', 'geneID_ESP', f"{genome}_geneID_anno", 
-              'geneID_check', 'merge_dmel6', 'merge_cross'], inplace=True)
+merged_df.drop(columns=['geneID_ERP', 'geneID_ESP', f"{genome}_geneID_anno", 
+              'geneID_check'], inplace=True)
 
 # rename  for LMM
-almost = almost.rename(columns={
+merged_df = merged_df.rename(columns={
     "flagDataOnlyExon_ERP": "flagBonusExon_ERP",
     "flagDataOnlyExon_ESP": "flagBonusExon_ESP",
     "numDataOnlyExon_ERP": "numBonusExon_ERP",
@@ -191,10 +190,10 @@ almost = almost.rename(columns={
     "dataOnlyER_ID": "bonusER_ID",
     "dataOnlyES_ID": "bonusES_ID"
     })
-print(almost.columns)
+print(merged_df.columns)
 
 # Save the results
-almost.to_csv(output_file, index=False)
+merged_df.to_csv(output_file, index=False)
 #merged_cross_anno.to_csv(f"/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/sex_specific_splicing/fiveSpecies_{genome}_full_annotation.csv", index=False)
 mismatch_geneID.to_csv(output_mismatch, index=False)
 #mismatch_geneID.to_csv(f"/nfshome/ammorse/mclab/SHARE/McIntyre_Lab/sex_specific_splicing/fiveSpecies_{genome}_geneID_mismatch.csv", index=False)
