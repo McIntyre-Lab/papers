@@ -1,5 +1,5 @@
 ## Orthologous Transcripts and Alternative Splicing in Drosophila
-This paper (bankole_sex_specific_splicing_2026) contains the documentation and scripts 
+This paper directiory (bankole_sex_specific_splicing_2026) contains the documentation and scripts 
 used to identify orthologous transcripts and characterize alternative splicing in Drosophila species
 
 The analysis uses long read RNAseq data from male and female head tissue to identify transcript models, 
@@ -59,9 +59,9 @@ reciprocal transcript mappings. Each connected component represents a
 group of transcript models with inferred evolutionary correspondence.
 
 ### Alternative Splicing
-Alternative splicing is characterized using UJC and ERP-level
-expression data to identify differences in transcript structure and
-splicing between species and between males and females.
+Alternative splicing is characterized using UJC and ERP level
+expression data from long read RNAseq to identify differences in transcript 
+structure and splicing between species and between males and females.
 
 ## Reproducibility
 The repository contains the scripts, design files, documentation, and
@@ -71,4 +71,20 @@ are documented in the documentation directory.
 ## Additional data availability
 The fiveSpecies full annotation files, supporting files, supplemental files, tables, figures
 are available on zenodo:   [link!!!]
+
+## IGV browser for visualizing transcript models
+A separate repository (IGV Browser for papers/bankole_2026) containing the files used to 
+visualize transcript models and alternative splicing using Integrative Genomics Viewer (IGV).
+
+The IGV tracks provide a visual representation of transcript models,
+splice junctions, and long read RNAseq alignments.
+
+- visualize transcript models across Drosophila species
+- visualize transcript models identified from long read RNAseq
+- compare transcript structures between males and females
+- examine splice junction usage
+- evaluate evidence supporting alternative splicing
+
+
+
 
