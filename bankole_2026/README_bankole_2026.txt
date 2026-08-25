@@ -1,9 +1,10 @@
 ## Orthologous Transcripts and Alternative Splicing in Drosophila
-This paper directiory (bankole_sex_specific_splicing_2026) contains the documentation and scripts 
-used to identify orthologous transcripts and characterize alternative splicing in Drosophila species
+This paper directiory (bankole_2026) contains the documentation and scripts 
+used to identify orthologous transcripts and characterize transcript usage in 
+Drosophila species
 
 The analysis uses long read RNAseq data from male and female head tissue to identify transcript models, 
-quantify transcripts and characterize alternative splicing across multiple Drosophila species.
+quantify transcript expression and characterize transcript usage across multiple Drosophila species.
 
 ## Species:
 Drosophila melanogaster (dmel6)
@@ -19,7 +20,7 @@ then identified using network-based analyses of the reciprocal
 mapping relationships.
 
 The resulting transcript models and orthology assignments are
-validated using long read RNA-seq data from male and female head tissue.
+validated using long read RNAseq data from male and female head tissue.
 
 
 ## Primary analysis steps:
@@ -28,9 +29,8 @@ validated using long read RNA-seq data from male and female head tissue.
 3. Perform SQANTI3 QC and SQANTIreads QC analyses
 4. Prepare data for UJC and ERP analysis
 5. Normalize gene level expression
-6. Generate gene level summaries
-7. Identify and characterize alternative splicing
-8. Generate component-level summaries
+6. Generate transcript and gene level expression summaries
+7. Identify and characterize alternative transcript usage
 
 
 ## Organization 
@@ -50,18 +50,13 @@ management.
 
 ### Transcript Homology
 Transcript homology is inferred through reciprocal liftover between
-species. Transcript models that map reciprocally between species are
+species. Transcript models that map between species are
 used to construct networks of corresponding transcript models.
 
 ### Orthology
 Orthologous transcript groups are identified from the network of
-reciprocal transcript mappings. Each connected component represents a
-group of transcript models with inferred evolutionary correspondence.
-
-### Alternative Splicing
-Alternative splicing is characterized using UJC and ERP level
-expression data from long read RNAseq to identify differences in transcript 
-structure and splicing between species and between males and females.
+transcript mappings. Only components with exactly one transcript per 
+species, either annotated or observed.
 
 ## Reproducibility
 The repository contains the scripts, design files, documentation, and
@@ -71,10 +66,11 @@ are documented in the documentation directory.
 ## Additional data availability
 The fiveSpecies full annotation files, supporting files, supplemental files, tables, figures
 are available on zenodo:   [link!!!]
+Data is available on SRA:  ######s
 
 ## IGV browser for visualizing transcript models
 A separate repository (IGV Browser for papers/bankole_2026) containing the files used to 
-visualize transcript models and alternative splicing using Integrative Genomics Viewer (IGV).
+visualize transcript models and transcript usage using Integrative Genomics Viewer (IGV).
 
 The IGV tracks provide a visual representation of transcript models,
 splice junctions, and long read RNAseq alignments.
