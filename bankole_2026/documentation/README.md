@@ -54,6 +54,9 @@ Sum counts across tech reps for ujc and erp - `04_dataPrep_sum_techReps_ujc_erp.
 ## Trand sex bias
 `tranD_sexBias_analysis.xlsx`
 
+## gene list enrichment
+`make_master_list_of_lists_02amm.xlsx`
+
 ## Figures
 1. `figures_09mdg.xlsx`
 2. `supp_figures.xlsx`
