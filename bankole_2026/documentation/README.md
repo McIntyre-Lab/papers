@@ -15,13 +15,13 @@ Summarized overview of ujc data analysis - `02_summarized_data_analysis_ujc_docu
 
 in 02_data_analysis/:
 
-Dorado basecalling and QC mel and sim - `01_dorado_basecalling_rmg_lmm.xlsx`
-Dorado basecalling and QC ser - 02_dorado_basecalling_kopp_lmm.xlsx`
-Dorado basecalilng and QC yak and san - `03_dorado_basecalling_rlr_lmm.xlsx`
-Mel and sim, aln and generate ujc count files - `04_rmg_aln_run_ujc_jxnHash_cnts_09ksb.xlsx`
-Ser, aln and generate ujc count files - `05_kopp_aln_run_ujc_jxnHash_cnts_07ksb.xlsx`
-Yak and san, aln and generate ujc count files - `06_rlr_aln_run_ujc_jxnHash_cnts_08ksb.xlsx`
-Link ujc to structural category, sqanti - `07_ujc_to_structural_category_02amm.xlsx`
+1. Dorado basecalling and QC mel and sim - `01_dorado_basecalling_rmg_lmm.xlsx`
+2. Dorado basecalling and QC ser - 02_dorado_basecalling_kopp_lmm.xlsx`
+3. Dorado basecalilng and QC yak and san - `03_dorado_basecalling_rlr_lmm.xlsx`
+4. Mel and sim, aln and generate ujc count files - `04_rmg_aln_run_ujc_jxnHash_cnts_09ksb.xlsx`
+5. Ser, aln and generate ujc count files - `05_kopp_aln_run_ujc_jxnHash_cnts_07ksb.xlsx`
+6. Yak and san, aln and generate ujc count files - `06_rlr_aln_run_ujc_jxnHash_cnts_08ksb.xlsx`
+7. Link ujc to structural category, sqanti - `07_ujc_to_structural_category_02amm.xlsx`
 
 ## Sqanti Reads
 SqantiReads qc and analysis - `sqanti_reads_qc_and_analysis_02ndk.xlsx`
@@ -31,10 +31,10 @@ Summarized overview of ERP analysis - `03_summarized_ERP_analysis_documentation_
 
 in 03_fiveSpecies_tranD_ERPs/:
 
-Create fiveSpecies ERP - `03a_fiveSpecies_tranD_and_ERPs_07ksb.xlsx`
-Mel and sim - `03b_rmg_erp_and_esp_analysis_05ksb.xlsx`
-Ser - `03c_axk_erp_and_esp_analysis_05ksb.xlsx`
-Yak and san - `03d_rlr_erp_and_esp_analysis_05ksb.xlsx`
+1. Create fiveSpecies ERP - `03a_fiveSpecies_tranD_and_ERPs_07ksb.xlsx`
+2. Mel and sim - `03b_rmg_erp_and_esp_analysis_05ksb.xlsx`
+3. Ser - `03c_axk_erp_and_esp_analysis_05ksb.xlsx`
+4. Yak and san - `03d_rlr_erp_and_esp_analysis_05ksb.xlsx`
 
 ## Data analysis
 Sum counts across tech reps for ujc and erp - `04_dataPrep_sum_techReps_ujc_erp.xlsx`
@@ -55,5 +55,5 @@ Sum counts across tech reps for ujc and erp - `04_dataPrep_sum_techReps_ujc_erp.
 `tranD_sexBias_analysis.xlsx`
 
 ## Figures
-`figures_09mdg.xlsx`
-`supp_figures.xlsx`
+1. `figures_09mdg.xlsx`
+2. `supp_figures.xlsx`
