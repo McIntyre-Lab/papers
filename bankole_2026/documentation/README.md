@@ -5,10 +5,10 @@ Summarized overview of fiveSpecies annotation - `01_summarized_fiveSpecies_docum
 
 in 01_fiveSpecies/:
 
-List of starting annotation files - `01_annotation_list_03ksb.xlsx`
-Mapping of reference annotation to reference genomes - `02_map_ref_anno_to_ref_genome_and_ujc_05ksb.xlsx`
-Create fiveSpecies annotations per genome - `03_create_fiveSpecies_annotation_per_genome_16amm.xlsx`
-Create fivespecies flag files - `04_create_fiveSpecies_flag_file_04ksb.xlsx`
+1. List of starting annotation files - `01_annotation_list_03ksb.xlsx`
+2. Mapping of reference annotation to reference genomes - `02_map_ref_anno_to_ref_genome_and_ujc_05ksb.xlsx`
+3. Create fiveSpecies annotations per genome - `03_create_fiveSpecies_annotation_per_genome_16amm.xlsx`
+4. Create fivespecies flag files - `04_create_fiveSpecies_flag_file_04ksb.xlsx`
 
 ## Data UJC
 Summarized overview of ujc data analysis - `02_summarized_data_analysis_ujc_documentation_03amm.xlsx`
