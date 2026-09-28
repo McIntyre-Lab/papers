@@ -40,15 +40,20 @@ yak and san - 03d_rlr_erp_and_esp_analysis_05ksb.xlsx
 sum counts across tech reps for ujc and erp - 04_dataPrep_sum_techReps_ujc_erp.xlsx
 
 ## Gene summary
+06_create_gene_summary_16mdg.xlsx
 
 ## Gene summary, AS analysis
+07_as_comparison_gene_summary_03mdg.xlsx
 
 ## Component summary
+08_create_component_summary_03mdg.xlsx
 
 ## Network analysis
 09_network_02lmm.xlsx
 
 ## Trand sex bias
+tranD_sexBias_analysis.xlsx
 
 ## Figures
-
+figures_09mdg.xlsx
+supp_figures.xlsx
