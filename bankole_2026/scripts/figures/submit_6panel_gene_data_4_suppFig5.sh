@@ -1,35 +1,47 @@
 #!/bin/bash
 
-#   1. get_components_from_geneID_03mdg.py
-#   2. plot_6panel_gene_data.py
-
-GENES=("FBgn0034928")
-SOURCE_SPECIES="dmel6"
-
+# ================================
+# INPUT
+# ================================
+#GENESETID="23"
+COMPONENT_IDS=(
+    7295
+    36119
+)
+# ================================
 # PLOT SETTINGS
+# ================================
 PANELS="ERPnovel"
 OUTPUT_FORMAT="pdf"
 
-ANNO_MIN_READS=1
+ANNO_MIN_READS=0
 ERP_ANNO_MIN_READS=10
-ERP_ANNO_TOP_N=50
+ERP_ANNO_TOP_N=""
 ERP_NOVEL_MIN_READS=50
-ERP_NOVEL_TOP_N=50
+ERP_NOVEL_TOP_N=""
 
+# Annotated UJCs with 0 reads are retained and drawn as gray outlines.
+# Mono-exon UJCs are dropped by default.
+
+# ================================
 # PATHS
+# ================================
 PROJ="/nfshome/mgaran/mclab/SHARE/McIntyre_Lab/sex_specific_splicing"
 ZENODO="${PROJ}/zenodo"
 DATA="${ZENODO}/datafiles"
 ANNO="${ZENODO}/fiveSpecies_supporting_files"
 SCRIPTS="${PROJ}/scripts"
-
-COMPONENT_FILE="${ZENODO}/FiveSpecies_network_files/component_map_by_node.csv"
 OUTPUT_DIR="${PROJ}/Figures"
 
-GET_COMPONENTS_SCRIPT="${SCRIPTS}/get_components_from_geneID_03mdg.py"
 PLOT_SCRIPT="${SCRIPTS}/6panel_plotting_scripts/plot_6panel_gene_data.py"
 
-ANNO_FILE="${ZENODO}/fiveSpecies_${SOURCE_SPECIES}_full_annotation.csv"
+FULL_ANNO_FILES=(
+    "dmel6:${ZENODO}/fiveSpecies_dmel6_full_annotation.csv"
+    "dsim2:${ZENODO}/fiveSpecies_dsim2_full_annotation.csv"
+    "dyak2:${ZENODO}/fiveSpecies_dyak2_full_annotation.csv"
+    "dsan1:${ZENODO}/fiveSpecies_dsan1_full_annotation.csv"
+    "dser1:${ZENODO}/fiveSpecies_dser1_full_annotation.csv"
+)
 
 ANNO_GTF_FILES=(
     "dmel6:${ANNO}/fiveSpecies_2_dmel6_anno_files/fiveSpecies_2_dmel6_ujc.gtf"
@@ -63,58 +75,39 @@ ERP_DATAFILES=(
     "dser1:${DATA}/datafile_erp_dser1.csv"
 )
 
-
-DATA_GTF_ARG=""
-DATA_GTF_ARG="--data_gtf_files ${DATA_GTF_FILES[*]}"
-
-ERP_DATAFILES_ARG=""
-ERP_DATAFILES_ARG="--erp_datafiles ${ERP_DATAFILES[*]}"
+# ================================
+# EXECUTION
+# ================================
+mkdir -p "${OUTPUT_DIR}"
 
 ERP_ANNO_TOP_N_ARG=""
-ERP_ANNO_TOP_N_ARG="--erp_anno_top_n ${ERP_ANNO_TOP_N}"
-
-ERP_NOVEL_TOP_N_ARG=""
-ERP_NOVEL_TOP_N_ARG="--erp_novel_top_n ${ERP_NOVEL_TOP_N}"
-
-# EXECUTION
-mkdir -p "${OUTPUT_DIR}"
-TEMP_COMPONENT_LIST="./roz_component_list_$$.csv"
-
-# Step 1: create component list for gene (includes misassigned components)
-echo "Step 1: Getting components for ${GENE_ID} (${SOURCE_SPECIES})..."
-python3 "${GET_COMPONENTS_SCRIPT}" \
-    --component_file "${COMPONENT_FILE}" \
-    --target_gene    "${GENE_ID}" \
-    --source_species "${SOURCE_SPECIES}" \
-    --output         "${TEMP_COMPONENT_LIST}" \
-    --add_erp        "${SOURCE_SPECIES}" \
-    --anno_file      "${ANNO_FILE}"
-
-if [[ ! -f "${TEMP_COMPONENT_LIST}" ]]; then
-    echo "ERROR when generating component list for ${GENE_ID}"
-    exit 1
+if [[ -n "${ERP_ANNO_TOP_N}" ]]; then
+    ERP_ANNO_TOP_N_ARG="--erp_anno_top_n ${ERP_ANNO_TOP_N}"
 fi
 
-# Step 2: Plot 6-panel figure
-echo "Step 2: Plotting ${GENE_ID} (panels: ${PANELS})..."
+ERP_NOVEL_TOP_N_ARG=""
+if [[ -n "${ERP_NOVEL_TOP_N}" ]]; then
+    ERP_NOVEL_TOP_N_ARG="--erp_novel_top_n ${ERP_NOVEL_TOP_N}"
+fi
+
+echo "------------------------------------------------"
+echo "Processing components: ${COMPONENT_IDS[*]}"
+echo "------------------------------------------------"
+
 python3 "${PLOT_SCRIPT}" \
-    --component_file     "${COMPONENT_FILE}" \
-    --component_list     "${TEMP_COMPONENT_LIST}" \
-    --gene_name          "${GENE_ID}" \
-    --output_dir         "${OUTPUT_DIR}" \
-    --panels             "${PANELS}" \
-    --output_format      "${OUTPUT_FORMAT}" \
-    --anno_min_reads     "${ANNO_MIN_READS}" \
-    --erp_anno_min_reads "${ERP_ANNO_MIN_READS}" \
+    --component_ids "${COMPONENT_IDS[@]}" \
+    --full_anno_files     "${FULL_ANNO_FILES[@]}" \
+    --output_dir          "${OUTPUT_DIR}" \
+    --panels              "${PANELS}" \
+    --output_format       "${OUTPUT_FORMAT}" \
+    --anno_min_reads      "${ANNO_MIN_READS}" \
+    --erp_anno_min_reads  "${ERP_ANNO_MIN_READS}" \
     --erp_novel_min_reads "${ERP_NOVEL_MIN_READS}" \
-    --anno_gtf_files     "${ANNO_GTF_FILES[@]}" \
-    --jxn_datafiles      "${JXN_DATAFILES[@]}" \
     ${ERP_ANNO_TOP_N_ARG} \
     ${ERP_NOVEL_TOP_N_ARG} \
-    ${ERP_ANNO_SIG_ONLY} \
-    ${ERP_NOVEL_SIG_ONLY} \
-    ${DATA_GTF_ARG} \
-    ${ERP_DATAFILES_ARG}
+    --anno_gtf_files      "${ANNO_GTF_FILES[@]}" \
+    --jxn_datafiles       "${JXN_DATAFILES[@]}" \
+    --data_gtf_files      "${DATA_GTF_FILES[@]}" \
+    --erp_datafiles       "${ERP_DATAFILES[@]}"
 
-rm -f "${TEMP_COMPONENT_LIST}"
-echo "Done: ${GENE_ID}"
+echo "Done: components ${COMPONENT_IDS[*]}"

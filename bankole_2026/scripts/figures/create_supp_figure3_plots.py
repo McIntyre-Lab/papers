@@ -14,6 +14,7 @@ from matplotlib.patches import Patch
 PROJ    = "/nfshome/mgaran/mclab/SHARE/McIntyre_Lab/sex_specific_splicing"
 FIGURES_DIR = f"{PROJ}/Figures"
 SUMMARY_DIR = f"{PROJ}/zenodo/summary_files"
+ROZ = "/TB14/TB14/mgaran"
 
 species_list = ['dmel', 'dsim', 'dsan', 'dyak', 'dser']
 
@@ -219,96 +220,76 @@ plt.close()
 print(f"Panel C saved to: {FIGURES_DIR}/supp_figure3_panelC.svg")
 
 
-# PANELS D AND E: proportion of multiple-transcript genes with AS events
+# PANEL D: AS comparison for genes with >=2 min10read non-ISM transcripts
 
-all_alt_columns = ['alt_donor_acceptor', 'alt_IR', 'alt_5p_ER', 'alt_3p_ER', 'alt_ERSkip']
-plot_data = {col: {} for col in all_alt_columns}
-
-for species in species_list:
-    df = pd.read_csv(f"{SUMMARY_DIR}/gene_summary_{species}.csv", low_memory=False)
-
-    # AS event tiers from the AS table (one row per geneID)
-    as_df = pd.read_csv(
-        f"{SUMMARY_DIR}/gene_summary_from_AS_analysis_{species}.csv", low_memory=False
-    ).set_index('geneID')
-    for col in all_alt_columns:
-        df[col] = df['geneID'].map(as_df[col])
-
-    # Denominator: genes with multiple observed transcripts (>= 2 non-fragment)
-    df['num_nonISM_UJC'] = df['num_ujc'] - df['num_ism_ujc']
-    filtered_df = df[df['num_nonISM_UJC'] >= 2]
-    total_count = len(filtered_df)
-    print(f"Panels D/E - {species}: {total_count} multiple-transcript genes (denominator)")
-    if total_count == 0:
-        continue
-
-    for col in all_alt_columns:
-        n_ujc       = (filtered_df[col] == 'anno_UJC').sum()
-        n_erp_anno  = (filtered_df[col] == 'anno_ERP').sum()
-        n_erp_novel = (filtered_df[col] == 'novel_ERP').sum()
-        plot_data[col][species] = {
-            'anno_ujc':     n_ujc       / total_count,
-            'anno_erp':     n_erp_anno  / total_count,
-            'novel_erp':    n_erp_novel / total_count,
-            'count_total':  n_ujc + n_erp_anno + n_erp_novel,
-        }
-
-legend_patches = [
-    Patch(facecolor=dark['dmel'],   edgecolor='black', label='anno_ujc'),
-    Patch(facecolor=medium['dmel'], edgecolor='black', label='anno_erp'),
-    Patch(facecolor=light['dmel'],  edgecolor='black', label='novel_erp'),
+panel_d_specs = [
+    (['alt_donor_acceptor', 'alt_IR'],
+     ['Alt. donor/acceptor', 'Alt. intron retention'],
+     'Donor/acceptor and intron retention'),
+    (['alt_5p_ER', 'alt_3p_ER', 'alt_ERSkip'],
+     ['Alt. start (5′)', 'Alt. end (3′)', 'Alt. skip'],
+     'Alternative start, end, and skip'),
 ]
 
-# Panel D: alt_donor_acceptor and alt_IR
-panel_c_cols   = ['alt_donor_acceptor', 'alt_IR']
-panel_c_labels = ['Alt. donor/acceptor', 'Alt. intron retention']
+plot_data = {}
+for species in species_list:
+    gene_df = pd.read_csv(
+        f"{SUMMARY_DIR}/gene_summary_min10reads_{species}.csv",
+        low_memory=False
+    )
+    as_df = pd.read_csv(
+        f"{ROZ}/gene_summary_from_AS_analysis_min10reads_{species}.csv",
+        low_memory=False
+    ).set_index('geneID')
 
-fig, ax = plt.subplots(figsize=(9, 6))
-x = np.arange(len(panel_c_cols)); bar_width = 0.16
-for i, species in enumerate(species_list):
-    x_pos      = x + i * bar_width
-    ujc_vals   = np.array([plot_data[col][species]['anno_ujc']  for col in panel_c_cols])
-    erp_a_vals = np.array([plot_data[col][species]['anno_erp']  for col in panel_c_cols])
-    erp_n_vals = np.array([plot_data[col][species]['novel_erp'] for col in panel_c_cols])
-    ax.bar(x_pos, ujc_vals,   bar_width, color=dark[species],   edgecolor='black', linewidth=0.5)
-    ax.bar(x_pos, erp_a_vals, bar_width, bottom=ujc_vals, color=medium[species], edgecolor='black', linewidth=0.5)
-    ax.bar(x_pos, erp_n_vals, bar_width, bottom=ujc_vals + erp_a_vals, color=light[species], edgecolor='black', linewidth=0.5)
-ax.set_xlabel('Alternative splicing category', fontsize=12)
-ax.set_ylabel('Proportion of genes', fontsize=10)
-ax.set_title('Proportion of genes by annotation level of alternative splicing\n(donor/acceptor, intron retention)', fontsize=14)
-ax.set_xticks(x + (len(species_list) - 1) * bar_width / 2)
-ax.set_xticklabels(panel_c_labels, rotation=0)
-ax.set_ylim(0, 1.05)
-ax.legend(handles=legend_patches, loc='upper right', fontsize=9)
+    multi_transcript = (gene_df['num_ujc'] - gene_df['num_ism_ujc']) >= 2
+    multi_exon = gene_df['numExon_GM'] >= 2
+    genes_plotted_df = gene_df[multi_transcript & multi_exon].copy()
+    total = len(genes_plotted_df)
+    print(f"Panel D - {species}: {total:,} genes in denominator")
+
+    plot_data[species] = {}
+    for alt_col in ['alt_donor_acceptor', 'alt_IR', 'alt_5p_ER', 'alt_3p_ER', 'alt_ERSkip']:
+        tier_values = genes_plotted_df['geneID'].map(as_df[alt_col])
+        plot_data[species][alt_col] = {
+            'UJCanno': (tier_values == 'anno_UJC').sum() / total,
+            'ERPanno': (tier_values == 'anno_ERP').sum() / total,
+            'ERPnovel': (tier_values == 'novel_ERP').sum() / total,
+        }
+
+fig, axes = plt.subplots(1, 2, figsize=(18, 6), sharey=True)
+bar_width = 0.16
+
+for ax, (alt_cols, alt_labels, subtitle) in zip(axes, panel_d_specs):
+    x = np.arange(len(alt_cols))
+
+    for i, species in enumerate(species_list):
+        x_pos = x + i * bar_width
+        ujc_vals = np.array([plot_data[species][col]['UJCanno'] for col in alt_cols])
+        erp_a_vals = np.array([plot_data[species][col]['ERPanno'] for col in alt_cols])
+        erp_n_vals = np.array([plot_data[species][col]['ERPnovel'] for col in alt_cols])
+
+        ax.bar(x_pos, ujc_vals, bar_width, color=dark[species], edgecolor='black', linewidth=0.5)
+        ax.bar(x_pos, erp_a_vals, bar_width, bottom=ujc_vals, color=medium[species], edgecolor='black', linewidth=0.5)
+        ax.bar(x_pos, erp_n_vals, bar_width, bottom=ujc_vals + erp_a_vals, color=light[species], edgecolor='black', linewidth=0.5)
+
+    ax.set_xlabel('Alternative splicing category', fontsize=12)
+    ax.set_ylabel('Proportion of genes', fontsize=10)
+    ax.set_title(subtitle, fontsize=14)
+    ax.set_xticks(x + (len(species_list) - 1) * bar_width / 2)
+    ax.set_xticklabels(alt_labels, rotation=0)
+    ax.set_ylim(0, 1.05)
+    ax.legend(
+        handles=[
+            Patch(facecolor=dark['dmel'], edgecolor='black', label='UJCanno'),
+            Patch(facecolor=medium['dmel'], edgecolor='black', label='ERPanno'),
+            Patch(facecolor=light['dmel'], edgecolor='black', label='ERPnovel'),
+        ],
+        loc='upper right', fontsize=9
+    )
+
 plt.tight_layout()
-plt.savefig(f"{FIGURES_DIR}/supp_figure3_panelD.svg", dpi=300, bbox_inches='tight')
+plt.savefig(f"{FIGURES_DIR}/as_comparison_min10reads.svg", dpi=300, bbox_inches='tight')
 plt.show()
 plt.close()
-print(f"Panel D saved to: {FIGURES_DIR}/supp_figure3_panelD.svg")
-
-# Panel E: alt_5p_ER, alt_3p_ER, alt_ERSkip
-panel_d_cols   = ['alt_5p_ER', 'alt_3p_ER', 'alt_ERSkip']
-panel_d_labels = ['Alt. start (5p)', 'Alt. end (3p)', 'Alt. skip (ERSkip)']
-
-fig, ax = plt.subplots(figsize=(10, 6))
-x = np.arange(len(panel_d_cols)); bar_width = 0.16
-for i, species in enumerate(species_list):
-    x_pos      = x + i * bar_width
-    ujc_vals   = np.array([plot_data[col][species]['anno_ujc']  for col in panel_d_cols])
-    erp_a_vals = np.array([plot_data[col][species]['anno_erp']  for col in panel_d_cols])
-    erp_n_vals = np.array([plot_data[col][species]['novel_erp'] for col in panel_d_cols])
-    ax.bar(x_pos, ujc_vals,   bar_width, color=dark[species],   edgecolor='black', linewidth=0.5)
-    ax.bar(x_pos, erp_a_vals, bar_width, bottom=ujc_vals, color=medium[species], edgecolor='black', linewidth=0.5)
-    ax.bar(x_pos, erp_n_vals, bar_width, bottom=ujc_vals + erp_a_vals, color=light[species], edgecolor='black', linewidth=0.5)
-ax.set_xlabel('Alternative splicing category', fontsize=12)
-ax.set_ylabel('Proportion of genes', fontsize=10)
-ax.set_title('Proportion of genes by annotation level of alternative splicing (5p, 3p, skip)', fontsize=14)
-ax.set_xticks(x + (len(species_list) - 1) * bar_width / 2)
-ax.set_xticklabels(panel_d_labels, rotation=0)
-ax.set_ylim(0, 1.05)
-ax.legend(handles=legend_patches, loc='upper right', fontsize=9)
-plt.tight_layout()
-plt.savefig(f"{FIGURES_DIR}/supp_figure3_panelE.svg", dpi=300, bbox_inches='tight')
-plt.show()
-plt.close()
-print(f"Panel E saved to: {FIGURES_DIR}/supp_figure3_panelE.svg")
+print(f"Panel D saved to: {FIGURES_DIR}/as_comparison_min10reads.svg")
