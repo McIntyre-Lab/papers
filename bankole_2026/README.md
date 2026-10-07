@@ -37,10 +37,15 @@ validated using long read RNAseq data from male and female head tissue.
 
 ## Organization 
 bash_scripts == Bash / submission scripts to run analyses  
+
 design_files == Sample and analysis design files
+
 documentation == Supporting documentation
-sas_programs == SAS programs for statistical analysis
+
+sas_programs == SAS programs for analysis 
+
 scripts == Python/R analysis scripts
+
 sra_info == SRA metadata and related information
 
 ### Unique Junction Combination (UJC)
@@ -68,7 +73,7 @@ are documented in the documentation directory.
 ## Additional data availability
 The fiveSpecies full annotation files, supporting files, supplemental files, tables, figures
 are available on zenodo:   [link!!!]
-Data is available on SRA:  ######s
+Data is available on SRA:  see sra_info directory
 
 ## IGV browser for visualizing transcript models
 A separate repository (IGV Browser for papers/bankole_2026) containing the files used to 
